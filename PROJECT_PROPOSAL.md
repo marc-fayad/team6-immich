@@ -18,7 +18,23 @@ Our team will focus on assessing Immich's authentication and authorization mecha
 
 ## Hypothetical Operational Environment
 
-### Systems Engineering View
+Our Operational Environment is a small photography studio business with five staff members that hosts Immich on a Linux server using Docker Compose. Staff will use web and mobile apps for Immich to organize and back up client photos, keep unfinished work private, and deliver completed work to clients via shared links. The Studio’s server hosts a couple major components:
+
+**immich-server:** The server is what handles REST API requests from the web browser and mobile apps, performs authorization checks and takes care of background jobs like metadata extraction/thumbnail generation.
+
+**immich-machine-learning:** Python service that handles facial recognition and smart search. 
+
+**PostgreSQL:** Database that stores users, authorization info, photo albums, etc.
+
+**Redis:** job queue for background processing
+
+**Local File Storage:** Original photos, videos, and thumbnails.
+
+A Reverse Proxy with TLS is the only component used that is exposed to the internet via port 443 under a studio-owned domain. The traffic is then forwarded to the Immich service on the internal network. PostgreSQL, Redis, and the Immich ML service are not published outside of the Docker Network. 
+
+The Studio staff expect Immich to maintain confidentiality for each user’s private photos unless they are deliberately shared, and to limit shared content to only the intended people. 
+
+### Systems Engineering Diagram
 
 *Diagram and description to be added.*
 
