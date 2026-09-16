@@ -159,10 +159,10 @@ While working on this proposal, I learned quite a bit about what the architectur
 
 This assignment helped me understand more about how Immich handles security when users are sharing private photos and videos. I thought the most interesting part was looking into some of Immich's past security issues involving shared links and access controls. Seeing actual examples of how a mistake in authorization could expose photos that were supposed to stay private helped me understand why these security features are so important. I also learned more about how open-source projects handle licensing and contributions from people outside of the main development team.
 
-**Team Member 4**
+**Marc Fayad**
 
-*Reflection to be added.*
+My sections of this proposal helped me discover some of the capabilities of GitHub, since those were more of my tasks. I found the project board to be super impressive and convenient to track work and organize tasks, something our group will definitely be using even more in the future. I even learned about the "mermaid" integration in GitHub, where I could add Markdown text marked as mermaid and it would build what I designed into a diagram. I found that very easy to use and exactly what our project needed.
 
 ### Team Reflection
 
-*Combined team reflection to be added.*
+As a team, we each learned about a new feature or idea that we may not have considered before, whether it was in GitHub or Immich or security concepts in general. However, our greatest knowledge gained over this first part of the project was about how we discovered each other's strengths, communication methods, and how we ideate. This is a project we all are fully in on, and we are all enthusiastic to continue learning through our work and work together efficiently as a team.
