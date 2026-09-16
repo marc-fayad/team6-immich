@@ -74,11 +74,15 @@ The Studio staff expect Immich to maintain confidentiality for each user’s pri
 
 ## License and Contribution Process
 
-*Immich license, contribution procedures, and contributor agreements to be added.*
+Immich is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0). This license allows users to use, modify, and distribute the software, while requiring modified source code to remain available under certain conditions, including when a modified version is made available to users over a network. Immich switched from the MIT License to AGPLv3 in 2024 to help ensure that modifications to the project remain available to the open-source community.
+
+Immich's contribution guidelines ask contributors to keep pull requests focused on a single change and to discuss larger or more impactful changes with the maintainers before beginning development. The project provides development setup documentation and identifies `good-first-issue` items for new contributors. The current contribution guidelines do not identify a separate Contributor License Agreement (CLA) or Developer Certificate of Origin (DCO) that contributors are required to sign.
 
 ## Security-Related History
 
-*Summary of Immich's security-related history, known vulnerabilities, security decisions, and security feature changes to be added.*
+Immich's security history shows why authentication and authorization are important for protecting private and shared photo assets. In 2026, Immich disclosed an authorization vulnerability involving shared links. Someone with access to a shared-link key could potentially add other assets belonging to the owner to the shared link, exposing private content that the owner did not originally intend to share.
+
+Another vulnerability disclosed in 2026 involved password-protected shared albums. The shared-album password could be included in URL query parameters, potentially exposing it through browser history, server or proxy logs, or referrer information. An attacker who obtained the password could potentially use it to access the shared media. These vulnerabilities directly relate to our project's focus because they demonstrate how failures in authentication and authorization controls can result in unintended access to private or shared assets.
 
 ## Team Reflection
 
@@ -92,9 +96,9 @@ The Studio staff expect Immich to maintain confidentiality for each user’s pri
 
 While working on this proposal, I learned quite a bit about what the architecture looks like for Immich and how different smaller services/components work together to make up a sophisticated photo management program. The thing I found most useful was reading through Immich’s documentation accessible on their github. Immich has extremely detailed diagrams on the architecture of their software which helped out a lot while working on the operational environment.
 
-**Team Member 3**
+**Dillon Haliburton**
 
-*Reflection to be added.*
+This assignment helped me understand more about how Immich handles security when users are sharing private photos and videos. I thought the most interesting part was looking into some of Immich's past security issues involving shared links and access controls. Seeing actual examples of how a mistake in authorization could expose photos that were supposed to stay private helped me understand why these security features are so important. I also learned more about how open-source projects handle licensing and contributions from people outside of the main development team.
 
 **Team Member 4**
 
