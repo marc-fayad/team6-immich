@@ -40,11 +40,29 @@ The Studio staff expect Immich to maintain confidentiality for each user’s pri
 
 ### Perceived Threats
 
-*Threat analysis to be added.*
+**Unauthorized Access to Private Assets:** An authorized user viewing, downloading, modifying, or deleting another user's photos
+
+**Privilege Escalation:** A regular user gaining access to admin functions or an album viewer accessing editor functions
+
+**Shared-Link Abuse:** Links being forwarded to unintended people, left active without an expiration date, or used to reach photos outside of the link's scope
+
+**Credential and Token Theft:** Compromised passwords, stolen session tokens or leaked API keys
+
+**Authentication Misconfiguration:** Weak or incorrect OAuth/OpenID Connect setup allowing account creation/takeover
+
+**Infrastructure Exposure:** Misconfigured database that gives direct access to unencrypted assets, bypassing the application
 
 ### Security Features
 
-*Security features to be added.*
+- Proper local password login and OpenID Connect single sign-on
+- Session management and per-device revoation
+- API keys with scoped permissions
+- Separate admin and user roles as well as per-user storage limits
+- Owner-based access checks on all assets/photo albums
+- Album sharing with editor and viewer roles
+- Shared links with optional passwords, expiration dates, download controls, metadata hiding
+- PIN-Protected locked folders for confidential assets
+- Proper internal network for backing services like PostgreSQL and Redis
 
 ## Team Motivation
 
@@ -70,9 +88,9 @@ The Studio staff expect Immich to maintain confidentiality for each user’s pri
 
 *Reflection to be added.*
 
-**Team Member 2**
+**Matthew Rayl**
 
-*Reflection to be added.*
+While working on this proposal, I learned quite a bit about what the architecture looks like for Immich and how different smaller services/components work together to make up a sophisticated photo management program. The thing I found most useful was reading through Immich’s documentation accessible on their github. Immich has extremely detailed diagrams on the architecture of their software which helped out a lot while working on the operational environment.
 
 **Team Member 3**
 
