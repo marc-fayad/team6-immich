@@ -76,13 +76,17 @@ The Studio staff expect Immich to maintain confidentiality for each user’s pri
 
 Immich is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0). This license allows users to use, modify, and distribute the software, while requiring modified source code to remain available under certain conditions, including when a modified version is made available to users over a network. Immich switched from the MIT License to AGPLv3 in 2024 to help ensure that modifications to the project remain available to the open-source community.
 
-Immich's contribution guidelines ask contributors to keep pull requests focused on a single change and to discuss larger or more impactful changes with the maintainers before beginning development. The project provides development setup documentation and identifies `good-first-issue` items for new contributors. The current contribution guidelines do not identify a separate Contributor License Agreement (CLA) or Developer Certificate of Origin (DCO) that contributors are required to sign.
+Immich's contribution guidelines ask contributors to keep pull requests focused on a single change and to discuss larger or more impactful changes with the maintainers before beginning development. The project provides development setup documentation and identifies good-first-issue items for new contributors. The current contribution guidelines do not identify a separate Contributor License Agreement (CLA) or Developer Certificate of Origin (DCO) that contributors are required to sign.
+
+Sources: Immich License https://github.com/immich-app/immich/blob/main/LICENSE | Contribution Guidelines https://github.com/immich-app/immich/blob/main/CONTRIBUTING.md | Developer Setup https://docs.immich.app/developer/setup/
 
 ## Security-Related History
 
 Immich's security history shows why authentication and authorization are important for protecting private and shared photo assets. In 2026, Immich disclosed an authorization vulnerability involving shared links. Someone with access to a shared-link key could potentially add other assets belonging to the owner to the shared link, exposing private content that the owner did not originally intend to share.
 
 Another vulnerability disclosed in 2026 involved password-protected shared albums. The shared-album password could be included in URL query parameters, potentially exposing it through browser history, server or proxy logs, or referrer information. An attacker who obtained the password could potentially use it to access the shared media. These vulnerabilities directly relate to our project's focus because they demonstrate how failures in authentication and authorization controls can result in unintended access to private or shared assets.
+
+Sources: Shared-Link Authorization Bypass Advisory https://github.com/immich-app/immich/security/advisories/GHSA-hvq7-hq9r-8gjr | Shared-Link Password Disclosure Advisory https://github.com/immich-app/immich/security/advisories/GHSA-78x4-6x83-jx75 | Immich Security Advisories https://github.com/immich-app/immich/security/advisories
 
 ## Team Reflection
 
