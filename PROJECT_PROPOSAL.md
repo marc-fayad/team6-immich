@@ -38,7 +38,52 @@ The Studio staff expect Immich to maintain confidentiality for each user’s pri
 
 ### Systems Engineering Diagram
 
-*Diagram and description to be added.*
+### Systems Engineering View
+
+The following diagram shows the systems engineering view of Immich within the operational environment.
+
+```mermaid
+flowchart TB
+
+    Internet["Internet / External Environment"]
+
+    Client["Photography Clients<br/>View Shared Photos"]
+    Staff["Studio Staff (5 Users)<br/>Web Browser / Immich Mobile App"]
+
+    subgraph Studio["Photography Studio Operational Environment"]
+
+        Proxy["Reverse Proxy + TLS<br/>HTTPS :443"]
+
+        subgraph SOI["System of Interest: Immich"]
+            Server["immich-server<br/>REST API<br/>Authentication / Authorization<br/>Background Jobs"]
+            ML["immich-machine-learning<br/>Facial Recognition<br/>Smart Search"]
+        end
+
+        subgraph Supporting["Supporting / Enabling Systems"]
+            DB["PostgreSQL<br/>Users, Authorization,<br/>Albums & Metadata"]
+            Redis["Redis<br/>Background Job Queue"]
+            Storage["Local File Storage<br/>Original Photos, Videos<br/>& Thumbnails"]
+            Docker["Docker Compose / Linux Server<br/>Execution Environment"]
+        end
+
+        Proxy -->|"Internal Traffic"| Server
+
+        Server -->|"Queries / Updates"| DB
+        Server -->|"Background Jobs"| Redis
+        Server -->|"ML Requests"| ML
+        Server -->|"Read / Write Media"| Storage
+
+        Docker -.-> Server
+        Docker -.-> ML
+        Docker -.-> DB
+        Docker -.-> Redis
+    end
+
+    Staff -->|"HTTPS :443"| Proxy
+    Client -->|"HTTPS :443<br/>Shared Link"| Proxy
+
+    Internet --- Client
+```
 
 ### Perceived Threats
 
