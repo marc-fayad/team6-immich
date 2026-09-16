@@ -14,7 +14,9 @@ https://github.com/marc-fayad/team6-immich
 
 ## Project Scope
 
-Our team will focus on assessing Immich's authentication and authorization mechanisms, particularly whether access controls adequately protect private and shared photo and video assets in a self-hosted environment.
+Team 6 will focus on assessing Immich's authentication and authorization mechanisms, particularly whether access controls adequately protect private and shared photo and video assets in a self-hosted environment.
+
+Rather than attempting to assess the security of the entire Immich application, our analysis will focus on a limited set of security-related functionality involving user authentication, access to user-owned assets, and the sharing of assets between users or through public sharing features. Throughout the semester, we will develop security requirements for these features and collect evidence to determine whether the software satisfies those requirements.
 
 ## Hypothetical Operational Environment
 
@@ -66,11 +68,19 @@ The Studio staff expect Immich to maintain confidentiality for each user’s pri
 
 ## Team Motivation
 
-*Team motivation for selecting Immich to be added.*
+Our team selected Immich because it is an actively developed open-source application with clear security requirements that relate to a realistic use case. Immich stores and manages personal photos and videos, which users would reasonably expect to remain private unless they intentionally choose to share them. Features such as multiple user accounts, shared albums, public sharing, OAuth authentication, and administrative user management make authentication and authorization important parts of the application's security.
+
+Immich also has an active open-source community and continues to receive frequent updates and community contributions. This gives our team an opportunity to apply software assurance techniques to a real-world project while examining software that has meaningful security and privacy expectations.
 
 ## Open-Source Project Description
 
-*Description of Immich, contributors, activity, usage, popularity, languages, platforms, documentation, and other project information to be added.*
+Immich is a self-hosted photo and video management application designed to give users control over storing, organizing, backing up, and sharing their personal media. It provides web and mobile applications and includes features such as automatic mobile backups, multiple user accounts, shared albums, public sharing, partner sharing, facial recognition and search, OAuth authentication, API keys, and administrative user management.
+
+Immich has a large and active open-source community. Its GitHub repository has over 114,000 stars, approximately 6,900 forks, and hundreds of open issues and pull requests. Development remains active, with frequent commits and releases as well as contributions from the community. At the time of this proposal, Immich continues to publish frequent releases and maintains issues specifically identified as appropriate for first-time contributors. This level of activity was an important consideration for our team because it provides an active project where we can observe development practices and potentially interact with contributors throughout the semester.
+
+The Immich ecosystem contains web, server, mobile, and machine-learning components and uses several technologies and programming languages. Major technologies include TypeScript, Svelte/SvelteKit, NestJS, PostgreSQL, and Python. Immich provides documentation covering installation, configuration, administration, development, and contribution procedures. For self-hosted production environments, Docker Compose is the recommended deployment method.
+
+**Sources:** [Immich GitHub Repository](https://github.com/immich-app/immich) | [Immich Releases](https://github.com/immich-app/immich/releases) | [Immich Contribution Opportunities](https://github.com/immich-app/immich/contribute) | [Immich Documentation](https://docs.immich.app/)
 
 ## License and Contribution Process
 
@@ -94,7 +104,7 @@ Sources: Shared-Link Authorization Bypass Advisory https://github.com/immich-app
 
 **Christian Theisen**
 
-*Reflection to be added.*
+While working on this proposal, I learned more about how GitHub issues and project boards can be used to organize and track work within a team. I was already familiar with branches and commits, but this was my first time using GitHub issues as part of a development workflow and connecting an issue to the work being completed on a branch. I also learned more about Immich as an open-source project and how active its development community is. Researching the project helped me better understand how authentication and authorization can be evaluated from a software assurance perspective by defining security requirements and gathering evidence to determine whether those requirements are being met.
 
 **Matthew Rayl**
 
