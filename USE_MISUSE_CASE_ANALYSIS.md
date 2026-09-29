@@ -159,11 +159,30 @@ The final diagram incorporates the legitimate actor, the two misusers, the three
 
 The iterative analysis produced these security requirements for Upload and Private Asset Access:
 
-**SR-ASSET-01 - Ownership Assignment:** 
+**SR-ASSET-01 - Ownership Assignment:** Immich will assign the authenticated uploading user as the owner of each newly uploaded asset and will not accept a client provided ownership identifier.
+
+**SR-ASSET-02 - Server-Side Authorization:** Immich will verify for every requested asset identifier that the authenticated user is authorized to access the asset before providing any metadata, thumbnails, or original files regardless of any filtering done by the client.
+
+**SR-ASSET-03 - Authorization Failure:** Immich will deny requests for any assets the user is not authorized to access, without telling if the requested identifier exists or not.
+
+**SR-ASSET-04 - Session Revocation:** Immich will allow a user to view and revoke any active sessions associated with their account, so that access from a lost or stolen device can be terminated.
+
+**SR-ASSET-05 - Secondary Authorization for Sensitive Assets:** Immich will restrict access to assets marked as locked to sessions that have been elevated using the account PIN, and will expire that elevation after a set period.
+
+**SR-ASSET-06 - Consistent Visibility Enforcement:** Immich will apply the locked-visibility restriction by default across all endpoints that return assets, instead of relying on each endpoint to set the restriction individually. 
 
 #### Immich Implementation Evidence
 
-TBD
+| Requirement | Support | Implementation Evidence |
+| ---------- | ---------- | ----------|
+| SR-ASSET-01 | Supported | Immich sets the authenticated uploader as the asset owner at creation; ownership is the same in postgreSQL, which is where information on access/authorization, users, and assets is stored. |
+| SR-ASSET-02 | Supported | Authorization is centralized in server/src/utils/access.ts. Controllers then call requireAccess with a permission and requested IDs resolved against repositories/access.repository.ts |
+| SR-ASSET-03 | Supported | The access check runs before the request handler, so unauthorized identifiers are rejected before they are confirmed. |
+| SR-ASSET-04 | Supported | Sessions are listed and revocable per device in the user settings. Release v3.1.0 added the option to invalidate sessions on password reset |
+| SR-ASSET-05 | Supported | The Locked Folder is advertised as extra protection for sensitive media, it uses a server-side PIN and session elevation. |
+| SR-ASSET-06 | Partially Supported | Elevation is enforced per handler. A study done in 2026 found that 4 out of 5 of the endpoints enforced the PIN requirement, while POST /search/random didn't. leaving out the visibility field returned assets that were supposed to be locked to a session that never entered the PIN. |
+
+Immich supports the Ownership, Authorization, Authorization Failure, Session Revocation, and PIN-Elevation. Consistent Visibility Enforcement is only partially addressed and supported. Ownership checks are centralized but the visibility restriction is applied individually, endpoint to endpoint. 
 
 ---
 
@@ -427,4 +446,14 @@ TBD
 
 ## References
 
-TBD
+- Immich. "Access Utilities." *Immich GitHub Repository*.
+https://github.com/immich-app/immich/blob/main/server/src/utils/access.ts
+
+- Immich. "Access Repository." *Immich GitHub Repository*.
+https://github.com/immich-app/immich/blob/main/server/src/repositories/access.repository.ts
+
+- Immich. "Release v3.1.0." *Immich GitHub Repository*.
+https://github.com/immich-app/immich/releases/tag/v3.1.0
+
+- Immich. "Pull Request #31735: Document Locked Folder Session Behaviour." *Immich GitHub Repository*.
+https://github.com/immich-app/immich/pull/31735
