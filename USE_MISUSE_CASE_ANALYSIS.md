@@ -89,15 +89,37 @@ The final diagram incorporates the legitimate actor, contextualized misuser, ide
 
 #### Final Use/Misuse Case Diagram
 
-*Diagram to be added.*
+The final diagram incorporates the legitimate Authentication and Login interaction, the External Credential Attacker, the identified misuse cases, and the security functionality derived through iterative analysis.
+
+![Authentication and Login Final Use/Misuse Case Diagram](authentication-login-final.drawio.png)
 
 #### Derived Security Requirements
 
-TBD
+The iterative misuse-case analysis produced the following functional security requirements for Authentication and Login:
+
+- **SR-AUTH-01 – Credential Validation:** Immich shall validate the email address and password supplied by a user before establishing an authenticated session or granting access to protected application functionality.
+
+- **SR-AUTH-02 – Authentication Failure:** Immich shall deny authentication when the supplied email address or password cannot be successfully validated.
+
+- **SR-AUTH-03 – Authentication Failure Disclosure:** Immich shall avoid revealing whether an authentication failure resulted from an invalid email address or an invalid password, reducing information available for account-enumeration attacks.
+
+- **SR-AUTH-04 – Authentication Event Logging:** Immich shall record failed authentication attempts with sufficient information to support security monitoring and investigation.
+
+- **SR-AUTH-05 – Compromised Credential Risk:** Authentication controls should provide a means of reducing reliance on reusable application passwords because possession of a valid studio member's password may allow an unauthorized user to satisfy ordinary password validation.
 
 #### Immich Implementation Evidence
 
-TBD
+The derived Authentication and Login requirements were compared against the current Immich implementation and official documentation.
+
+| Requirement | Support | Immich Implementation Evidence |
+| --- | --- | --- |
+| **SR-AUTH-01** | Supported | Immich's authentication service retrieves the user by email and compares the submitted password with the stored password hash using bcrypt. A successful authentication results in creation of the login response and session. |
+| **SR-AUTH-02** | Supported | If the user does not exist, has no password, or the password comparison fails, Immich rejects the request with an unauthorized response rather than establishing a session. |
+| **SR-AUTH-03** | Supported | Immich returns the same "Incorrect email or password" response for unsuccessful password authentication. It also performs a bcrypt comparison against a dummy hash when an email is not registered to reduce timing-based user enumeration. |
+| **SR-AUTH-04** | Supported | Immich records a warning for a failed login attempt containing the submitted email address and source IP address. |
+| **SR-AUTH-05** | Partially Supported | Immich supports third-party authentication through OpenID Connect (OIDC) on top of OAuth2 and allows administrators to disable local password authentication. This provides a deployment option that can reduce reliance on Immich-managed reusable passwords. However, ordinary email/password authentication still relies on possession of valid credentials and does not by itself distinguish a legitimate user from an attacker who has obtained those credentials. |
+
+Overall, Immich directly supports the credential-validation, authentication-failure, failure-disclosure, and failed-login logging requirements identified by this analysis. The compromised-credential requirement is only partially addressed by the availability of OAuth/OIDC and the ability to disable password authentication. The strength of authentication provided by an external identity provider depends on that provider's configuration and security controls.
 
 ---
 
@@ -407,4 +429,11 @@ TBD
 
 ## References
 
-TBD
+- Immich. "Auth Service." *Immich GitHub Repository*.  
+  https://github.com/immich-app/immich/blob/main/server/src/services/auth.service.ts
+
+- Immich. "OAuth." *Immich Documentation*.  
+  https://docs.immich.app/administration/oauth/
+
+- Immich. "System Settings." *Immich Documentation*.  
+  https://docs.immich.app/administration/system-settings/
