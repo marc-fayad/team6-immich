@@ -85,11 +85,17 @@ TBD
 
 #### Actors
 
-TBD
+**Studio Member:** A member of the photography studio who has an authenticated Immich account and uses the Immich mobile or web app to upload photos from client shoots and to view, download, and organized any assets they own. Studio members rely on Immich to keep unfinished assets and personal photos visible only to the uploading member until that member shares them intentionally. 
 
 #### Use Case Description
 
-TBD
+The Upload and Private Asset Access use case represents a Photography Studio Member adding new photos to Immich and then accessing their own private media. The member uploads photos/videos through the Immich client, Immich then stores the data, records the member as the owner of the asset, and processes it in the background. The studio member can then view, download, and organize their assets, and move any sensitive assets into a locked folder.
+
+**Goal:** Upload photos to Immich and access assets owned by the requesting authenticated member while preventing access by other users of the same instance.
+
+**Precondition:** The Studio Member is authenticated to Immich with an active session. 
+
+**Successful Outcome:** Immich stores the uploaded asset under the member's ownership and returns only assets the member is authorized to access.
 
 #### Initial Use Case
 
