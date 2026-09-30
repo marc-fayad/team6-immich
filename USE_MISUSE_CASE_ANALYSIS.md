@@ -371,8 +371,7 @@ This demonstrates that administrator authorization protects against authenticate
 
 #### Final Use/Misuse Case Diagram
 
-<img width="936" height="852" alt="administrative_access_user_management drawio" src="https://github.com/user-attachments/assets/b027c02b-0540-4099-8239-d0f3b23cdab5" />
-
+<img width="936" height="851" alt="administrative_access_user_management drawio (1)" src="https://github.com/user-attachments/assets/ef38b935-5993-4607-a6f6-903f2f8578fb" />
 
 #### Derived Security Requirements
 
