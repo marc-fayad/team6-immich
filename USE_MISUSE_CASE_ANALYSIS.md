@@ -775,7 +775,13 @@ I also reviewed Immich's documentation and source code to compare the security r
 
 ### 8.1 Combined Team Reflection
 
-TBD
+As a team, this project helped us better understand how use and misuse case analysis can be used to identify security requirements in a real open-source application. Dividing the five essential interactions among the team allowed us to examine Immich from several different security perspectives, including authentication, private asset access, public sharing, administrative access, and external authentication.
+
+A common lesson across our analyses was that successful authentication alone does not guarantee that an action is secure. Our work identified additional security concerns involving authorization, asset ownership, administrator privileges, compromised sessions, shared-link access, and external identity providers. Iteratively analyzing the misuse cases and security countermeasures also helped us recognize that a security control can itself be examined for additional threats, leading to more specific security requirements.
+
+We also learned the importance of verifying the security requirements derived from our diagrams against the actual software. Team members reviewed Immich's documentation and source code to determine whether identified requirements were implemented, partially supported, or dependent on configuration. This helped connect the concepts from our use/misuse case analysis to the security functionality of a real application.
+
+Overall, dividing the five interactions among the team gave each member an opportunity to focus on a specific area of Immich while contributing to a larger security analysis. Combining the individual analyses gave us a broader understanding of how different features, users, attackers, and security controls interact within the same application.
 
 ---
 
