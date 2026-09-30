@@ -197,7 +197,7 @@ The final diagram incorporates the legitimate actor, the two misusers, the three
 
 #### Final Use/Misuse Case Diagram
 
-<img width="751" height="852" alt="private-asset-access-final drawio (1)" src="https://github.com/user-attachments/assets/81e9c423-3543-459d-a4f2-6df5147719c8" />
+<img width="751" height="852" alt="private-asset-access-final drawio (2) drawio" src="https://github.com/user-attachments/assets/3c46f432-a754-42c4-82dd-376ffb8a4245" />
 
 #### Derived Security Requirements
 
