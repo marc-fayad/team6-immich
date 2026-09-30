@@ -370,20 +370,33 @@ The following table consolidates the functional security requirements derived fr
 
 ### 4.1 Prompt Used
 
-TBD
+Generative AI was used as a supporting tool during the development and review of the use/misuse case diagrams. The team used AI to evaluate whether the diagrams followed the notation and iterative analysis process presented in the course and to identify potential areas for improvement.
+
+An example prompt used during the Authentication and Login analysis was:
+
+> Review this use/misuse case diagram for Immich's Authentication and Login functionality. Check whether the legitimate actor, misuser, use cases, misuse cases, security use cases, and relationships are consistent with misuse-case analysis. In particular, check the use of `<<threatens>>`, `<<includes>>`, and `<<mitigates>>` relationships. Identify any missing threats or security functionality and suggest improvements, but distinguish suggestions from features that are actually implemented by Immich.
 
 ### 4.2 Suggestions Produced
 
-TBD
+AI-assisted review suggested making the misuser more specific to the operational environment rather than representing the threat as a generic attacker. This contributed to describing the **External Credential Attacker** in terms of network access, motive, and the ability to submit authentication requests through the same Internet-accessible login interface used by legitimate studio members.
+
+The review also suggested analyzing the security functionality recursively rather than stopping after adding credential validation. This led to considering whether **Validate Login Credentials** could itself be threatened. The resulting **Use Stolen or Reused Credentials** misuse case demonstrated that an attacker possessing valid credentials may successfully satisfy ordinary password validation.
+
+AI was also used to review diagram relationships and terminology, including the direction and meaning of `<<threatens>>`, `<<includes>>`, and `<<mitigates>>` relationships.
 
 ### 4.3 Improvements Made to the Diagrams
 
-TBD
+The Authentication and Login diagram was developed through several iterations based on the misuse-case analysis and review process. The initial diagram contained only the legitimate **Photography Studio Member** and **Log In with Email and Password** interaction. Subsequent iterations added the **External Credential Attacker**, **Gain Unauthorized Account Access**, and **Validate Login Credentials** security functionality.
+
+A further iteration introduced **Use Stolen or Reused Credentials** after recognizing that successful credential validation does not necessarily establish that the person presenting valid credentials is the legitimate account owner. The final diagram was also reorganized to reduce visual clutter and clearly distinguish legitimate functionality from misuse cases.
+
+Suggestions were evaluated against the course notation and Immich's actual functionality before being incorporated. AI-generated suggestions were not treated as evidence that a security feature existed in Immich; implementation claims were separately checked against Immich documentation and source code.
 
 ### 4.4 Usefulness and Limitations
 
-TBD
+AI was useful as a review and brainstorming tool because it helped identify additional questions to ask during the recursive misuse-case analysis and provided feedback on diagram organization, terminology, and relationships. It was particularly useful for challenging the assumption that credential validation completely resolves unauthorized-access threats.
 
+However, AI suggestions required independent evaluation. AI can suggest security controls that are reasonable in theory but may not actually be implemented by the software being analyzed. It can also misinterpret diagram notation or relationships. For these reasons, the team treated AI output as suggestions rather than authoritative security evidence and relied on course material, Immich's official documentation, and Immich source code when determining the final diagrams, requirements, and implementation findings.
 ---
 
 ## 5. Alignment with Immich Security Features
@@ -440,7 +453,13 @@ TBD
 
 ### 7.3 Team Collaboration
 
-TBD
+The five essential interactions were divided among team members so that each person was responsible for developing one complete use/misuse case analysis. Each analysis included identifying actors and interactions, developing misuse cases and security countermeasures, deriving security requirements, and comparing those requirements with Immich's documentation or source code.
+
+GitHub Issues and the Project Board were used to assign and track work. Team members worked on separate branches and used pull requests to integrate completed work into the main report. Pull requests also provided an opportunity for teammates to review contributions and suggest changes before they were merged.
+
+In addition to the five individual analyses, report-wide responsibilities were distributed across the team. Adu was assigned the security documentation review, Marc assisted with diagram consistency and notation, Dillon compiled the consolidated security requirements, Matthew assisted with verifying requirements against Immich documentation and source code, and Christian maintained the Project Board and integrated the final Markdown report.
+
+The team also communicated outside GitHub to coordinate progress, resolve repository-access issues, identify work that still needed to be integrated, and avoid overlapping edits as the final report was assembled. Before submission, the completed analyses and report-wide sections were brought together for a final team review.
 
 ---
 
