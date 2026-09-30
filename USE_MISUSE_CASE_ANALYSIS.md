@@ -538,8 +538,6 @@ For SR-OIDC-08, the document records an OAuth profile-picture SSRF vulnerability
 
 ## 3. Consolidated Security Requirements
 
-## 3. Consolidated Security Requirements
-
 The following table brings together the security requirements identified through each of the five use/misuse case analyses. It also shows the main security control involved and whether the current Immich implementation supports the requirement.
 
 | ID | Security Requirement | Derived From | Security Property / Control | Immich Support |
