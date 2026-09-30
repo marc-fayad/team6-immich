@@ -175,43 +175,88 @@ TBD
 
 #### Actors
 
-TBD
+**Photography Studio Member:** A staff member at the photography studio who uses Immich to organize photos and create public shared links for delivering selected photos to clients.
+
+**Client:** A customer of the photography studio who receives a public shared link and uses it to access photos intentionally shared by the studio.
 
 #### Use Case Description
 
-TBD
+The Shared Albums and Public Links use case represents a Photography Studio Member using Immich to share selected photos with a client through a public link. The Studio Member selects the photos that should be shared and creates a public link that can be sent to the Client. The Client can then use the link to access the shared photos without needing an Immich account.
+
+**Goal:** Allow a Photography Studio Member to securely share selected photos with a Client without exposing other private photos stored in Immich.
+
+**Precondition:** The Photography Studio Member is logged into Immich and has access to the photos that will be shared.
+
+**Successful Outcome:** Immich creates a public share that allows the Client to access the intended photos while following the sharing restrictions set by the Studio Member.
 
 #### Initial Use Case
 
-TBD
+The initial use-case analysis identified **Create Public Share** and **Access Shared Photos** as the primary interactions. The Photography Studio Member creates a public share containing selected photos, and the Client uses the resulting link to access the shared content.
+
+The initial analysis represents the intended sharing interaction before misuse cases and security countermeasures are introduced.
 
 #### Misuser(s)
 
-TBD
+**Unauthorized Shared-Link Holder:** Someone who gets access to a public shared link even though the photos were not meant for them. The link could have been forwarded to them or exposed in some other way. They could then try to use the link to view photos without permission. This person does not have a studio account but can still reach Immich's public sharing page through the link.
 
 #### Misuse Cases
 
-TBD
+**Access Shared Content Without Authorization:** An Unauthorized Shared-Link Holder gets a public link that was meant for a Client and tries to use it to view the shared photos. This threatens the normal **Access Shared Photos** use case because someone who was not supposed to receive the link could potentially use it to view the content.
+
+**Access Photos Using Expired Link:** An Unauthorized Shared-Link Holder tries to access the shared photos after the link was supposed to expire. This also threatens **Access Shared Photos** because a link that is no longer valid should not continue giving someone access to the photos.
 
 #### Security Countermeasures
 
-TBD
+**Password-Protected Shared Link:** Immich allows the Studio Member to add a password to a public shared link. This adds another layer of protection because having the link by itself is not enough to access the photos. The person opening the link also needs to provide the correct password.
+
+**Set Share Expiration:** Immich allows the Studio Member to set an expiration time for a public shared link. Once that time has passed, the link should no longer allow access to the shared photos. This helps prevent old links from continuing to provide access longer than the Studio Member intended.
 
 #### Iterative Analysis
 
-TBD
+The Shared Albums and Public Links analysis was built by starting with the normal sharing process and then looking at ways that process could be misused.
+
+**Initial Use Case:** The analysis started with the Photography Studio Member creating a public share and the Client using the link to access the selected photos. This represents how the sharing feature is supposed to work normally.
+
+**Iteration 1 – Unauthorized Shared Access:** The **Unauthorized Shared-Link Holder** was introduced along with the **Access Shared Content Without Authorization** misuse case. This represents someone getting a shared link that was not intended for them and attempting to use it to view the photos.
+
+**Iteration 2 – Password Protection:** The **Password-Protected Shared Link** security feature was added as a countermeasure. Requiring a password gives the shared link another layer of protection so that simply getting the link may not be enough to access the photos.
+
+**Iteration 3 – Expired Link Access:** The **Access Photos Using Expired Link** misuse case was then added to represent someone attempting to continue using a shared link after the Studio Member intended for access to end.
+
+**Iteration 4 – Share Expiration:** The **Set Share Expiration** security feature was added to address this misuse case. Setting and enforcing an expiration time limits how long the shared link can continue to provide access.
+
+The final diagram shows the normal sharing process along with the two misuse cases and the security features that help address them.
 
 #### Final Use/Misuse Case Diagram
 
-*Diagram to be added.*
+The final diagram shows the Photography Studio Member and Client using Immich's public sharing feature, along with the Unauthorized Shared-Link Holder, the two identified misuse cases, and the security features added to address those threats.
+
+<img width="835" height="552" alt="image" src="https://github.com/user-attachments/assets/01cc69aa-5274-44a6-992b-9c55920e0886" />
 
 #### Derived Security Requirements
 
-TBD
+The misuse-case analysis produced the following security requirements for Shared Albums and Public Links:
+
+- **SR-SHARE-01 – Shared-Link Password Protection:** Immich shall require the correct password before allowing access to a password-protected public share.
+
+- **SR-SHARE-02 – Invalid Shared-Link Password:** Immich shall deny access when an incorrect password is provided for a password-protected public share.
+
+- **SR-SHARE-03 – Shared-Link Expiration:** Immich shall prevent access to a public shared link after its configured expiration time has passed.
+
+- **SR-SHARE-04 – Expiration Validation:** Immich shall check whether a public shared link has expired before allowing access to the photos associated with that link.
 
 #### Immich Implementation Evidence
 
-TBD
+Immich already includes several protections that line up with the security requirements identified in this analysis. The public sharing documentation and source code were reviewed to see how each requirement is handled.
+
+| Requirement | Status | How Immich Addresses It |
+|---|---|---|
+| SR-SHARE-01 | Implemented | Public shared links in Immich can be protected with a password. When password protection is enabled, the correct password must be provided before the shared content can be accessed. |
+| SR-SHARE-02 | Implemented | Immich checks the password submitted for a protected share. If the password is incorrect, access to the share is rejected. |
+| SR-SHARE-03 | Implemented | A public share can be given an expiration date. After that expiration time is reached, the shared link is no longer treated as valid. |
+| SR-SHARE-04 | Implemented | When a shared link is validated, Immich checks its expiration information. The link remains valid if no expiration was set or if the expiration time has not been reached. |
+
+Overall, the protections identified in the misuse-case analysis are already represented in Immich. Password protection helps limit access when a link reaches someone it was not intended for, while expiration dates limit how long a shared link can continue providing access. Together, these features address the two misuse cases identified in the diagram.
 
 ---
 
@@ -444,7 +489,11 @@ TBD
 
 ### Dillon
 
-TBD
+For this assignment, I was responsible for the Shared Albums and Public Links section. I focused on how a photography studio could use Immich to share photos with clients and what security problems could come from public shared links. I created the use/misuse case diagram and looked at two main risks, someone getting a shared link that was not intended for them and someone trying to use a link after it had expired.
+
+One thing I learned from this part of the project was how normal features can create security risks depending on how they are used. Public links are useful for easily sharing photos with clients, but they can also be forwarded or exposed to other people. Adding password protection and expiration dates helped show how security controls can be connected directly to specific misuse cases instead of just listing general security features.
+
+I also reviewed Immich's documentation and source code to compare the security requirements from my analysis with what Immich actually supports. This showed me that the password and expiration protections from my diagram are already implemented in Immich. I am also helping combine the security requirements from each team member into the final set of requirements for the project.
 
 ### 8.1 Combined Team Reflection
 
@@ -462,3 +511,10 @@ TBD
 
 - Immich. "System Settings." *Immich Documentation*.  
   https://docs.immich.app/administration/system-settings/
+  
+- Immich. "Sharing." *Immich Documentation*.  
+  https://docs.immich.app/features/sharing/
+
+- Immich. "Shared Link Service." *Immich GitHub Repository*.  
+  https://github.com/immich-app/immich/blob/main/server/src/services/shared-link.service.ts
+  
