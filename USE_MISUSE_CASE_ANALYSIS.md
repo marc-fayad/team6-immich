@@ -221,23 +221,31 @@ TBD
 
 #### Actors
 
-TBD
+**Photography Studio Administrator:** An administrative member of the five-person photography studio who has an existing Immich account and has the responsibility for administering the studio's Immich application. They can create accounts when employees join, reset passwords, configure user storage, and remove accounts when employees leave.
 
 #### Use Case Description
 
-TBD
+The **Administrative Access and User Management** use case represents a photography studio administrator managing the application through their account with elevated privileges. Using the administrative functions to manage user access to Immich within the photography studio, the designated Photography Studio Administrator is responsible for managing the accounts of the five staff members. The administrator can create new user accounts, modify existing user information, reset user passwords, configure user storage quotas, and remove users who should no longer have access to the system.
+
+These administrative functions are important to the studio because user accounts control access to client photos, albums, and other potentially sensitive information stored within Immich. Administrative user management functions should only be available to an authenticated user with the appropriate elevated administrator privileges. Regular studio users may access the Immich features permitted by their basic accounts but should not be able to perform administrative actions affecting other users.
 
 #### Initial Use Case
 
-TBD
+The initial use case focuses on the interaction between the **Photography Studio Administrator** and Immich's functionality to manage user accounts. The administrator accesses the administrative suite to manage the accounts of studio staff members, including creating accounts for new users, modifying existing accounts, resetting passwords, configuring storage quotas, and removing users who no longer require access.
+
+In the initial use case diagram, the **Photography Studio Administrator** is the primary actor and **Administrative Access and User Management** is the use case within the Immich system. At this point, the diagram represents only the intended administrative interaction and does not yet include any potential misuse or security threats.
 
 #### Misuser(s)
 
-TBD
+**Unauthorized Studio Member:** A photography studio employee who has a valid Immich account but does not have administrator privileges. This user has legitimate access to normal Immich functionalities but may attempt to gain unauthorized access to administrative functions. Their goal could include modifying another user's account, resetting passwords, creating unauthorized accounts, or deleting existing users.
+
+**Compromised-Admin Attacker:** An unauthorized individual who has obtained access to a valid **Photography Studio Administrator** account or authenticated administrative session. Because the attacker is operating through an account with legitimate administrator privileges, they may attempt to abuse Immich's user-management functionality to modify accounts, reset passwords, create unauthorized users, or remove legitimate studio users.
 
 #### Misuse Cases
 
-TBD
+**Perform Unauthorized User Administration:** An **Unauthorized Studio Member** attempts to access administrator-only user management functions despite having a non-administrative account. The user may attempt to create new accounts, modify other users, reset another user's password, or delete existing accounts. This misuse case threatens the **Administrative Access and User Management** use case because successful unauthorized access could allow a regular studio employee to alter who can access Immich and the studio's client data.
+
+**Abuse Compromised Administrator Access:** A **Compromised-Admin Attacker** uses access to a valid administrator account or authenticated administrative session to perform unauthorized user management actions. Because the compromised account possesses legitimate administrator privileges, the attacker may be able to create unauthorized accounts, modify existing users, reset passwords, or remove legitimate studio users. This misuse case threatens the **Administrative Access and User Management** use case by abusing legitimate administrative privileges rather than attempting to access the functionality through a non-administrative account.
 
 #### Security Countermeasures
 
