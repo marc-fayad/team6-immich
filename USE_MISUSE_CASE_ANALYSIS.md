@@ -464,15 +464,35 @@ However, AI suggestions required independent evaluation. AI can suggest security
 
 ### 5.1 Supported Security Requirements
 
-TBD
+**Authentication:** Immich satisfies SR-AUTH-01 through SR-AUTH-04. User credentials are validated server-side against a bcrypt hash before a session is made. Failed authentication produces an unauthorized response instead of a session, and the same generic failure message is returned for both invalid emails and invalid passwords. Failed attempts are logged with submitted email and the source IP.
+
+**Authorization and Asset Ownership:** Immich satisfies SR-ASSET-01 through SR-ASSET-05. Ownership is assigned from the authenticated request at the time the asset is uploaded. Authorization is centralized in the server's access utilities and invoked by controllers before the handlers execute. Unauthorized identifiers are rejected without confirming their existence, sessions are listable and revocable per device, and locked assets require the use of a PIN-elevated session that expires after a timed period. 
+
+**Public Sharing:** Immich satisfies SR-SHARE-01 through SR-SHARE-04. Shared links support optional password protection and expiration dates, and both are validated via the server before the shared content is returned.
+
+**Federated Identity:** Immich satisfies SR-OIDC-01, SR-OIDC-02, SR-OIDC-04, and SR-OIDC-05. OAuth state is validated and missing state is rejected, the callback requires a PKCE code verifier, an existing OAuth association is not silently replaced, and administrators control external account provisioning through the auto-register setting.
+
+**Administrative Controls:** SR-ADMIN TBD
+
+Altogether, the supported requirements cover the bulk of what the misuse-case analysis asked for. Identity is verified before access, access is checked against ownership rather than assumed, and shared content carries optional limits on who can see it and how long it can be seen.
 
 ### 5.2 Partially Supported Security Requirements
 
-TBD
+**SR-AUTH-05 - Compromised Credential Risk:** Immich supports OIDC and allows admins to disable password login entirely, which gives a deployment a path to multi-factor authentication. Immich does not provide MFA itself, so the protection only exists if the studio deploys an identity provider and has it configured properly.
+
+**SR-ASSET-06 - Consistent Visibility Enforcement:** Locked-asset restriction is implemented, but enforced handler by handler instead of as a default. A 2026 assessment found that four of five search endpoints enforcing PIN requirement while `POST /search/random` did not, showing locked assets to a session that never entered the PIN.
+
+**SR-OIDC-06 - Validated Role Claims:** Immich honors role claims from the identity provider, so the validity of privilege assignment depends on the provider's configuration rather than Immich.
+
+**SR-OIDC-03, SR-OIDC-07, SR-OIDC-08 - Identity Validation, TLS Verification, and SSRF Protection:** These features are supporting in current Immich releases but were fixed in v3.0.0 to patch vulnerabilities. They are listed under partially supported because the requirement is satisfied only if the current, patched version of Immich is being used.
 
 ### 5.3 Identified Security Gaps
 
-TBD
+**Detection Without Response:** Immich will log failed authentication attempts but doesn't implement an account lockout or rate limiting on the login endpoint. For the studio's internet-facing deployment, an attacker could make repeated attempts and the only consequence is a log entry.
+
+**Per-Endpoint Enforcement Instead of Default-Deny:** The locked-folder bypass shows that a restriction that is implemented in each handler is only as strong as the least careful handler. Ownership checks don't have this problem because they are centralized, but visibility doesn't have that same chokepoint. This security gap is significant because it is a structural weakness, not a simple single defect.
+
+**Controls Whose Strength Live Outside the Software:** MFA, TLS termination, rate limiting, role-claim correctness, and network isolation are all dependent on the operator or the identity provider. Reasonable choice for self-hosted software, but also means security effectiveness for Immich can't be determined by Immich alone.
 
 ### 5.4 Sufficiency of Existing Security Features
 
