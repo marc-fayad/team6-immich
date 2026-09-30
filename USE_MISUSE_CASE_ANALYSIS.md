@@ -402,8 +402,6 @@ Based on the use/misuse case analysis, the following security requirements were 
 
 #### Actors
 
-<img width="1028" height="597" alt="image_001" src="https://github.com/user-attachments/assets/dedec495-f531-40af-9a12-951db678af32" />
-
 User (Web or Mobile Client): The primary actor. The user wants to access their Immich account using external authentication.
 External Identity Provider (IdP): The external system responsible for authenticating the user. Depending on an Immich deployment, this can be an OIDC-compatible identity provider. Its role is to verify the user's identity and return authentication information to Immich.
 Main use case: Authenticate with OAuth/OIDC
@@ -491,7 +489,7 @@ Finally, successfully authenticated profile information can itself contain attac
 
 #### Final Use/Misuse Case Diagram
 
-*Diagram to be added.*
+<img width="1028" height="597" alt="image_001" src="https://github.com/user-attachments/assets/dedec495-f531-40af-9a12-951db678af32" />
 
 #### Derived Security Requirements
 
