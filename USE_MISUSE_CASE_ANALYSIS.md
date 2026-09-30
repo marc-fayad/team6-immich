@@ -538,14 +538,41 @@ For SR-OIDC-08, the document records an OAuth profile-picture SSRF vulnerability
 
 ## 3. Consolidated Security Requirements
 
-| ID | Security Requirement | Derived From | Security Property / Control | Immich Support | Evidence |
-|---|---|---|---|---|---|
-| **SR-AUTH-01** | The system shall authenticate a user before establishing an authenticated Immich session and granting access to protected resources. | Authentication/Login | Authentication & Session Management | **Supported** | The OAuth flow establishes the Immich session only after external authentication, callback processing, identity validation, and account association. |
-| **SR-ASSET-01** | The system shall authorize access to private assets according to the authenticated user's ownership or granted permissions before permitting protected asset operations. | Private Asset Access | Object-Level Authorization | * | Requires evidence from the team's Private Asset Access analysis. |
-| **SR-SHARE-01** | Shared-link credentials shall grant access only to the resources and operations explicitly authorized by the share. | Shared Links | Scoped Authorization / Least Privilege  Requires evidence from the team's Shared Links analysis. |
-| **SR-ADMIN-01** | Administrative functionality shall be available only to users whose administrator privileges have been successfully established and authorized. | Administrative Access | RBAC / Least Privilege | **Partially addressed** | OAuth role claims can affect local administrative status; only trusted, recognized role claims should affect privileges. |
-| **SR-OIDC-01** | The system shall protect external authentication by validating OAuth state, requiring PKCE, cryptographically validating OIDC identity, securely linking accounts, controlling automatic registration and role claims, validating IdP TLS, and validating externally supplied profile resources. | OAuth/OIDC | Federated Authentication / Transaction Integrity | **Supported in current patched design, with IdP/configuration dependencies** | The document identifies direct state and PKCE checks plus controls for identity validation, account linking, registration, roles, TLS, and SSRF. |
-The following table consolidates the functional security requirements derived from the five misuse-case analyses and maps them to the threats and security controls that motivated them.
+## 3. Consolidated Security Requirements
+
+The following table brings together the security requirements identified through each of the five use/misuse case analyses. It also shows the main security control involved and whether the current Immich implementation supports the requirement.
+
+| ID | Security Requirement | Derived From | Security Property / Control | Immich Support |
+|---|---|---|---|---|
+| **SR-AUTH-01** | Validate a user's email and password before creating an authenticated session or granting protected access. | Authentication/Login | Authentication | Supported |
+| **SR-AUTH-02** | Deny authentication when the supplied credentials cannot be successfully validated. | Authentication/Login | Authentication | Supported |
+| **SR-AUTH-03** | Avoid revealing whether an authentication failure was caused by an invalid email or password. | Authentication/Login | Information Disclosure Prevention | Supported |
+| **SR-AUTH-04** | Record failed authentication attempts with enough information to support monitoring and investigation. | Authentication/Login | Security Logging | Supported |
+| **SR-AUTH-05** | Provide a way to reduce reliance on reusable application passwords when possible. | Authentication/Login | Compromised Credential Protection | Partially Supported |
+| **SR-ASSET-01** | Assign the authenticated uploader as the owner of each newly uploaded asset. | Private Asset Access | Asset Ownership | Supported |
+| **SR-ASSET-02** | Verify that an authenticated user is authorized to access an asset before returning protected asset data. | Private Asset Access | Server-Side Authorization | Supported |
+| **SR-ASSET-03** | Deny unauthorized asset requests without revealing whether the requested asset exists. | Private Asset Access | Authorization Failure Handling | Supported |
+| **SR-ASSET-04** | Allow users to view and revoke active sessions associated with their account. | Private Asset Access | Session Management | Supported |
+| **SR-ASSET-05** | Restrict locked assets to sessions that have completed PIN-based elevation. | Private Asset Access | Secondary Authorization | Supported |
+| **SR-ASSET-06** | Apply locked-asset visibility restrictions consistently across endpoints that return assets. | Private Asset Access | Consistent Access Control | Partially Supported |
+| **SR-SHARE-01** | Require the correct password before allowing access to a password-protected public share. | Shared Links | Shared-Link Authentication | Supported |
+| **SR-SHARE-02** | Deny access when an incorrect password is provided for a protected public share. | Shared Links | Access Control | Supported |
+| **SR-SHARE-03** | Prevent access to a public shared link after its configured expiration time. | Shared Links | Time-Limited Access | Supported |
+| **SR-SHARE-04** | Check a public shared link's expiration status before granting access to its photos. | Shared Links | Expiration Validation | Supported |
+| **SR-ADMIN-01** | Verify administrator privileges before allowing access to administrator-only user management functions. | Administrative Access | Role-Based Access Control | Supported |
+| **SR-ADMIN-02** | Deny administrator-only operations when the authenticated user does not have administrator privileges. | Administrative Access | Authorization Enforcement | Supported |
+| **SR-ADMIN-03** | Require a valid authenticated session before permitting administrative user management functionality. | Administrative Access | Authentication & Session Validation | Supported |
+| **SR-ADMIN-04** | Restrict sensitive user-management operations to authorized administrators. | Administrative Access | Least Privilege | Supported |
+| **SR-OIDC-01** | Generate and validate an unpredictable OAuth state value for external authentication transactions. | OAuth/OIDC | OAuth State Validation | Supported |
+| **SR-OIDC-02** | Require PKCE for OAuth/OIDC authorization-code authentication. | OAuth/OIDC | Authorization-Code Protection | Supported |
+| **SR-OIDC-03** | Cryptographically validate identity information received from the configured OIDC provider. | OAuth/OIDC | Identity Validation | Supported in Current Patched Releases |
+| **SR-OIDC-04** | Link an external identity to a local account only after successful validation and prevent silent replacement of an existing association. | OAuth/OIDC | Secure Account Linking | Supported |
+| **SR-OIDC-05** | Allow administrators to disable automatic creation of accounts from externally authenticated identities. | OAuth/OIDC | Account Provisioning Control | Supported |
+| **SR-OIDC-06** | Accept authorization-role claims only from a validated OIDC identity and recognized Immich roles. | OAuth/OIDC | Role Claim Validation | Partially Supported |
+| **SR-OIDC-07** | Validate TLS certificates for OIDC communications by default. | OAuth/OIDC | TLS Validation | Supported in Current Patched Releases |
+| **SR-OIDC-08** | Validate externally supplied OAuth profile-resource URLs before making server-side requests. | OAuth/OIDC | SSRF Prevention | Supported in Current Patched Releases |
+
+Overall, most of the security requirements identified by the team are supported by the current Immich implementation. The main limitations identified by the analyses involve compromised credentials, consistent enforcement of locked-asset visibility, and the security of externally supplied OIDC role claims. Some OIDC protections also depend on using a current patched version of Immich.
 
 ## 4. AI-Assisted Use/Misuse Case Analysis
 
@@ -746,7 +773,7 @@ For this assignment, I was responsible for the Shared Albums and Public Links se
 
 One thing I learned from this part of the project was how normal features can create security risks depending on how they are used. Public links are useful for easily sharing photos with clients, but they can also be forwarded or exposed to other people. Adding password protection and expiration dates helped show how security controls can be connected directly to specific misuse cases instead of just listing general security features.
 
-I also reviewed Immich's documentation and source code to compare the security requirements from my analysis with what Immich actually supports. This showed me that the password and expiration protections from my diagram are already implemented in Immich. I am also helping combine the security requirements from each team member into the final set of requirements for the project.
+I also reviewed Immich's documentation and source code to compare the security requirements from my analysis with what Immich actually supports. This showed me that the password and expiration protections from my diagram are already implemented in Immich. I also compiled the security requirements from each team member's analysis into the final consolidated security requirements section.
 
 ### 8.1 Combined Team Reflection
 
