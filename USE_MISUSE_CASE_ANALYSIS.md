@@ -153,7 +153,7 @@ The final diagram incorporates the legitimate actor, the two misusers, the three
 
 #### Final Use/Misuse Case Diagram
 
-*Diagram to be added.*
+![Upload and Private Asset Access Final Use/Misuse Case Diagram](private-asset-access-final.drawio.png)
 
 #### Derived Security Requirements
 
@@ -432,7 +432,9 @@ TBD
 
 ### Matthew
 
-TBD
+I was tasked with the analysis of uploading assets and private asset access section. I looked into how our Photography Studio Member uploads client shoots to Immich and views their private assets, and what might happen if another user tried to access those assets without permission. During my analysis I looked at two types of misusers, a curious studio employee with a valid Immich account and someone who acquired a staff member's lost/stolen device with an active logged-in session on it.
+
+One thing that I learned while working on my part was that the biggest threat or risk isn't an outside breaking in but an authenticated user accessing something they shouldn't. The employee already passes authentication into the server, so the asset protection must come from ownership checks instead of the login page. While working through the other misuser, my analysis had to go even further because the person with a stolen device has access to an authenticated active session and will pass an ownership check too, which led to the features of session revocation, the Locked Folder, and PIN-elevation as a second layer of security inside of an authenticated account.
 
 ### Dillon
 
