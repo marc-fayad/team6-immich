@@ -524,34 +524,33 @@ The following table consolidates the functional security requirements derived fr
 
 ### 4.1 Prompt Used
 
-You are an expert software security requirement engineer. Your job is to suggest misuse cases for a particular description of a use case diagram. Misuse cases need to be introduced in stages as back-and-forth analysis by introducing security countermeasures in response to a misuse case. For the Immich OAuth/OIDC External Authentication use case, identify the actors/interactions, relevant contextualized misusers, misuse cases, countermeasures, and derived security requirements. Then evaluate Immich's documentation and code to determine how well the implementation supports those requirements.
+Generative AI was used as a supporting tool during the development and review of the use/misuse case diagrams. The team used AI to evaluate whether the diagrams followed the notation and iterative analysis process presented in the course and to identify potential areas for improvement.
+
+An example prompt used during the Authentication and Login analysis was:
+
+> Review this use/misuse case diagram for Immich's Authentication and Login functionality. Check whether the legitimate actor, misuser, use cases, misuse cases, security use cases, and relationships are consistent with misuse-case analysis. In particular, check the use of `<<threatens>>`, `<<includes>>`, and `<<mitigates>>` relationships. Identify any missing threats or security functionality and suggest improvements, but distinguish suggestions from features that are actually implemented by Immich.
 
 ### 4.2 Suggestions Produced
 
-The analysis produced eight principal misuse cases:
-1. OAuth callback/CSRF manipulation.
-2. Authorization-code interception.
-3. Forged or manipulated OIDC identity.
-4. Account-linking/account-takeover attacks.
-5. Unauthorized automatic account creation.
-6. Privilege escalation through role claims.
-7. MITM attacks against Immich-to-IdP communications.
-8. SSRF through OAuth profile resources.
-Corresponding countermeasures included state validation, PKCE, cryptographic OIDC identity validation, controlled account linking, configurable auto-registration, trusted role claims, TLS certificate validation, and URL/network destination validation
+AI-assisted review suggested making the misuser more specific to the operational environment rather than representing the threat as a generic attacker. This contributed to describing the **External Credential Attacker** in terms of network access, motive, and the ability to submit authentication requests through the same Internet-accessible login interface used by legitimate studio members.
+
+The review also suggested analyzing the security functionality recursively rather than stopping after adding credential validation. This led to considering whether **Validate Login Credentials** could itself be threatened. The resulting **Use Stolen or Reused Credentials** misuse case demonstrated that an attacker possessing valid credentials may successfully satisfy ordinary password validation.
+
+AI was also used to review diagram relationships and terminology, including the direction and meaning of `<<threatens>>`, `<<includes>>`, and `<<mitigates>>` relationships.
 
 ### 4.3 Improvements Made to the Diagrams
 
-The AI-assisted analysis expanded the initial use-case diagram from page 1 by introducing explicit malicious actors and <<threatens>> relationships. It also added security use cases and <<mitigates>> relationships.
-The most significant improvement is that security controls are now traceable:
-Misuser → Misuse Case → Threatened Use Case → Countermeasure → Security Requirement
-For example:
-Network Attacker → Impersonate IdP → Threatens OIDC Authentication → TLS Certificate Validation → SR-OIDC-07
-This makes the diagram useful for requirements engineering rather than merely illustrating the normal authentication workflow.
+The Authentication and Login diagram was developed through several iterations based on the misuse-case analysis and review process. The initial diagram contained only the legitimate **Photography Studio Member** and **Log In with Email and Password** interaction. Subsequent iterations added the **External Credential Attacker**, **Gain Unauthorized Account Access**, and **Validate Login Credentials** security functionality.
+
+A further iteration introduced **Use Stolen or Reused Credentials** after recognizing that successful credential validation does not necessarily establish that the person presenting valid credentials is the legitimate account owner. The final diagram was also reorganized to reduce visual clutter and clearly distinguish legitimate functionality from misuse cases.
+
+Suggestions were evaluated against the course notation and Immich's actual functionality before being incorporated. AI-generated suggestions were not treated as evidence that a security feature existed in Immich; implementation claims were separately checked against Immich documentation and source code.
 
 ### 4.4 Usefulness and Limitations
 
-AI assistance was useful for systematically exploring how an attacker could adapt after each security control was introduced. It helped transform a normal OAuth/OIDC workflow into explicit security requirements.
-The main limitation is that suggested misuse cases do not prove that Immich contains a vulnerability or implements a countermeasure. Implementation claims therefore require verification against documentation, source code, tests, and security advisories. The attached document follows that distinction by separately evaluating whether each derived requirement is actually supported.
+AI was useful as a review and brainstorming tool because it helped identify additional questions to ask during the recursive misuse-case analysis and provided feedback on diagram organization, terminology, and relationships. It was particularly useful for challenging the assumption that credential validation completely resolves unauthorized-access threats.
+
+However, AI suggestions required independent evaluation. AI can suggest security controls that are reasonable in theory but may not actually be implemented by the software being analyzed. It can also misinterpret diagram notation or relationships. For these reasons, the team treated AI output as suggestions rather than authoritative security evidence and relied on course material, Immich's official documentation, and Immich source code when determining the final diagrams, requirements, and implementation findings.
 
 ---
 
@@ -559,33 +558,39 @@ The main limitation is that suggested misuse cases do not prove that Immich cont
 
 ### 5.1 Supported Security Requirements
 
-Supported Security Requirements
-According to the attached analysis, current Immich supports:
-- OAuth state validation.
-- PKCE code-verifier handling.
-- OIDC identity processing.
-- Configurable automatic OAuth registration.
-- Protection against silently replacing an already-linked OAuth identity.
-- OAuth role-claim processing.
-- TLS protection in patched releases.
-- Protection against the documented OAuth profile-resource SSRF issue in patched releases.
-The overall assessment also identifies back-channel logout support and states that Immich documentation expects the Authorization Code flow
+**Authentication:** Immich satisfies SR-AUTH-01 through SR-AUTH-04. User credentials are validated server-side against a bcrypt hash before a session is made. Failed authentication produces an unauthorized response instead of a session, and the same generic failure message is returned for both invalid emails and invalid passwords. Failed attempts are logged with submitted email and the source IP.
+
+**Authorization and Asset Ownership:** Immich satisfies SR-ASSET-01 through SR-ASSET-05. Ownership is assigned from the authenticated request at the time the asset is uploaded. Authorization is centralized in the server's access utilities and invoked by controllers before the handlers execute. Unauthorized identifiers are rejected without confirming their existence, sessions are listable and revocable per device, and locked assets require the use of a PIN-elevated session that expires after a timed period. 
+
+**Public Sharing:** Immich satisfies SR-SHARE-01 through SR-SHARE-04. Shared links support optional password protection and expiration dates, and both are validated via the server before the shared content is returned.
+
+**Federated Identity:** Immich satisfies SR-OIDC-01, SR-OIDC-02, SR-OIDC-04, and SR-OIDC-05. OAuth state is validated and missing state is rejected, the callback requires a PKCE code verifier, an existing OAuth association is not silently replaced, and administrators control external account provisioning through the auto-register setting.
+
+**Administrative Controls:** SR-ADMIN TBD
+
+Altogether, the supported requirements cover the bulk of what the misuse-case analysis asked for. Identity is verified before access, access is checked against ownership rather than assumed, and shared content carries optional limits on who can see it and how long it can be seen.
 
 ### 5.2 Partially Supported Security Requirements
 
-Some security requirements depend on the external IdP rather than Immich alone.
-Role-based authorization is a clear example. Immich can consume a configured role claim and use it to establish administrative status, but the correctness of that decision depends on the IdP correctly authenticating the user and securely governing the role claim
+**SR-AUTH-05 - Compromised Credential Risk:** Immich supports OIDC and allows admins to disable password login entirely, which gives a deployment a path to multi-factor authentication. Immich does not provide MFA itself, so the protection only exists if the studio deploys an identity provider and has it configured properly.
+
+**SR-ASSET-06 - Consistent Visibility Enforcement:** Locked-asset restriction is implemented, but enforced handler by handler instead of as a default. A 2026 assessment found that four of five search endpoints enforcing PIN requirement while `POST /search/random` did not, showing locked assets to a session that never entered the PIN.
+
+**SR-OIDC-06 - Validated Role Claims:** Immich honors role claims from the identity provider, so the validity of privilege assignment depends on the provider's configuration rather than Immich.
+
+**SR-OIDC-03, SR-OIDC-07, SR-OIDC-08 - Identity Validation, TLS Verification, and SSRF Protection:** These features are supporting in current Immich releases but were fixed in v3.0.0 to patch vulnerabilities. They are listed under partially supported because the requirement is satisfied only if the current, patched version of Immich is being used.
 
 ### 5.3 Identified Security Gaps
 
-The document identifies important historical gaps rather than claiming they necessarily remain in a current patched installation.
-The first was insufficient TLS certificate verification for OIDC discovery, token, user-info, and JWKS communications. The document identifies v3.0.0 as the patched release. 
-The second involved SSRF through OAuth profile-picture synchronization, where an externally supplied URL could cause Immich to access internal resources. The document likewise identifies v3.0.0 as patched.
+**Detection Without Response:** Immich will log failed authentication attempts but doesn't implement an account lockout or rate limiting on the login endpoint. For the studio's internet-facing deployment, an attacker could make repeated attempts and the only consequence is a log entry.
+
+**Per-Endpoint Enforcement Instead of Default-Deny:** The locked-folder bypass shows that a restriction that is implemented in each handler is only as strong as the least careful handler. Ownership checks don't have this problem because they are centralized, but visibility doesn't have that same chokepoint. This security gap is significant because it is a structural weakness, not a simple single defect.
+
+**Controls Whose Strength Live Outside the Software:** MFA, TLS termination, rate limiting, role-claim correctness, and network isolation are all dependent on the operator or the identity provider. Reasonable choice for self-hosted software, but also means security effectiveness for Immich can't be determined by Immich alone.
 
 ### 5.4 Sufficiency of Existing Security Features
 
-The analyzed controls provide meaningful protection for OAuth/OIDC authentication when Immich is current and correctly configured. State validation protects the authentication transaction, PKCE protects the authorization-code exchange, OIDC validation establishes identity trust, controlled linking protects local accounts, and TLS protects the Immich-to-IdP trust boundary.
-These controls are not sufficient in isolation. Security also depends on a trusted and correctly configured IdP, appropriate role-claim governance, secure automatic-registration settings, and use of a patched Immich version. The historical TLS and SSRF findings demonstrate why implementation verification remains necessary even when the architecture contains appropriate security mechanisms. 
+TBD
 
 ## 6. Security Configuration and Installation Documentation Review
 
