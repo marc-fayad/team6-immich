@@ -4,7 +4,7 @@
 
 - Christian Theisen
 - Adu
-- Marc
+- Marc Fayad
 - Matthew
 - Dillon
 
