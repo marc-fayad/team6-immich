@@ -593,9 +593,9 @@ However, AI suggestions required independent evaluation. AI can suggest security
 
 **Federated Identity:** Immich satisfies SR-OIDC-01, SR-OIDC-02, SR-OIDC-04, and SR-OIDC-05. OAuth state is validated and missing state is rejected, the callback requires a PKCE code verifier, an existing OAuth association is not silently replaced, and administrators control external account provisioning through the auto-register setting.
 
-**Administrative Controls:** SR-ADMIN TBD
+**Administrative Controls:** Immich sastisfies SR-ADMIN-01 through SR-ADMIN-04. Admin-only routes check the authenticated user's admin status, non-administrators receive a forbidden response and the denial is logged, authentication and session validity are set before the privilege check is ran, and security-sensitive user management operations (creating accounts, modifying accounts, resetting passwords, deleting accounts) are documented as admin functions.
 
-Altogether, the supported requirements cover the bulk of what the misuse-case analysis asked for. Identity is verified before access, access is checked against ownership rather than assumed, and shared content carries optional limits on who can see it and how long it can be seen.
+Altoghether, the supported requirements cover the bulk of what the misuse-case analysis asked for. Identity is verified before access, privilege is checked before admin functions execute, access to assets is checked against ownership, and shared content has optional limits on who can see them and how long they can be seen.
 
 ### 5.2 Partially Supported Security Requirements
 
@@ -617,7 +617,11 @@ Altogether, the supported requirements cover the bulk of what the misuse-case an
 
 ### 5.4 Sufficiency of Existing Security Features
 
-TBD
+The security features that Immich offer are mainly sufficient for the requirements this analysis produced. Of the requirements listed across five different interactions, the majority are supported by implemented features by Immich, and the rest are addressed in part. No requirement was found to be unsupported entirely. For a self-hosted, open-source project, the existence of centralized authorization, scoped API keys, session revocation, second authorization factor for sensitive media, and a full OIDC implementation make up for a stronger baseline than our team expected.
+
+The gaps that are left are mainly focused in defense-in-depth rather than primary controls. Immich is able to answer whether a user is allowed to see a certain asset, which was the main concern of the operational environment. The layer beneath that is not as complete. What happens when credentials or a session becomes compromised, and whether a control is enforced consistently across every path that returns sensitive assets. 
+
+Some of Immich's strongest protections are opt-in, including OIDC, disabling password loogin, shared-link passwords with expirations, and the Locked Folder, so a default installation of Immich that hasn't been configured is much weaker than one that has been configured. Immich's security features are sufficient for the Photography Studio as long as the operator enables the optional security controls, keeps the instance up to date, and supplies rate limiting and transport security that Immich leaves to the deployment.
 
 ## 6. Security Configuration and Installation Documentation Review
 
