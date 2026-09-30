@@ -727,11 +727,11 @@ https://github.com/apeprah1/Immich-OSS-Project-Proposal-/blob/OSS-Project-Propos
 
 
 
-TBD
+
 
 ### Marc
 
-TBD
+I was tasked with determining how Administrative Access and User Management are used and misused in Immich. Working on this assignment helped me better understand how use and misuse case analysis can be used to develop security requirements for real software. A user being successfully authenticated does not necessarily mean they should have access to administrative functions, so Immich must also verify that the user has administrator privileges before allowing those actions. After identifying how a normal studio user could attempt to access administrative functions, I looked at the security controls Immich uses to prevent this and then considered how those controls could still be misused, such as through a compromised administrator account. This helped me see how security requirements can be derived by repeatedly considering how an attacker might interact with both a feature and its protections.
 
 ### Matthew
 
