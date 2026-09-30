@@ -327,43 +327,73 @@ Overall, the protections identified in the misuse-case analysis are already repr
 
 #### Actors
 
-TBD
+**Photography Studio Administrator:** An administrative member of the five-person photography studio who has an existing Immich account and has the responsibility for administering the studio's Immich application. They can create accounts when employees join, reset passwords, configure user storage, and remove accounts when employees leave.
 
 #### Use Case Description
 
-TBD
+The **Administrative Access and User Management** use case represents a photography studio administrator managing the application through their account with elevated privileges. Using the administrative functions to manage user access to Immich within the photography studio, the designated Photography Studio Administrator is responsible for managing the accounts of the five staff members. The administrator can create new user accounts, modify existing user information, reset user passwords, configure user storage quotas, and remove users who should no longer have access to the system.
+
+These administrative functions are important to the studio because user accounts control access to client photos, albums, and other potentially sensitive information stored within Immich. Administrative user management functions should only be available to an authenticated user with the appropriate elevated administrator privileges. Regular studio users may access the Immich features permitted by their basic accounts but should not be able to perform administrative actions affecting other users.
 
 #### Initial Use Case
 
-TBD
+The initial use case focuses on the interaction between the **Photography Studio Administrator** and Immich's functionality to manage user accounts. The administrator accesses the administrative suite to manage the accounts of studio staff members, including creating accounts for new users, modifying existing accounts, resetting passwords, configuring storage quotas, and removing users who no longer require access.
+
+In the initial use case diagram, the **Photography Studio Administrator** is the primary actor and **Administrative Access and User Management** is the use case within the Immich system. At this point, the diagram represents only the intended administrative interaction and does not yet include any potential misuse or security threats.
 
 #### Misuser(s)
 
-TBD
+**Unauthorized Studio Member:** A photography studio employee who has a valid Immich account but does not have administrator privileges. This user has legitimate access to normal Immich functionalities but may attempt to gain unauthorized access to administrative functions. Their goal could include modifying another user's account, resetting passwords, creating unauthorized accounts, or deleting existing users.
+
+**Compromised-Admin Attacker:** An unauthorized individual who has obtained access to a valid **Photography Studio Administrator** account or authenticated administrative session. Because the attacker is operating through an account with legitimate administrator privileges, they may attempt to abuse Immich's user-management functionality to modify accounts, reset passwords, create unauthorized users, or remove legitimate studio users.
 
 #### Misuse Cases
 
-TBD
+**Perform Unauthorized User Administration:** An **Unauthorized Studio Member** attempts to access administrator-only user management functions despite having a non-administrative account. The user may attempt to create new accounts, modify other users, reset another user's password, or delete existing accounts. This misuse case threatens the **Administrative Access and User Management** use case because successful unauthorized access could allow a regular studio employee to alter who can access Immich and the studio's client data.
+
+**Abuse Compromised Administrator Access:** A **Compromised-Admin Attacker** uses access to a valid administrator account or authenticated administrative session to perform unauthorized user management actions. Because the compromised account possesses legitimate administrator privileges, the attacker may be able to create unauthorized accounts, modify existing users, reset passwords, or remove legitimate studio users. This misuse case threatens the **Administrative Access and User Management** use case by abusing legitimate administrative privileges rather than attempting to access the functionality through a non-administrative account.
 
 #### Security Countermeasures
 
-TBD
+**Verify Administrator Authorization:** Immich verifies that an authenticated user has administrator privileges before allowing access to administrator-only user management functionality. A regular studio member may have a valid Immich account, but authentication alone does not authorize the user to perform administrative actions. Immich must also verify the user's administrator status before allowing actions such as creating, modifying, or deleting other user accounts. This countermeasure mitigates **Perform Unauthorized User Administration**.
+
+**Deny Unauthorized Administrative Requests:** If an authenticated user without administrator privileges attempts to access an administrator-only function, Immich denies the request. This server-side authorization enforcement prevents a regular studio member from gaining administrative capabilities simply by attempting to directly access an administrative endpoint or bypass the normal user interface. This countermeasure further mitigates **Perform Unauthorized User Administration**.
+
+These authorization controls provide protection against users who lack administrator privileges. However, they do not fully mitigate **Abuse Compromised Administrator Access** because an attacker using a valid administrator account or authenticated administrator session may satisfy Immich's administrator authorization checks. This limitation requires further consideration during the iterative misuse-case analysis.
 
 #### Iterative Analysis
 
-TBD
+The initial misuse-case analysis identified that an Unauthorized Studio Member could attempt to access administrator-only user management functions. To address this misuse, **Verify Administrator Authorization** requires Immich to verify that the authenticated user has administrator privileges before allowing administrative actions. **Deny Unauthorized Administrative Requests** further protects the use case by rejecting administrative requests made by users who do not have the required privileges.
+
+After introducing these countermeasures, the analysis was repeated to determine whether the Manage User Accounts use case could still be misused. This identified **Abuse Compromised Administrator Access**. If an attacker obtains access to a legitimate administrator account or authenticated administrator session, the attacker may pass through Immich's administrator authorization checks and gain access to the same user management functions available to the actual administrator.
+
+This demonstrates that administrator authorization protects against authenticated users who lack the required privileges, but it depends on the security of the administrator's authentication and session. Immich's existing authentication and session controls therefore provide an additional layer of protection by requiring a valid authenticated session before administrator authorization is evaluated. The final use/misuse case diagram reflects both the initial authorization threat and the additional risk created when valid administrator access is compromised.
 
 #### Final Use/Misuse Case Diagram
 
-*Diagram to be added.*
+<img width="936" height="852" alt="administrative_access_user_management drawio" src="https://github.com/user-attachments/assets/b027c02b-0540-4099-8239-d0f3b23cdab5" />
+
 
 #### Derived Security Requirements
 
-TBD
+Based on the use/misuse case analysis, the following security requirements were derived for administrative access and user management:
+
+**SR-ADMIN-01 – Administrator Authorization:** Immich shall verify that an authenticated user has administrator privileges before permitting access to administrator-only user management functions.
+
+**SR-ADMIN-02 – Unauthorized Administrative Access Prevention:** Immich shall deny requests to perform administrator-only user management operations when the authenticated user does not possess administrator privileges.
+
+**SR-ADMIN-03 – Authentication and Session Validation:** Immich shall require a valid authenticated user session before evaluating and permitting access to administrative user management functionality.
+
+**SR-ADMIN-04 – Administrative Function Restriction:** Immich shall restrict security-sensitive user management operations, including creating users, modifying user accounts, resetting user passwords, and deleting users, to authorized administrators.
 
 #### Immich Implementation Evidence
 
-TBD
+| Requirement | Support | Immich Implementation Evidence |
+| --- | --- | --- |
+| **SR-ADMIN-01** | Supported | AuthService.authenticate() checks the authenticated user's isAdmin property when an administrator-only route is requested. |
+| **SR-ADMIN-02** | Supported | Immich logs denied access and returns Forbidden when a non-administrator attempts to access an administrator-only route. |
+| **SR-ADMIN-03** | Supported | Immich validates authentication before performing the administrator authorization check and maintains server-side session records associated with authenticated users.|
+| **SR-ADMIN-04** | Supported | Immich documents administrator functionality for creating users, resetting passwords, configuring user storage, and deleting users. |
 
 ---
 
