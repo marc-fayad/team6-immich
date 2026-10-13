@@ -6,8 +6,16 @@
 
 ## 1. Introduction and Operational Context
 
-TODO: Briefly describe Immich, the hypothetical operational
-environment, and the purpose of the assurance case.
+Immich is an open-source, self-hosted photo and video management application that allows users to upload, organize, store, and share digital media. Because Immich manages potentially sensitive personal and professional information, security assurance is an important consideration for organizations evaluating its adoption.
+
+For this assignment, Team 6 considers a hypothetical professional photography studio employing five staff members who use Immich to manage client photographs and videos. The studio operates a self-hosted Immich deployment consisting of web and mobile clients, an application server accessed through a reverse proxy, a PostgreSQL database, and file storage. Studio employees access the system to upload, organize, retrieve, and share client media, while an administrator manages the deployment and client recipients may receive access to selected assets through sharing functionality.
+
+The operational environment introduces several security concerns, including unauthorized account access, disclosure of private photographs, insecure network communication, unauthorized modification of stored data, and potential loss of media availability. A successful security incident could expose confidential client information, disrupt studio operations, or damage client trust.
+
+The purpose of this assurance case is to develop structured arguments supporting five critical security claims associated with Immich's use in this environment. Each claim is supported by an assurance argument, relevant rebutting defeaters, and planned evidence that stakeholders could evaluate when determining whether the application provides an acceptable level of security.
+
+This assignment is a trustworthiness planning exercise rather than a certification of Immich's current security. Planned evidence may include artifacts that are not currently available and would require additional testing, inspection, or documentation. The evidence alignment and gap analysis identifies these limitations and highlights the additional assurance activities necessary before an organizational adoption decision.
+
 
 ## 2. Top-Level Assurance Claims
 
