@@ -128,10 +128,13 @@ Immich protects stored user data from unauthorized disclosure
 or modification.
 
 ### Claim 5: Availability and Data Preservation
-**Owner:** TBD
+**Owner:** Matthew
 
-Immich maintains the availability and integrity of user data
-despite system failures or malicious activity.
+**Claim:** The studio's media library remains available to authorized users and is recoverable after accidental, malicious, or infrastructure-caused loss. 
+
+**Context:** A single-host Docker compose deployment on a Linux server that is on-premises, five staff members, local storage and offsite backup.
+
+**Importance:** This claim addresses whether assets can still exist and be served in the event of loss. For a photography studio, client work becomes unrecoverable once lost - a deleted photo shoot can't be reshot, and an instance that goes down during a deadline is a business failure even though no data was exposed. Immich also records file paths for assets in its database rather than scanning the library folder, so the database and stored files both need to survive and stay consistent for an asset to be retrievable, which makes data preservation the property of the system, not just the disk. The theats identified for this claim are denial of service, data loss, and ransomware. 
 
 ## 3. Assurance Case Arguments and Diagrams
 
@@ -225,13 +228,31 @@ TODO
 TODO: Insert diagram here.
 
 ### 3.5 Availability and Data Preservation
-**Owner:** TBD
+**Owner:** Matthew
+
+**C1:** The studio's media library remains available to authorized users and is recoverable after accidental, malicious, or infrastructure-caused loss. 
+
+**CT1:** A single-host Docker compose deployment on a Linux server that is on-premises, five staff members, local storage and offsite backup.
 
 #### Supporting Argument
-TODO
+
+**C2 - Recoverable Deletion:** Assets that were deleted in error can be recovered via the studio's review window. Deleted assets are placed in trash for a configurable retention period rather than permanently deleting them immediately, giving a studio member time to notice a mistaken deletion.
+
+**C3 - Recoverable Infrastructure Failure:** The library can be restored to working order after a host/storage failure. Database backups are created automatically and the manual process for backing up and restoring both the database and media libraries is documented, so a rebuilt host can be restored to the previous working state.
+
+**C4 - Durable Stored Assets:** Stored assets will remain intact and accounted for over time. Since Immich records file paths for assets in its database rather than scanning the library folder, the database and file system both need to survive and stay consistent for an asset to be retrievable.
+
+**C5 - Continuous Service:** Immich service remains usable during normal operation hours, peak ingest, and version upgrades. Background processing, storage capacity, and upgrades must not make the service unusable during normal studio activity.
 
 #### Rebutting Defeaters
-TODO
+
+**Against C2:**
+- **R1:** Unless the trash retention period expires before a deletion is noticed.
+- **R2:** Unless a deletion propagates to the backup copy before the next review.
+
+**Against C3:**
+- **R3:** Unless the backup covers the database but not the original files.
+- **R4:** 
 
 #### Planned Evidence
 TODO
