@@ -23,9 +23,10 @@ The following five claims address critical security properties
 of Immich in our assumed operational environment.
 
 ### Claim 1: Authentication and Account Access
+
 **Owner:** Christian Theisen
 
-Immich prevents unauthorized access to protected user accounts.
+Immich restricts access to photography studio user accounts to authenticated and authorized users.
 
 ### Claim 2: Photo/Video Access and Authorization
 
