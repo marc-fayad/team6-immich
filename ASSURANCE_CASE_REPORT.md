@@ -352,7 +352,7 @@ and pull requests.
 
 TODO: Add references to Immich documentation, source code,
 security resources, and relevant course materials.
-Team 6. Immich Use Case and Misuse Case Security Analysis. GitHub project analysis.
-Immich contributors. Immich open-source project. Official GitHub repository.
-Immich. Official documentation. Immich documentation.
+Team 6. Immich Use Case and Misuse Case Security Analysis. [GitHub project analysis.](https://github.com/marc-fayad/team6-immich/blob/main/USE_MISUSE_CASE_ANALYSIS.md)
+Immich contributors. Immich open-source project. Official GitHub repository. [https://github.com/immich-app/immich](https://github.com/immich-app/immich)
+Immich. Official documentation. [Immich documentation.https://docs.immich.app/overview/quick-start/](https://docs.immich.app/overview/quick-start/)
 
