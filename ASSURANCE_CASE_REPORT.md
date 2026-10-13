@@ -146,20 +146,97 @@ despite system failures or malicious activity.
 Each assurance case includes supporting claims, rebutting
 defeaters, and planned tangible evidence.
 
+
 ### 3.1 Authentication and Account Access
+
 **Owner:** Christian Theisen
 
+**Top-Level Claim (C1):** Immich restricts access to photography
+studio user accounts to authenticated and authorized users.
+
 #### Supporting Argument
-TODO
+
+The authentication assurance case builds on the team's previous
+authentication and login use-case and misuse-case analysis. That
+analysis identified the risk of unauthorized account access,
+particularly when an attacker possesses stolen or reused credentials.
+
+To establish confidence in the top-level claim, three supporting
+security properties must be demonstrated:
+
+**C1.1 — Credential Validation:**
+Immich rejects authentication attempts involving invalid credentials
+without granting access to protected user accounts.
+
+**C1.2 — Credential-Guessing Resistance:**
+Immich sufficiently restricts automated credential-guessing attempts
+to reduce the likelihood of unauthorized account access.
+
+**C1.3 — Session Invalidation:**
+Immich prevents expired or revoked authentication sessions from
+continuing to access protected user accounts.
+
+Together, these claims address initial authentication, resistance
+to repeated unauthorized login attempts, and continued account
+protection after a session becomes invalid.
 
 #### Rebutting Defeaters
-TODO
+
+The following rebutting defeaters identify circumstances that could
+undermine confidence in the supporting claims.
+
+**R1 — Stolen or Reused Credentials:**
+An attacker possessing valid stolen or reused credentials may
+successfully authenticate despite correct credential validation.
+
+**R2 — Credential-Guessing Bypass:**
+An attacker may bypass login attempt restrictions through repeated
+requests, distributed attempts, or alternative authentication
+endpoints.
+
+**R3 — Invalid Session Reuse:**
+Expired or revoked authentication tokens may remain usable if
+session invalidation is not consistently enforced.
+
+These rebuttals demonstrate why credential validation alone is
+insufficient to establish confidence in account security. Additional
+controls, testing, and operational safeguards are needed to address
+the identified risks.
 
 #### Planned Evidence
-TODO
+
+The following evidence artifacts are proposed to support the
+assurance argument. These artifacts represent planned verification
+activities and are not assertions that the tests have already passed.
+
+**E1 — Credential Validation Test Matrix**
+- Valid and invalid credential test cases
+- Authentication response records
+- Account access verification results
+
+**E2 — Credential-Guessing Resistance Test Report**
+- Repeated login attempt test results
+- Rate-limiting behavior records
+- Authentication endpoint coverage matrix
+
+**E3 — Session Invalidation Test Report**
+- Session expiration test results
+- Session revocation test records
+- Invalid token replay test results
+
+**E4 — Credential Compromise Assessment**
+- Stolen credential threat analysis
+- Multi-factor authentication capability assessment
+- Credential compromise response procedure
+
+Each proposed test report should identify the Immich version,
+deployment configuration, test procedures, expected results,
+observed results, and any unresolved security weaknesses.
 
 #### Assurance Case Diagram
-TODO: Insert diagram here.
+
+TODO: Insert completed authentication assurance case diagram.
+
 
 ### 3.2 Photo/Video Access and Authorization
 **Owner:** Adu
