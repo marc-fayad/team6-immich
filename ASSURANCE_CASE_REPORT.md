@@ -310,13 +310,55 @@ The evidence was partially aligned, and there are gaps which require further tes
 
 ### 5.1 Prompt Used
 
-TODO: Include an AI prompt used to improve assurance claims,
-identify rebutting defeaters, or refine evidence.
+ChatGPT was used to assist in evaluating and refining the Authentication and Account Access assurance claim. The following prompt was used to guide the analysis:
 
-### 5.2 Reflection on AI Usefulness
+> You are an expert software security engineer reviewing an assurance case for Immich, an open-source photo management application deployed in a professional photography studio.
+>
+> Evaluate the following top-level assurance claim:
+>
+> "Immich prevents unauthorized access to protected user accounts."
+>
+> Assess whether the claim identifies a relevant entity, expresses a critical security property, and provides a sufficiently clear assurance objective.
+>
+> Suggest improvements to the claim's wording. Then identify three supporting security claims, relevant rebutting defeaters that could undermine the argument, and tangible, measurable evidence needed to address those defeaters.
+>
+> Ensure that supporting claims describe security outcomes rather than specific technologies. Phrase all terminal evidence as noun phrases rather than statements asserting that security has already been demonstrated.
+>
+> Distinguish between evidence that may already exist in the Immich project and additional testing or documentation required to establish confidence in the claim.
 
-TODO: Discuss how AI assisted with the assurance case and
-identify limitations requiring human review.
+### 5.2 AI-Assisted Analysis
+
+The AI-assisted review suggested refining the original claim to better identify the relevant entity and security property.
+
+**Original Claim:**
+
+Immich prevents unauthorized access to protected user accounts.
+
+**Refined Claim:**
+
+Immich restricts access to photography studio user accounts to authenticated and authorized users.
+
+The analysis identified three supporting security claims:
+
+1. **Credential Validation:** Immich rejects invalid authentication credentials.
+2. **Credential-Guessing Resistance:** Immich limits automated credential-guessing attacks.
+3. **Session Invalidation:** Immich prevents invalidated sessions from accessing protected accounts.
+
+The analysis also identified potential rebutting defeaters, including the use of stolen or reused credentials, bypasses of login attempt restrictions, and continued use of revoked session tokens.
+
+Suggested evidence included authentication test reports, credential-validation test matrices, rate-limiting test results, and session-revocation test records. These are planned evidence artifacts rather than proof that the relevant security properties have already been verified.
+
+### 5.3 Reflection on AI Usefulness
+
+AI assistance was useful for improving the clarity and structure of the assurance argument. In particular, it helped distinguish between a security mechanism and the security outcome that stakeholders need to trust. The analysis emphasized that successful credential validation does not necessarily prevent unauthorized access when an attacker possesses stolen credentials.
+
+Another useful contribution was identifying reasons why the top-level claim could fail. Considering credential-guessing attacks and invalidated sessions helped expand the argument beyond basic username and password validation.
+
+AI also helped distinguish assurance claims from supporting evidence. While claims describe security properties that should hold, evidence must consist of tangible and measurable artifacts that can be independently evaluated.
+
+However, AI-generated suggestions do not establish that Immich currently satisfies these claims. Source-code inspection, documentation review, and security testing would still be required to verify the relevant security properties. The team must also evaluate whether the proposed evidence is sufficient for the photography studio's operational environment.
+
+Overall, AI was most useful as a brainstorming and review tool for strengthening assurance arguments, identifying potential weaknesses, and planning evidence collection. Human judgment remains necessary to evaluate the relevance, accuracy, and sufficiency of the proposed assurances.
 
 ## 6. Team Reflection
 
