@@ -257,7 +257,6 @@ Argument: Immich can assign private media when it assigns ownership authenticate
 
 #### Rebutting Defeaters
 
-Assurance Claim Analysis
 Proposed claim: “Canvas uses AES encryption.”
 Assessment: this is a bad assurance claim because it states a feature, not a critical property.
 Looking at the Good Claim Checklist, we have
@@ -265,14 +264,20 @@ Looking at the Good Claim Checklist, we have
 2. Critical property: although AES is mentioned, it does not explicitly state that it focuses on confidentiality or the ability to protect the information.
 3. Property value and uncertainty: it does not mention the required protection level or the associated risk.
 An improved claim would be “Canvas protects sensitive user information from being disclosed during storage and transmission.”
+
 2. Rebutting Defeaters Using Eliminative Induction
+   
 Assurance claim: “The login page has no exploitable SQL injection weakness.”
 Rebutting defeaters point out the ways this claim may be false.
-ID Rebutting Defeater
+
 R1 Unless user input is directly concatenated to the SQL query
+
 R2 Unless input validation can be bypassed
+
 R3 Unless authentication queries include injectable parameters
+
 R4 Unless error messages disclose information about SQL queries
+
 R5 Unless an untested login endpoint contains an SQL injection vulnerability
 
 #### Planned Evidence
