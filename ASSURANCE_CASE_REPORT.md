@@ -470,7 +470,15 @@ Overall, AI was most useful as a brainstorming and review tool for strengthening
 
 ### 6.1 Individual Reflections
 
-**Christian Theisen:** TODO
+**Christian Theisen:**
+
+For this assignment, I was responsible for developing the Authentication and Account Access assurance case for Immich. I refined the top-level security claim, identified supporting claims, examined potential rebutting defeaters, and developed an assurance case diagram showing how the claims relate to proposed security evidence.
+
+One of the most important things I learned was that implementing authentication controls does not automatically guarantee that a system is secure. For example, validating credentials may prevent unauthorized login attempts, but it does not necessarily protect against attackers using stolen credentials. This helped me better understand the importance of identifying circumstances that could invalidate a security claim.
+
+I also gained a better understanding of how evidence supports an assurance argument. Developing the diagram required me to distinguish between security claims, rebuttals, undermining defeaters, and tangible evidence. The evidence alignment and gap analysis reinforced that proposed test reports are not equivalent to verified security results.
+
+Overall, this assignment helped me understand how structured assurance cases can be used to evaluate software security and identify areas requiring additional verification before an organization can confidently adopt a system.
 
 **Adu:** 
 
