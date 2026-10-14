@@ -196,6 +196,7 @@ TODO: Insert diagram here.
 
 ### 3.3 Network Communication Security
 **Owner:** Marc
+
 **Top-Level CLaim (NC0):** Immich protects sensitive information from unauthorized disclosure or modification during network communication.
 
 #### Supporting Argument
