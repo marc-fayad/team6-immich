@@ -635,8 +635,13 @@ My part of this assignment focused on stored data security, specifically protect
 
 ### 6.2 Combined Team Reflection
 
-TODO: Summarize what the team learned and found most useful
-while developing the assurance cases.
+Throughout the development of the Immich software assurance cases, our team gained a deeper understanding of how security claims, supporting arguments, rebutting defeaters, and evidence work together to establish confidence in a software system. One of our most important takeaways was recognizing that the presence of security features does not automatically guarantee that a system is secure. Security properties must be evaluated through measurable evidence, testing, and consideration of potential weaknesses.
+
+By examining authentication and account access, photo and video authorization, stored data security, and availability and data preservation, we identified how different security concerns require different assurance approaches. Our analysis highlighted risks involving compromised credentials, unauthorized access to private media, insufficient storage permissions, and incomplete backup and recovery procedures. We also learned that an application's security depends not only on its implementation but also on how it is configured, deployed, and maintained.
+
+Developing the assurance case diagrams helped us organize our arguments and identify circumstances that could undermine our claims. The evidence alignment and gap analysis was particularly valuable because it required us to distinguish between existing security mechanisms and evidence that would still need to be collected through testing or inspection.
+
+Overall, this assignment reinforced the importance of structured security reasoning, collaboration, and evidence-based evaluation. Our team gained a better appreciation for how assurance cases can help stakeholders identify security risks, prioritize additional verification activities, and make informed decisions about adopting open-source software such as Immich.
 
 ## 7. GitHub Collaboration
 
@@ -651,9 +656,11 @@ and pull requests.
 
 ## 8. References
 
-TODO: Add references to Immich documentation, source code,
-security resources, and relevant course materials.
-Team 6. Immich Use Case and Misuse Case Security Analysis. [GitHub project analysis.](https://github.com/marc-fayad/team6-immich/blob/main/USE_MISUSE_CASE_ANALYSIS.md)
-Immich contributors. Immich open-source project. Official GitHub repository. [https://github.com/immich-app/immich](https://github.com/immich-app/immich)
-Immich. Official documentation. [Immich documentation.https://docs.immich.app/overview/quick-start/](https://docs.immich.app/overview/quick-start/)
+1. Team 6. *Immich Use Case and Misuse Case Security Analysis.*
+   [GitHub Project Analysis](https://github.com/marc-fayad/team6-immich/blob/main/USE_MISUSE_CASE_ANALYSIS.md).
 
+2. Immich Contributors. *Immich — Open-Source Photo and Video Management.*
+   [Official GitHub Repository](https://github.com/immich-app/immich).
+
+3. Immich. *Official Documentation — Quick Start.*
+   [Immich Documentation](https://docs.immich.app/overview/quick-start/).
