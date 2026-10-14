@@ -196,25 +196,29 @@ TODO: Insert diagram here.
 
 ### 3.3 Network Communication Security
 **Owner:** Marc
+**Top-Level CLaim (NC0):** Immich protects sensitive information from unauthorized disclosure or modification during network communication.
 
 #### Supporting Argument
 
-Sensitive information communicated by Immich includes photographs, videos, associated metadata, login credentials, and session tokens. Supporting the top-level claim requires assurance that this information remains confidential and retains its integrity across public connections and internal service communication.
+Sensitive information communicated by Immich includes photographs, videos, metadata, login credentials, and session tokens. This is important because supporting the top-level claim requires assurance that this information remains confidential and retains its integrity across public connections and internal service communication.
 
-First, public communication paths must protect sensitive information against interception. This includes login requests, uploads, downloads, API requests, and shared-link access. Every public route carrying sensitive information must require encrypted transport, and clients must be unable to bypass the protected entry point through a directly exposed backend endpoint.
-Second, clients must be able to establish that they are communicating with the intended server. An encrypted connection would not adequately protect information if an attacker could impersonate the server. Supported clients must therefore reject invalid server identities. Protected connections must also detect and reject alterations to transmitted data before the application accepts the modified information.
-
-Finally, internal communication must receive appropriate protection. Backend services must be inaccessible to unauthorized systems, and sensitive information exchanged between services must remain protected against interception and modification. Network isolation reduces exposure, but additional transport protection is necessary wherever isolation alone cannot adequately address the identified threats.
-Together, these arguments address unauthorized disclosure and modification across the relevant communication paths. Confidence in the top-level claim increases when testing eliminates the identified reasons for doubt.
+First, public communication paths must protect sensitive information against interception. This includes login requests, uploads, downloads, API requests, and shared-link access. Second, clients must be able to establish that they are communicating with the intended server. An encrypted connection would not adequately protect information if an attacker could impersonate the server. Finally, internal communication must receive appropriate protection. Backend services must be inaccessible to unauthorized systems, and sensitive information exchanged between services must remain protected against interception and modification. 
 
 #### Rebutting Defeaters
-TODO
+**R1** - Unless a public route exposes sensitive information in plaintext.
+**R2** - Unless an attacker impersonates the server or modifies transmitted information.
+**R3** - Unless an attacker intercepts or modifies internal service traffic.
 
 #### Planned Evidence
-TODO
+**E1** - Public-route transport test report | Tests covering login, uploads, downloads, API requests, and shared links.
+**E2** - Public entry-point bypass test report | Connection attempts against public IPv4 and IPv6 addresses, alternate ports, and direct backend endpoints.
+**E3** - Client certificate-validation test report | Tests of supported browser and mobile clients using expired, untrusted, and hostname-mismatched certificates.
+**E4** - Transport integrity and tampering test report | Controlled attempts to alter protected traffic in transit.
+**E5** - Internal service access and network isolation test report | An approved service communication matrix and connectivity tests from authorized and unauthorized network locations.
+**E6** - Internal traffic confidentiality and integrity test report | An inventory of documentation of sensitive internal data flows, their protection mechanisms, and controlled interception and modification tests.
 
 #### Assurance Case Diagram
-TODO: Insert diagram here.
+<img width="1915" height="1058" alt="image" src="https://github.com/user-attachments/assets/8acb16a4-2bbd-4d84-89cb-a38676f16dac" />
 
 ### 3.4 Stored Data Security
 **Owner:** Dillon 
