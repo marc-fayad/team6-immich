@@ -236,7 +236,7 @@ observed results, and any unresolved security weaknesses.
 
 #### Assurance Case Diagram
 
-TODO: Insert completed authentication assurance case diagram.
+![Authentication and Account Access Assurance Case](authentication-assurance-case.png)
 
 
 ### 3.2 Photo/Video Access and Authorization
