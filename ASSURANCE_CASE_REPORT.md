@@ -336,11 +336,34 @@ Assess whether planned evidence is available from Immich,
 could be collected, or requires additional assurance activities.
 
 ### 4.1 Authentication and Account Access
+
 **Owner:** Christian Theisen
 
-- Available evidence: TODO
-- Evidence requiring collection: TODO
-- Identified gaps: TODO
+#### Available Evidence
+
+The team's previous use-case and misuse-case analysis provides a starting point for evaluating authentication security in Immich. The analysis identifies legitimate login behavior, unauthorized account access scenarios, and the risks associated with stolen or reused credentials.
+
+Immich's publicly available source code and documentation provide resources for further examination of authentication and session-management functionality. However, these resources alone do not establish that the security claims have been fully verified.
+
+#### Evidence Requiring Collection
+
+The following evidence artifacts are proposed to evaluate the authentication assurance claims:
+
+- **E1 — Authentication Test Report:** Results from valid, invalid, and unauthorized authentication attempts.
+- **E2 — Credential-Validation Test Matrix:** Coverage of valid, invalid, malformed, and edge-case credential scenarios.
+- **E3 — Compromised-Credential Security Test Report:** Assessment of stolen or reused credentials and account compromise safeguards.
+- **E4 — Login Rate-Limiting Test Results:** Verification of restrictions against repeated or automated authentication attempts.
+- **E5 — Session Revocation Test Results:** Verification that expired or revoked sessions cannot continue accessing protected accounts.
+
+#### Identified Gaps
+
+The primary assurance gap is the absence of independently verified test results demonstrating that all authentication controls operate as intended in the photography studio's deployment.
+
+Credential validation alone cannot prevent unauthorized access when an attacker possesses valid stolen credentials. Additional verification is required to determine whether automated login restrictions can be bypassed and whether expired or revoked sessions remain usable.
+
+The assurance case also identifies a potential limitation in authentication test coverage, represented by undermining defeater UM1. Supporting claim C1.7 requires further development to establish that testing adequately covers unauthorized-access scenarios and relevant edge cases.
+
+Until these evidence gaps are addressed through testing and review, the authentication claims should be considered assurance objectives rather than fully verified security guarantees.
 
 ### 4.2 Photo/Video Access and Authorization
 **Owner:** Adu
