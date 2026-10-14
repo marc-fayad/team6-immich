@@ -128,10 +128,9 @@ Immich protects stored user data from unauthorized disclosure
 or modification.
 
 ### Claim 5: Availability and Data Preservation
-**Owner:** TBD
+**Owner:** Matthew
 
-Immich maintains the availability and integrity of user data
-despite system failures or malicious activity.
+Immich maintains the availability and integrity of user data despite system failures or malicious activity.
 
 ## 3. Assurance Case Arguments and Diagrams
 
@@ -253,19 +252,68 @@ The expected result is that unauthorized access and modification attempts are de
 <img width="720" height="768" alt="image" src="https://github.com/user-attachments/assets/09c6df03-c68e-44d8-91fd-8f472c7584d1" />
 
 ### 3.5 Availability and Data Preservation
-**Owner:** TBD
+**Owner:** Matthew
+
+**Top-Level Claim (C1)** Immich maintains the availability and integrity of user data despite system failures or malicious activity.
+
+**Context** A single-host Docker compose deployment on a Linux server that is on-premises, five staff members, local storage and offsite backup.
 
 #### Supporting Argument
-TODO
+
+**C2 - Recoverable Deletion:** Assets that were deleted in error can be recovered via the studio's review window. Deleted assets are placed in trash for a configurable retention period rather than permanently deleting them immediately, giving a studio member time to notice a mistaken deletion.
+
+**C3 - Recoverable Infrastructure Failure:** The library can be restored to working order after a host/storage failure. Database backups are created automatically and the manual process for backing up and restoring both the database and media libraries is documented, so a rebuilt host can be restored to the previous working state.
+
+**C4 - Durable Stored Assets:** Stored assets will remain intact and accounted for over time. Since Immich records file paths for assets in its database rather than scanning the library folder, the database and file system both need to survive and stay consistent for an asset to be retrievable.
+
+**C5 - Continuous Service:** Immich service remains usable during normal operation hours, peak ingest, and version upgrades. Background processing, storage capacity, and upgrades must not make the service unusable during normal studio activity.
 
 #### Rebutting Defeaters
-TODO
+
+**R1 - Expired Recovery Window:** A mistaken deletion could become permanent if the trash retention period as well as backup version history both lapse before the deletion is noticed by the user.
+
+**R2 - Incomplete Backup Coverage:** A backup could protect the database while forgetting the original media files, or it may store both on the same storage volume as the live library, rendering both unrecoverable after a disk failure or a ransomware event.
+
+**R3 - Unverified Restore Capability:** A backup set might be unusable if it has never been restored, or if the restore was used against a dataset that is smaller than the production library.
+
+**R4 - Undetected Data Divergence:** Stored media files may be lost, corrupted, or separated from their database records without being detected, because Immich resolves assets via the recorded file paths instead of scanning the library folder.
+
+**R5 - Service Interruption Under Load or Upgrade:** The Immich instance could become unusable during bulk ingest, a failed version update, or an outage, making the library unavailable to be used even through no data was lost.
+
+These rebuttals show why the presence of a backup feature is not sufficient on its own to establish confidence in availability and data preservation. Coverage, verification, isolation, and consistent monitoring are also required to address the risks identified.
 
 #### Planned Evidence
-TODO
+
+**E1 - Recovery Window Configuration Record**
+- Trash retention setting export from administration settings
+- Backup version listing from the offsite target
+- Deletion to Recovery timing records from recovery drill
+  
+**E2 - Backup Coverage Report**
+- Backup job manifest that lists the database dump and each media directory
+- File-count and byte-count comparison between the source and the backup
+- Offsite target config export that shows storage location, version, and object-lock setting
+
+**E3 - Restore Drill Report**
+- Restore duration records from a clean-instance restore
+- Post-restore asset count reconciliation results
+- Drill dataset size record relative to production library
+
+**E4 - Storage Integrity Verification Report**
+- Checksum comparison output between stored files and the database records
+- Missing-file and orphaned-file listings
+- Storage template migration job logs
+
+**E5 - Availability and Upgrade Test Report
+- Host resource utilization measurements from a bulk-upload load test
+- Staging upgrade rehearsal records, including the pre-upgrade database dump inventory
+- Uptime monitoring records from external health probe
+
+Each of the proposed reports should identify the Immich version, deployment configuration, the backup target, test procedures, expected and observed results, and any unresolved availability or preservation weaknesses.
 
 #### Assurance Case Diagram
-TODO: Insert diagram here.
+
+![Availability and Data Preservation Assurance Case Diagram](data-preservation-assurance-diagram.drawio.png)
 
 ## 4. Evidence Alignment and Gap Analysis
 
@@ -338,11 +386,47 @@ Of the five planned evidence items, E3 has the clearest starting point in Immich
 Immich provides a useful foundation for protecting stored data, but additional testing would be needed before the studio could confidently accept the Stored Data Security claim.
 
 ### 4.5 Availability and Data Preservation
-**Owner:** TBD
+**Owner:** Matthew
 
-- Available evidence: TODO
-- Evidence requiring collection: TODO
-- Identified gaps: TODO
+**Available Evidence**
+
+**E1 - Recovery Window Configuration Record:** The trash retention setting is available in the admin settings and can be exported as configuration evidence. Immich also supports deletion-to-recovery timing, since trashed assets are restorable through the web interface for the set period.
+
+**E2 - Backup Coverage:** Backup Coverage Report is partially available. Immich automatically creates database backups that are stored in `UPLOAD_LOCATION/backups`, keeping the last 14 by default and running them daily at 2:00 AM, with both the schedule and the retention count adjustable in the admin settings. A backup can also be triggered on demand from the job status page. 
+
+**E3 - Restore Drill Report:** This is supported by Immich's restore tooling. Since Immich version 2.5.0, database backups can be restored from the web interface and Immich creates a restore point before that and rolls back automatically if the restore fails, making a drill low-risk to run against the production instance. Restore duration is observable from this process
+
+**E4 - Storage Integrity Verification Report:** This is also partially available, as storage template migration job logs are recorded on the job status page. Immich also stores a checksum of each asset for duplicate detection, so the reference values needed for checksum comparison already exist in the database
+
+**E5 - Availability and Upgrade Test Report:** Also partially available. Immich publishes release notes and migration documentation that identifies any breaking changes between version, which supports the requirement of staging upgrade rehearsal records.
+
+The Backup Procedure is also documented, including an explicit warning that a copy of the data folder does not make up a backup of the database.
+
+**Evidence Requiring Collection**
+
+**E1:** Backup version listing depends on the chosen offsite storage target. Deletion-to-Recovery timing record requires an actual drill. Immich doesn't log how long a deleted asset sat before it was restored
+
+**E2:** The media-directory portion, file-count and byte-count comparison, and offsite config export all come from backup tooling that the studio selects. Immich will backup just the database.
+
+**E3:** Post-restore asset count reconciliation requires running a script comparing the database rows against the files on disk. The drill dataset size record requires a full-size copy of the production library in a testing environment.
+
+**E4:** Running the checksum comparison and the missing-file and orphaned-file listings requires tooling that the studio builds. 
+
+**E5:** Host resource utilization measurements require a monitored load test, and uptime records require using an external health probe against the server. Neither of these is produced by Immich.
+
+**Identified Gaps**
+
+**File System Backups:** Immich states that it doesn't handle backing up the file system, so the original media, the only asset the studio can't regenerate, is the responsibility of the operator.
+
+**Automatic Backups:** Database backups that are written to `UPLOAD_LOCATION/backups` are written in the same storage volume as the library. A disk failure or ransomware attack will lead to the destruction of both copies. 
+
+**No Integrity Verification:** Immich doesn't perform any scheduled checks that files recorded in the database still exist/match their stored checksums. Because assets are resolved from recorded paths instead of scanning the library, files lost at the file system level are declared a broken asset instead of a detected error. Since there is no answer to R4 provided by the project, E4 is solely a collection activity.
+
+**No Availability Engineering:** Immich doesn't provide any clustering, failover, or replication, and the project has no uptime figures or service-level commitment. C5 depends completely on the hardware and monitoring of the photography studio.
+
+**No Restore Verification:** Immich can perform a restore to roll back a failed instance, but it doesn't verify that the restored instance matches the original. The Reconciliation listed in E3 is still a manual operation.
+
+Overall, the project-provided evidence for Availability and Data Preservation is pretty weak, but for a good reason. Availability and Preservation are properties of deployment, and Immich is an application, not a managed service. The project can supply the recovery mechanisms like trash retention, database backups and documented procedures, but the studio must supply backup destinations, verification processes, and monitoring, meaning this claim can't be judged from the Immich project alone but by the performance of a specific deployment. 
 
 ## 5. AI-Assisted Assurance Case Development
 
@@ -378,7 +462,7 @@ My part of this assignment focused on stored data security, specifically protect
 
 **Marc:** TODO
 
-**Matthew:** TODO
+**Matthew:** For this deliverable I was tasked with handling the assurance case for availability and data preservation. I felt like this assignment was a bit tougher than the use/misuse case assignment, because I had to really take into account what Immich actually provides and what features the operator has to provide that are outside the scope of the Immich application. Immich provides solid recovery mechanisms, but it doesn't back up the original media files or verify that stored files match their database records, and it writes database backups on the same storage volume as the library by default, which led me to the understanding that the assurance of the claim I handled can't be judged by the Immich application on its own but by the recovery procedures of the operator and their deployment of Immich. 
 
 ### 6.2 Combined Team Reflection
 
