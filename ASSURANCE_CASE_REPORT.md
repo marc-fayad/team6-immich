@@ -213,16 +213,44 @@ TODO: Insert diagram here.
 **Owner:** Dillon 
 
 #### Supporting Argument
-TODO
+
+The top-level claim is that Immich protects the studio's stored photos, videos, and metadata from unauthorized disclosure or modification. This is important because the five-person photography studio would be storing private client media and information in a self-hosted environment.
+
+The argument focuses on two areas: preventing unauthorized access to stored files and preventing unauthorized changes to stored data. File storage permissions and application-level authorization should prevent users from retrieving private files without permission. The system must also prevent unauthorized modifications to stored photos, videos, and database records.
 
 #### Rebutting Defeaters
-TODO
+
+    R1: Unless unauthorized users can retrieve private stored files.
+
+    R2: Unless storage permissions allow unauthorized file access.
+
+    R3: Unless application authorization checks can be bypassed.
+
+    R4: Unless unauthorized changes can be made to stored data.
+
+These rebuttals identify ways the top-level claim could fail. Even if Immich checks permissions through its application, incorrect storage permissions or database privileges could still expose the studio's information.
 
 #### Planned Evidence
-TODO
+
+The following five evidence items would be needed to support the claim:
+
+    E1: Storage Permission Audit Results
+
+    E2: File Access Restriction Test Results
+
+    E3: Unauthorized Asset Access Test Results
+
+    E4: Unauthorized Modification Test Results
+
+    E5: Database Modification Authorization Test Results
+
+For E1 and E2, the studio would inspect file permissions and attempt unauthorized access directly through the storage environment. E3 would involve requesting private assets using accounts that do not have permission. E4 and E5 would test whether unauthorized users can change stored media or database records.
+
+The expected result is that unauthorized access and modification attempts are denied. Test reports should record the deployment configuration, attempted actions, expected outcomes, and actual results.
 
 #### Assurance Case Diagram
-TODO: Insert diagram here.
+
+<img width="720" height="768" alt="image" src="https://github.com/user-attachments/assets/09c6df03-c68e-44d8-91fd-8f472c7584d1" />
 
 ### 3.5 Availability and Data Preservation
 **Owner:** TBD
@@ -287,9 +315,27 @@ The evidence was partially aligned, and there are gaps which require further tes
 ### 4.4 Stored Data Security
 **Owner:** Dillon 
 
-- Available evidence: TODO
-- Evidence requiring collection: TODO
-- Identified gaps: TODO
+**Available Evidence**
+
+Immich's open-source code includes asset access controls and automated tests for some media operations. These provide a starting point for evaluating whether private files can be accessed without permission. However, application-level authorization does not prove that the studio's actual file storage and database are properly secured.
+
+**Evidence Requiring Collection**
+
+| Evidence | Additional Verification Needed |
+|---|---|
+| E1 – Storage Permission Audit Results | Review file and directory permissions in the studio's deployment. |
+| E2 – File Access Restriction Test Results | Attempt direct file access using unauthorized operating-system accounts or services. |
+| E3 – Unauthorized Asset Access Test Results | Review existing authorization tests and attempt unauthorized asset requests through the API. |
+| E4 – Unauthorized Modification Test Results | Attempt unauthorized changes to stored photos and videos. |
+| E5 – Database Modification Authorization Test Results | Review database privileges and attempt unauthorized changes to stored metadata. |
+
+**Identified Gaps**
+
+The biggest gap is that Immich's implementation does not automatically prove that a particular self-hosted deployment is secure. Incorrect file permissions, exposed storage volumes, or excessive database privileges could create security problems even when application authorization works correctly.
+
+Of the five planned evidence items, E3 has the clearest starting point in Immich's existing automated tests. The other evidence items require additional inspection or testing, particularly against the studio's own configuration. We have not performed those deployment-specific tests, so the results cannot yet be treated as verified evidence.
+
+Immich provides a useful foundation for protecting stored data, but additional testing would be needed before the studio could confidently accept the Stored Data Security claim.
 
 ### 4.5 Availability and Data Preservation
 **Owner:** TBD
@@ -326,7 +372,9 @@ The part of this assignment that I enjoyed doing the most was comparing the prop
 In general, this assignment was highly edifying and improved my knowledge of security assurance, evidence, and rebuttals. In particular, I now know how to determine if an open-source application can satisfy the security requirements of an organization before it is deployed in a production environment.
 
 
-**Dillon:** TODO
+**Dillon:**
+
+My part of this assignment focused on stored data security, specifically protecting photos, videos, and metadata from unauthorized access or modification. One thing I learned was that having security features in the application does not necessarily mean the stored data is fully protected. File permissions, database access, and how the system is deployed all matter. The most challenging part was figuring out how to connect the security claim to specific evidence instead of just describing what Immich is supposed to do. Creating the diagram helped me break the claim into smaller parts and identify what would actually need to be tested. The evidence gap analysis also showed me why reviewing source code alone is not enough to prove a system is secure. Overall, this assignment helped me better understand how assurance cases can be used to evaluate an open-source application before an organization decides to rely on it.
 
 **Marc:** TODO
 
