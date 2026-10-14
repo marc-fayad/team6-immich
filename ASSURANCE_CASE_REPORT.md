@@ -116,7 +116,7 @@ The proposed assurance case contains four high-risk security claims for Immichâ€
 
 
 ### Claim 3: Network Communication Security
-**Owner:** TBD
+**Owner:** Marc
 
 Immich protects sensitive information from unauthorized
 disclosure or modification during network communication.
@@ -195,10 +195,17 @@ TODO: Insert diagram here.
 <img width="1069" height="304" alt="image" src="https://github.com/user-attachments/assets/d245eaf1-4775-4202-855a-20ec7ac21e10" />
 
 ### 3.3 Network Communication Security
-**Owner:** TBD
+**Owner:** Marc
 
 #### Supporting Argument
-TODO
+
+Sensitive information communicated by Immich includes photographs, videos, associated metadata, login credentials, and session tokens. Supporting the top-level claim requires assurance that this information remains confidential and retains its integrity across public connections and internal service communication.
+
+First, public communication paths must protect sensitive information against interception. This includes login requests, uploads, downloads, API requests, and shared-link access. Every public route carrying sensitive information must require encrypted transport, and clients must be unable to bypass the protected entry point through a directly exposed backend endpoint.
+Second, clients must be able to establish that they are communicating with the intended server. An encrypted connection would not adequately protect information if an attacker could impersonate the server. Supported clients must therefore reject invalid server identities. Protected connections must also detect and reject alterations to transmitted data before the application accepts the modified information.
+
+Finally, internal communication must receive appropriate protection. Backend services must be inaccessible to unauthorized systems, and sensitive information exchanged between services must remain protected against interception and modification. Network isolation reduces exposure, but additional transport protection is necessary wherever isolation alone cannot adequately address the identified threats.
+Together, these arguments address unauthorized disclosure and modification across the relevant communication paths. Confidence in the top-level claim increases when testing eliminates the identified reasons for doubt.
 
 #### Rebutting Defeaters
 TODO
