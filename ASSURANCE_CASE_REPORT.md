@@ -210,25 +210,30 @@ The following evidence artifacts are proposed to support the
 assurance argument. These artifacts represent planned verification
 activities and are not assertions that the tests have already passed.
 
-**E1 — Credential Validation Test Matrix**
-- Valid and invalid credential test cases
+**E1 — Authentication Test Report**
+- Valid and invalid authentication test cases
 - Authentication response records
-- Account access verification results
+- Unauthorized account access test results
 
-**E2 — Credential-Guessing Resistance Test Report**
-- Repeated login attempt test results
-- Rate-limiting behavior records
-- Authentication endpoint coverage matrix
+**E2 — Credential-Validation Test Matrix**
+- Valid, invalid, and malformed credential scenarios
+- Expected and observed authentication responses
+- Authentication endpoint coverage
 
-**E3 — Session Invalidation Test Report**
-- Session expiration test results
-- Session revocation test records
-- Invalid token replay test results
+**E3 — Compromised-Credential Security Test Report**
+- Stolen or reused credential scenarios
+- Account compromise response testing
+- Assessment of additional authentication safeguards
 
-**E4 — Credential Compromise Assessment**
-- Stolen credential threat analysis
-- Multi-factor authentication capability assessment
-- Credential compromise response procedure
+**E4 — Login Rate-Limiting Test Results**
+- Repeated authentication attempt tests
+- Rate-limiting enforcement and bypass scenarios
+- Automated credential-guessing resistance results
+
+**E5 — Session Revocation Test Results**
+- Session expiration and revocation tests
+- Invalidated token replay attempts
+- Verification of protected account access denial
 
 Each proposed test report should identify the Immich version,
 deployment configuration, test procedures, expected results,
