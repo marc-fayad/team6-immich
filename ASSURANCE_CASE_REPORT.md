@@ -340,7 +340,7 @@ The evidence was partially aligned, and there are gaps which require further tes
 - Identified gaps: TODO
 
 ### 4.5 Availability and Data Preservation
-**Owner:** TBD
+**Owner:** Matthew
 
 **Available Evidence**
 
