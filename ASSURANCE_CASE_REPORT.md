@@ -493,7 +493,7 @@ The evidence was partially aligned, and there are gaps which require further tes
 
 
 ### 4.3 Network Communication Security
-**Owner:** TBD
+**Owner:** Marc
 
 **- Available evidence:**
 Immich’s official documentation describes HTTPS access through a reverse proxy and provides example proxy configurations. Its remote-access guidance also explains the use of certificates for HTTPS connections. These provide a starting point for evaluating the protection of sensitive information during public network communication. However, documentation and example configurations do not prove that the studio’s actual deployment prevents unauthorized disclosure or modification.
@@ -683,7 +683,7 @@ While working on my section, I learned more about the importance of protection o
 
 Throughout the development of the Immich software assurance cases, our team gained a deeper understanding of how security claims, supporting arguments, rebutting defeaters, and evidence work together to establish confidence in a software system. One of our most important takeaways was recognizing that the presence of security features does not automatically guarantee that a system is secure. Security properties must be evaluated through measurable evidence, testing, and consideration of potential weaknesses.
 
-By examining authentication and account access, photo and video authorization, stored data security, and availability and data preservation, we identified how different security concerns require different assurance approaches. Our analysis highlighted risks involving compromised credentials, unauthorized access to private media, insufficient storage permissions, and incomplete backup and recovery procedures. We also learned that an application's security depends not only on its implementation but also on how it is configured, deployed, and maintained.
+By examining authentication and account access, photo and video authorization, network communication security, stored data security, and availability and data preservation, we identified how different security concerns require different assurance approaches. Our analysis highlighted risks involving compromised credentials, unauthorized access to private media, interception or modification of network traffic, insufficient storage permissions, and incomplete backup and recovery procedures. We also learned that an application's security depends not only on its implementation but also on how it is configured, deployed, and maintained.
 
 Developing the assurance case diagrams helped us organize our arguments and identify circumstances that could undermine our claims. The evidence alignment and gap analysis was particularly valuable because it required us to distinguish between existing security mechanisms and evidence that would still need to be collected through testing or inspection.
 
