@@ -125,7 +125,7 @@ The proposed assurance case contains four high-risk security claims for Immich�
 
 
 ### Claim 3: Network Communication Security
-**Owner:** TBD
+**Owner:** Marc
 
 Immich protects sensitive information from unauthorized
 disclosure or modification during network communication.
@@ -290,19 +290,39 @@ TODO: Insert diagram here.
 <img width="1069" height="304" alt="image" src="https://github.com/user-attachments/assets/d245eaf1-4775-4202-855a-20ec7ac21e10" />
 
 ### 3.3 Network Communication Security
-**Owner:** TBD
+**Owner:** Marc
+
+**Top-Level CLaim (NC0):** Immich protects sensitive information from unauthorized disclosure or modification during network communication.
 
 #### Supporting Argument
-TODO
+
+Sensitive information communicated by Immich includes photographs, videos, metadata, login credentials, and session tokens. This is important because supporting the top-level claim requires assurance that this information remains confidential and retains its integrity across public connections and internal service communication.
+
+First, public communication paths must protect sensitive information against interception. This includes login requests, uploads, downloads, API requests, and shared-link access. Second, clients must be able to establish that they are communicating with the intended server. An encrypted connection would not adequately protect information if an attacker could impersonate the server. Finally, internal communication must receive appropriate protection. Backend services must be inaccessible to unauthorized systems, and sensitive information exchanged between services must remain protected against interception and modification. 
 
 #### Rebutting Defeaters
-TODO
+**R1** - Unless a public route exposes sensitive information in plaintext.
+
+**R2** - Unless an attacker impersonates the server or modifies transmitted information.
+
+**R3** - Unless an attacker intercepts or modifies internal service traffic.
 
 #### Planned Evidence
-TODO
+**E1** - Public-route transport test report | Tests covering login, uploads, downloads, API requests, and shared links.
+
+**E2** - Public entry-point bypass test report | Connection attempts against public IPv4 and IPv6 addresses, alternate ports, and direct backend endpoints.
+
+**E3** - Client certificate-validation test report | Tests of supported browser and mobile clients using expired, untrusted, and hostname-mismatched certificates.
+
+**E4** - Transport integrity and tampering test report | Controlled attempts to alter protected traffic in transit.
+
+**E5** - Internal service access and network isolation test report | An approved service communication matrix and connectivity tests from authorized and unauthorized network locations.
+
+**E6** - Internal traffic confidentiality and integrity test report | An inventory of documentation of sensitive internal data flows, their protection mechanisms, and controlled interception and modification tests.
+
 
 #### Assurance Case Diagram
-TODO: Insert diagram here.
+<img width="1915" height="1058" alt="image" src="https://github.com/user-attachments/assets/8acb16a4-2bbd-4d84-89cb-a38676f16dac" />
 
 ### 3.4 Stored Data Security
 **Owner:** Dillon 
@@ -475,9 +495,33 @@ The evidence was partially aligned, and there are gaps which require further tes
 ### 4.3 Network Communication Security
 **Owner:** TBD
 
-- Available evidence: TODO
-- Evidence requiring collection: TODO
-- Identified gaps: TODO
+**- Available evidence:**
+Immich’s official documentation describes HTTPS access through a reverse proxy and provides example proxy configurations. Its remote-access guidance also explains the use of certificates for HTTPS connections. These provide a starting point for evaluating the protection of sensitive information during public network communication. However, documentation and example configurations do not prove that the studio’s actual deployment prevents unauthorized disclosure or modification.
+
+**- Evidence requiring collection:**
+
+**E1** - Public-route Transport Test Report: Test login, uploads, downloads, API requests, and shared links to verify that sensitive information cannot be transmitted over plaintext public connections.
+
+**E2** - Public Entry-point Bypass Test Report: Attempt connections through alternate ports and direct backend addresses to verify that clients cannot bypass the protected public entry point.
+
+**E3** - Client Certificate-validation Test Report: Test supported browsers and mobile clients with expired, untrusted, and hostname-mismatched certificates to verify rejection of invalid server identities.
+
+**E4** - Transport Integrity and Tampering Test Report: Attempt controlled alterations to protected traffic to verify that modified information is rejected before application acceptance.
+
+**E5** - Internal Service Access and Network Isolation Test Report: Review network rules and attempt connections from unauthorized networks and unrelated containers to verify that internal services are restricted.
+
+**E6** - Internal Traffic Confidentiality and Integrity Test Report: Identify sensitive internal data flows and perform controlled interception and modification tests to evaluate their confidentiality and integrity protections.
+
+
+**- Identified gaps:**
+
+The biggest gap is that support for HTTPS does not automatically create protection across every communication path. Incorrect proxy settings, directly exposed backend ports, or inadequate certificate validation could undermine the claim even when the intended public connection uses HTTPS.
+
+Internal communication needs special attention. Immich’s reverse-proxy examples include HTTP connections between the proxy and the backend. HTTPS at the public entry point does not, by itself, ensure that sensitive information remains protected throughout internal communication. The studio would need to evaluate the protection of those internal paths.
+
+Out of the six planned evidence items, E1 and E2 have the clearest starting point in the official reverse-proxy guidance. However, all six need additional inspection or testing against the studio’s deployment. 
+
+Immich provides guidance for establishing protected public connections, but additional testing would be needed before the studio could accept the Network Communication Security claim.
 
 ### 4.4 Stored Data Security
 **Owner:** Dillon 
@@ -629,7 +673,9 @@ In general, this assignment was highly edifying and improved my knowledge of sec
 
 My part of this assignment focused on stored data security, specifically protecting photos, videos, and metadata from unauthorized access or modification. One thing I learned was that having security features in the application does not necessarily mean the stored data is fully protected. File permissions, database access, and how the system is deployed all matter. The most challenging part was figuring out how to connect the security claim to specific evidence instead of just describing what Immich is supposed to do. Creating the diagram helped me break the claim into smaller parts and identify what would actually need to be tested. The evidence gap analysis also showed me why reviewing source code alone is not enough to prove a system is secure. Overall, this assignment helped me better understand how assurance cases can be used to evaluate an open-source application before an organization decides to rely on it.
 
-**Marc:** TODO
+**Marc:** 
+
+While working on my section, I learned more about the importance of protection over a network, when communicating sensitive information. I learned to look at network communication security in a different way, focusing on some of the important initial best practices when it comes to that. Information must be protected against interception when a connection is already made. The connection made must also be confirmed that it is between the right user and server, and the communications themselves need to be encrypted as a final fail-safe. It was interesting looking to these as the priorities and supporting arguments for my section, because while I know all of these things, it is interesting seeing them grouped together into one comprehensive network comms security setup. Besides that, creating the diagram was a good way for me to visualize the claim as a while, since I have had some trouble recently feeling a little lost with all of the terminology thrown at us and a very technical but also somewhat intangible project to be working on, since a lot of what we are doing is theory. Today's diagram helped me visualize it all better.
 
 **Matthew:** For this deliverable I was tasked with handling the assurance case for availability and data preservation. I felt like this assignment was a bit tougher than the use/misuse case assignment, because I had to really take into account what Immich actually provides and what features the operator has to provide that are outside the scope of the Immich application. Immich provides solid recovery mechanisms, but it doesn't back up the original media files or verify that stored files match their database records, and it writes database backups on the same storage volume as the library by default, which led me to the understanding that the assurance of the claim I handled can't be judged by the Immich application on its own but by the recovery procedures of the operator and their deployment of Immich. 
 
