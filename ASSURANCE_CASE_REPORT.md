@@ -395,7 +395,7 @@ These rebuttals show why the presence of a backup feature is not sufficient on i
 - Missing-file and orphaned-file listings
 - Storage template migration job logs
 
-**E5 - Availability and Upgrade Test Report
+**E5 - Availability and Upgrade Test Report**
 - Host resource utilization measurements from a bulk-upload load test
 - Staging upgrade rehearsal records, including the pre-upgrade database dump inventory
 - Uptime monitoring records from external health probe
