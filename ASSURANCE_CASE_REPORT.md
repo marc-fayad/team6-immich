@@ -206,16 +206,24 @@ First, public communication paths must protect sensitive information against int
 
 #### Rebutting Defeaters
 **R1** - Unless a public route exposes sensitive information in plaintext.
+
 **R2** - Unless an attacker impersonates the server or modifies transmitted information.
+
 **R3** - Unless an attacker intercepts or modifies internal service traffic.
 
 #### Planned Evidence
 **E1** - Public-route transport test report | Tests covering login, uploads, downloads, API requests, and shared links.
+
 **E2** - Public entry-point bypass test report | Connection attempts against public IPv4 and IPv6 addresses, alternate ports, and direct backend endpoints.
+
 **E3** - Client certificate-validation test report | Tests of supported browser and mobile clients using expired, untrusted, and hostname-mismatched certificates.
+
 **E4** - Transport integrity and tampering test report | Controlled attempts to alter protected traffic in transit.
+
 **E5** - Internal service access and network isolation test report | An approved service communication matrix and connectivity tests from authorized and unauthorized network locations.
+
 **E6** - Internal traffic confidentiality and integrity test report | An inventory of documentation of sensitive internal data flows, their protection mechanisms, and controlled interception and modification tests.
+
 
 #### Assurance Case Diagram
 <img width="1915" height="1058" alt="image" src="https://github.com/user-attachments/assets/8acb16a4-2bbd-4d84-89cb-a38676f16dac" />
