@@ -6,8 +6,16 @@
 
 ## 1. Introduction and Operational Context
 
-TODO: Briefly describe Immich, the hypothetical operational
-environment, and the purpose of the assurance case.
+Immich is an open-source, self-hosted photo and video management application that allows users to upload, organize, store, and share digital media. Because Immich manages potentially sensitive personal and professional information, security assurance is an important consideration for organizations evaluating its adoption.
+
+For this assignment, Team 6 considers a hypothetical professional photography studio employing five staff members who use Immich to manage client photographs and videos. The studio operates a self-hosted Immich deployment consisting of web and mobile clients, an application server accessed through a reverse proxy, a PostgreSQL database, and file storage. Studio employees access the system to upload, organize, retrieve, and share client media, while an administrator manages the deployment and client recipients may receive access to selected assets through sharing functionality.
+
+The operational environment introduces several security concerns, including unauthorized account access, disclosure of private photographs, insecure network communication, unauthorized modification of stored data, and potential loss of media availability. A successful security incident could expose confidential client information, disrupt studio operations, or damage client trust.
+
+The purpose of this assurance case is to develop structured arguments supporting five critical security claims associated with Immich's use in this environment. Each claim is supported by an assurance argument, relevant rebutting defeaters, and planned evidence that stakeholders could evaluate when determining whether the application provides an acceptable level of security.
+
+This assignment is a trustworthiness planning exercise rather than a certification of Immich's current security. Planned evidence may include artifacts that are not currently available and would require additional testing, inspection, or documentation. The evidence alignment and gap analysis identifies these limitations and highlights the additional assurance activities necessary before an organizational adoption decision.
+
 
 ## 2. Top-Level Assurance Claims
 
@@ -15,9 +23,10 @@ The following five claims address critical security properties
 of Immich in our assumed operational environment.
 
 ### Claim 1: Authentication and Account Access
+
 **Owner:** Christian Theisen
 
-Immich prevents unauthorized access to protected user accounts.
+Immich restricts access to photography studio user accounts to authenticated and authorized users.
 
 ### Claim 2: Photo/Video Access and Authorization
 
@@ -137,20 +146,102 @@ Immich maintains the availability and integrity of user data despite system fail
 Each assurance case includes supporting claims, rebutting
 defeaters, and planned tangible evidence.
 
+
 ### 3.1 Authentication and Account Access
+
 **Owner:** Christian Theisen
 
+**Top-Level Claim (C1):** Immich restricts access to photography
+studio user accounts to authenticated and authorized users.
+
 #### Supporting Argument
-TODO
+
+The authentication assurance case builds on the team's previous
+authentication and login use-case and misuse-case analysis. That
+analysis identified the risk of unauthorized account access,
+particularly when an attacker possesses stolen or reused credentials.
+
+To establish confidence in the top-level claim, three supporting
+security properties must be demonstrated:
+
+**C1.1 — Credential Validation:**
+Immich rejects authentication attempts involving invalid credentials
+without granting access to protected user accounts.
+
+**C1.2 — Credential-Guessing Resistance:**
+Immich sufficiently restricts automated credential-guessing attempts
+to reduce the likelihood of unauthorized account access.
+
+**C1.3 — Session Invalidation:**
+Immich prevents expired or revoked authentication sessions from
+continuing to access protected user accounts.
+
+Together, these claims address initial authentication, resistance
+to repeated unauthorized login attempts, and continued account
+protection after a session becomes invalid.
 
 #### Rebutting Defeaters
-TODO
+
+The following rebutting defeaters identify circumstances that could
+undermine confidence in the supporting claims.
+
+**R1 — Stolen or Reused Credentials:**
+An attacker possessing valid stolen or reused credentials may
+successfully authenticate despite correct credential validation.
+
+**R2 — Credential-Guessing Bypass:**
+An attacker may bypass login attempt restrictions through repeated
+requests, distributed attempts, or alternative authentication
+endpoints.
+
+**R3 — Invalid Session Reuse:**
+Expired or revoked authentication tokens may remain usable if
+session invalidation is not consistently enforced.
+
+These rebuttals demonstrate why credential validation alone is
+insufficient to establish confidence in account security. Additional
+controls, testing, and operational safeguards are needed to address
+the identified risks.
 
 #### Planned Evidence
-TODO
+
+The following evidence artifacts are proposed to support the
+assurance argument. These artifacts represent planned verification
+activities and are not assertions that the tests have already passed.
+
+**E1 — Authentication Test Report**
+- Valid and invalid authentication test cases
+- Authentication response records
+- Unauthorized account access test results
+
+**E2 — Credential-Validation Test Matrix**
+- Valid, invalid, and malformed credential scenarios
+- Expected and observed authentication responses
+- Authentication endpoint coverage
+
+**E3 — Compromised-Credential Security Test Report**
+- Stolen or reused credential scenarios
+- Account compromise response testing
+- Assessment of additional authentication safeguards
+
+**E4 — Login Rate-Limiting Test Results**
+- Repeated authentication attempt tests
+- Rate-limiting enforcement and bypass scenarios
+- Automated credential-guessing resistance results
+
+**E5 — Session Revocation Test Results**
+- Session expiration and revocation tests
+- Invalidated token replay attempts
+- Verification of protected account access denial
+
+Each proposed test report should identify the Immich version,
+deployment configuration, test procedures, expected results,
+observed results, and any unresolved security weaknesses.
 
 #### Assurance Case Diagram
-TODO: Insert diagram here.
+
+![Authentication and Account Access Assurance Case](authentication-assurance-case.png)
+
 
 ### 3.2 Photo/Video Access and Authorization
 **Owner:** Adu
@@ -321,11 +412,34 @@ Assess whether planned evidence is available from Immich,
 could be collected, or requires additional assurance activities.
 
 ### 4.1 Authentication and Account Access
+
 **Owner:** Christian Theisen
 
-- Available evidence: TODO
-- Evidence requiring collection: TODO
-- Identified gaps: TODO
+#### Available Evidence
+
+The team's previous use-case and misuse-case analysis provides a starting point for evaluating authentication security in Immich. The analysis identifies legitimate login behavior, unauthorized account access scenarios, and the risks associated with stolen or reused credentials.
+
+Immich's publicly available source code and documentation provide resources for further examination of authentication and session-management functionality. However, these resources alone do not establish that the security claims have been fully verified.
+
+#### Evidence Requiring Collection
+
+The following evidence artifacts are proposed to evaluate the authentication assurance claims:
+
+- **E1 — Authentication Test Report:** Results from valid, invalid, and unauthorized authentication attempts.
+- **E2 — Credential-Validation Test Matrix:** Coverage of valid, invalid, malformed, and edge-case credential scenarios.
+- **E3 — Compromised-Credential Security Test Report:** Assessment of stolen or reused credentials and account compromise safeguards.
+- **E4 — Login Rate-Limiting Test Results:** Verification of restrictions against repeated or automated authentication attempts.
+- **E5 — Session Revocation Test Results:** Verification that expired or revoked sessions cannot continue accessing protected accounts.
+
+#### Identified Gaps
+
+The primary assurance gap is the absence of independently verified test results demonstrating that all authentication controls operate as intended in the photography studio's deployment.
+
+Credential validation alone cannot prevent unauthorized access when an attacker possesses valid stolen credentials. Additional verification is required to determine whether automated login restrictions can be bypassed and whether expired or revoked sessions remain usable.
+
+The assurance case also identifies a potential limitation in authentication test coverage, represented by undermining defeater UM1. Supporting claim C1.7 requires further development to establish that testing adequately covers unauthorized-access scenarios and relevant edge cases.
+
+Until these evidence gaps are addressed through testing and review, the authentication claims should be considered assurance objectives rather than fully verified security guarantees.
 
 ### 4.2 Photo/Video Access and Authorization
 **Owner:** Adu
@@ -432,19 +546,69 @@ Overall, the project-provided evidence for Availability and Data Preservation is
 
 ### 5.1 Prompt Used
 
-TODO: Include an AI prompt used to improve assurance claims,
-identify rebutting defeaters, or refine evidence.
+ChatGPT was used to assist in evaluating and refining the Authentication and Account Access assurance claim. The following prompt was used to guide the analysis:
 
-### 5.2 Reflection on AI Usefulness
+> You are an expert software security engineer reviewing an assurance case for Immich, an open-source photo management application deployed in a professional photography studio.
+>
+> Evaluate the following top-level assurance claim:
+>
+> "Immich prevents unauthorized access to protected user accounts."
+>
+> Assess whether the claim identifies a relevant entity, expresses a critical security property, and provides a sufficiently clear assurance objective.
+>
+> Suggest improvements to the claim's wording. Then identify three supporting security claims, relevant rebutting defeaters that could undermine the argument, and tangible, measurable evidence needed to address those defeaters.
+>
+> Ensure that supporting claims describe security outcomes rather than specific technologies. Phrase all terminal evidence as noun phrases rather than statements asserting that security has already been demonstrated.
+>
+> Distinguish between evidence that may already exist in the Immich project and additional testing or documentation required to establish confidence in the claim.
 
-TODO: Discuss how AI assisted with the assurance case and
-identify limitations requiring human review.
+### 5.2 AI-Assisted Analysis
+
+The AI-assisted review suggested refining the original claim to better identify the relevant entity and security property.
+
+**Original Claim:**
+
+Immich prevents unauthorized access to protected user accounts.
+
+**Refined Claim:**
+
+Immich restricts access to photography studio user accounts to authenticated and authorized users.
+
+The analysis identified three supporting security claims:
+
+1. **Credential Validation:** Immich rejects invalid authentication credentials.
+2. **Credential-Guessing Resistance:** Immich limits automated credential-guessing attacks.
+3. **Session Invalidation:** Immich prevents invalidated sessions from accessing protected accounts.
+
+The analysis also identified potential rebutting defeaters, including the use of stolen or reused credentials, bypasses of login attempt restrictions, and continued use of revoked session tokens.
+
+Suggested evidence included authentication test reports, credential-validation test matrices, rate-limiting test results, and session-revocation test records. These are planned evidence artifacts rather than proof that the relevant security properties have already been verified.
+
+### 5.3 Reflection on AI Usefulness
+
+AI assistance was useful for improving the clarity and structure of the assurance argument. In particular, it helped distinguish between a security mechanism and the security outcome that stakeholders need to trust. The analysis emphasized that successful credential validation does not necessarily prevent unauthorized access when an attacker possesses stolen credentials.
+
+Another useful contribution was identifying reasons why the top-level claim could fail. Considering credential-guessing attacks and invalidated sessions helped expand the argument beyond basic username and password validation.
+
+AI also helped distinguish assurance claims from supporting evidence. While claims describe security properties that should hold, evidence must consist of tangible and measurable artifacts that can be independently evaluated.
+
+However, AI-generated suggestions do not establish that Immich currently satisfies these claims. Source-code inspection, documentation review, and security testing would still be required to verify the relevant security properties. The team must also evaluate whether the proposed evidence is sufficient for the photography studio's operational environment.
+
+Overall, AI was most useful as a brainstorming and review tool for strengthening assurance arguments, identifying potential weaknesses, and planning evidence collection. Human judgment remains necessary to evaluate the relevance, accuracy, and sufficiency of the proposed assurances.
 
 ## 6. Team Reflection
 
 ### 6.1 Individual Reflections
 
-**Christian Theisen:** TODO
+**Christian Theisen:**
+
+For this assignment, I was responsible for developing the Authentication and Account Access assurance case for Immich. I refined the top-level security claim, identified supporting claims, examined potential rebutting defeaters, and developed an assurance case diagram showing how the claims relate to proposed security evidence.
+
+One of the most important things I learned was that implementing authentication controls does not automatically guarantee that a system is secure. For example, validating credentials may prevent unauthorized login attempts, but it does not necessarily protect against attackers using stolen credentials. This helped me better understand the importance of identifying circumstances that could invalidate a security claim.
+
+I also gained a better understanding of how evidence supports an assurance argument. Developing the diagram required me to distinguish between security claims, rebuttals, undermining defeaters, and tangible evidence. The evidence alignment and gap analysis reinforced that proposed test reports are not equivalent to verified security results.
+
+Overall, this assignment helped me understand how structured assurance cases can be used to evaluate software security and identify areas requiring additional verification before an organization can confidently adopt a system.
 
 **Adu:** 
 
