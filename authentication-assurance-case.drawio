@@ -1,0 +1,154 @@
+<mxfile host="app.diagrams.net" pages="2">
+  <diagram name="Page-1" id="r3cXxll9odYyXmXB1w9P">
+    <mxGraphModel dx="2566" dy="1091" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="C-GNKw_7wZIQODiiUZKh-7" edge="1" parent="1" source="C-GNKw_7wZIQODiiUZKh-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;" target="C-GNKw_7wZIQODiiUZKh-4" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="C-GNKw_7wZIQODiiUZKh-8" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endArrow=block;endFill=1;" target="C-GNKw_7wZIQODiiUZKh-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="440" y="220" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="C-GNKw_7wZIQODiiUZKh-9" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endArrow=block;endFill=1;" target="C-GNKw_7wZIQODiiUZKh-5">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="440" y="220" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-3" edge="1" parent="1" source="C-GNKw_7wZIQODiiUZKh-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;entryX=0;entryY=0;entryDx=300;entryDy=58.5;entryPerimeter=0;" target="Ze_x7xkHHMBSUfT8QfPU-1" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="-80" y="120" />
+              <mxPoint x="-80" y="178.57" />
+            </Array>
+            <mxPoint x="-190" y="178.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="C-GNKw_7wZIQODiiUZKh-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="C1: Immich restricts access to photography studio user accounts to authenticated and authorized users." vertex="1">
+          <mxGeometry height="100" width="400" x="240" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-10" edge="1" parent="1" source="C-GNKw_7wZIQODiiUZKh-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="Ze_x7xkHHMBSUfT8QfPU-9" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-11" edge="1" parent="1" source="C-GNKw_7wZIQODiiUZKh-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="Ze_x7xkHHMBSUfT8QfPU-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="C-GNKw_7wZIQODiiUZKh-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="C1.1: Immich rejects invalid authentication credentials without granting access to protected user accounts." vertex="1">
+          <mxGeometry height="100" width="300" x="-180" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="C-GNKw_7wZIQODiiUZKh-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="C1.2: Immich sufficiently restricts automated credential-guessing attempts to reduce unauthorized account access." vertex="1">
+          <mxGeometry height="100" width="300" x="290" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="C-GNKw_7wZIQODiiUZKh-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="C1.3: Immich prevents expired or revoked authentication sessions from continuing to access protected user accounts." vertex="1">
+          <mxGeometry height="100" width="300" x="760" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-16" edge="1" parent="1" source="Ze_x7xkHHMBSUfT8QfPU-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="Ze_x7xkHHMBSUfT8QfPU-15" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-1" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;size=17;fillColor=#FFF2CC;" value="R1: Unless an attacker possesses stolen or reused valid credentials." vertex="1">
+          <mxGeometry height="100" width="300" x="-500" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-22" edge="1" parent="1" source="Ze_x7xkHHMBSUfT8QfPU-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="Ze_x7xkHHMBSUfT8QfPU-21">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-4" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;size=17;fillColor=#FFF2CC;" value="R2: Unless attackers bypass login attempt restrictions." vertex="1">
+          <mxGeometry height="100" width="300" x="290" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-25" edge="1" parent="1" source="Ze_x7xkHHMBSUfT8QfPU-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="Ze_x7xkHHMBSUfT8QfPU-24">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-5" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;size=17;fillColor=#FFF2CC;" value="R3: Unless expired or revoked session tokens remain usable." vertex="1">
+          <mxGeometry height="100" width="300" x="760" y="492.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-7" edge="1" parent="1" source="C-GNKw_7wZIQODiiUZKh-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=block;endFill=1;" target="Ze_x7xkHHMBSUfT8QfPU-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-39" edge="1" parent="1" source="Ze_x7xkHHMBSUfT8QfPU-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="Ze_x7xkHHMBSUfT8QfPU-38" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-8" parent="1" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#ffffff;rounded=0;" value="&lt;div&gt;E1: Authentication Test Report&lt;/div&gt;" vertex="1">
+          <mxGeometry height="145" width="145" x="-240" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-35" edge="1" parent="1" source="Ze_x7xkHHMBSUfT8QfPU-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="Ze_x7xkHHMBSUfT8QfPU-30" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-9" parent="1" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#ffffff;rounded=0;" value="&lt;div&gt;&lt;b&gt;E2: Credential-Validation Test Matrix&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="145" width="145" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-14" edge="1" parent="1" source="C-GNKw_7wZIQODiiUZKh-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" target="Ze_x7xkHHMBSUfT8QfPU-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-18" edge="1" parent="1" source="Ze_x7xkHHMBSUfT8QfPU-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="Ze_x7xkHHMBSUfT8QfPU-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-15" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="C1.4: Immich limits unauthorized account access resulting from compromised credentials." vertex="1">
+          <mxGeometry height="100" width="300" x="-590" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-33" edge="1" parent="1" source="Ze_x7xkHHMBSUfT8QfPU-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="Ze_x7xkHHMBSUfT8QfPU-28" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-17" parent="1" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#ffffff;rounded=0;" value="&lt;div&gt;E3: Compromised-Credential Security Test Report&lt;/div&gt;" vertex="1">
+          <mxGeometry height="145" width="145" x="-512.5" y="510" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-36" edge="1" parent="1" source="Ze_x7xkHHMBSUfT8QfPU-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="Ze_x7xkHHMBSUfT8QfPU-31" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-19" parent="1" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#ffffff;rounded=0;" value="&lt;div&gt;E4: Login Rate-Limiting Test Results&lt;/div&gt;" vertex="1">
+          <mxGeometry height="145" width="145" x="367.5" y="850" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-23" edge="1" parent="1" source="Ze_x7xkHHMBSUfT8QfPU-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="Ze_x7xkHHMBSUfT8QfPU-19">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-21" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="C1.5: Immich enforces login attempt restrictions that resist circumvention by automated attackers." vertex="1">
+          <mxGeometry height="100" width="300" x="290" y="650" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-27" edge="1" parent="1" source="Ze_x7xkHHMBSUfT8QfPU-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="Ze_x7xkHHMBSUfT8QfPU-26">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-24" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="C1.6: Immich invalidates expired or revoked authentication sessions and prevents their continued use." vertex="1">
+          <mxGeometry height="100" width="300" x="760" y="680" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-37" edge="1" parent="1" source="Ze_x7xkHHMBSUfT8QfPU-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="Ze_x7xkHHMBSUfT8QfPU-32" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-26" parent="1" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#ffffff;rounded=0;" value="&lt;div&gt;E5: Session Revocation Test Results&lt;/div&gt;" vertex="1">
+          <mxGeometry height="145" width="145" x="837.5" y="850" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-28" parent="1" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#CCCCCC;" value="" vertex="1">
+          <mxGeometry height="55" width="55" x="-467.5" y="680" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-30" parent="1" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#CCCCCC;" value="" vertex="1">
+          <mxGeometry height="55" width="55" x="45" y="655" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-31" parent="1" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#CCCCCC;" value="" vertex="1">
+          <mxGeometry height="55" width="55" x="412.5" y="1030" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-32" parent="1" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#CCCCCC;" value="" vertex="1">
+          <mxGeometry height="55" width="55" x="882.5" y="1030" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-41" edge="1" parent="1" source="Ze_x7xkHHMBSUfT8QfPU-38" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="Ze_x7xkHHMBSUfT8QfPU-40" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-38" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;size=17;fillColor=#A9C4EB;" value="UM1: Unless the authentication tests fail to cover relevant unauthorized-access scenarios." vertex="1">
+          <mxGeometry height="100" width="300" x="-317.5" y="675" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-40" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="C1.7: Authentication testing covers valid, invalid, and unauthorized-access scenarios, including relevant edge cases." vertex="1">
+          <mxGeometry height="100" width="300" x="-317.5" y="890" as="geometry" />
+        </mxCell>
+        <mxCell id="Ze_x7xkHHMBSUfT8QfPU-42" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#000000;" value="" vertex="1">
+          <mxGeometry height="45" width="40" x="-200" y="995" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="RjnCZBo0U0zCedNvMf-l" name="Page-2">
+    <mxGraphModel dx="1201" dy="764" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
