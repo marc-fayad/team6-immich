@@ -11,21 +11,45 @@
 
 ### 1.1 Project Overview
 
-[Briefly describe Immich and its purpose as an open-source, self-hosted photo and video management application.]
+Immich is an open-source, self-hosted photo and video management application that allows users to upload, organize, store, and share digital media. Since Immich handles potentially sensitive information, understanding its security risks is important for organizations considering its use.
+
+For this assignment, Team 6 will examine Immich through data flow diagrams (DFDs) and threat modeling to identify potential security weaknesses, evaluate possible mitigations, and determine whether existing security controls adequately address the identified threats.
 
 ### 1.2 Operational Environment
 
-[Describe the hypothetical five-person professional photography studio from our previous assignments.]
+Our team is continuing with the hypothetical professional photography studio introduced in our previous assignments. The studio employs five staff members who use Immich to manage client photographs and videos.
 
-[Include the primary users, deployment environment, application components, and sensitive data being processed.]
+The assumed deployment includes web and mobile clients, an application server accessed through a reverse proxy, a PostgreSQL database, and file storage. Studio employees upload, organize, retrieve, and share client media, while an administrator manages the deployment. External clients may also access selected media through sharing links.
+
+Because the studio manages private client information, unauthorized access, disclosure of photographs, modification of stored data, and service interruptions could negatively affect operations and client trust.
 
 ### 1.3 Threat Modeling Objectives
 
-[Explain the purpose of developing Data Flow Diagrams (DFDs), identifying STRIDE threats, evaluating mitigations, and examining existing security controls.]
+The purpose of this assignment is to identify potential security threats within Immich by examining how data moves between users, application components, and storage systems.
+
+Our objectives are to:
+
+- Develop Level 1 or Level 2 DFDs representing critical data flows.
+- Identify trust boundaries and interactions that may introduce security risks.
+- Use Microsoft's Threat Modeling Tool to identify potential STRIDE threats.
+- Evaluate the relevance of generated threats and propose appropriate mitigations.
+- Examine Immich's existing security controls and identify gaps requiring additional protection or verification.
+
+The results will help us better understand how the security concerns identified in our previous assignments relate to Immich's architecture and data flows.
 
 ### 1.4 Scope and Assumptions
 
-[Define the system boundaries, included components, relevant security scenarios, and any assumptions about the studio's deployment.]
+The threat modeling exercise focuses on the five security areas identified in our previous assurance case:
+
+1. Authentication and Account Access
+2. Photo/Video Access and Authorization
+3. Network Communication Security
+4. Stored Data Security
+5. Availability and Data Preservation
+
+The analysis considers our hypothetical studio deployment rather than every possible Immich configuration. We will examine relevant application components, user interactions, data flows, and trust boundaries.
+
+Threats identified during this assignment represent potential security risks and do not necessarily indicate confirmed vulnerabilities in Immich. Additional investigation, configuration review, or testing may be required to determine whether specific threats are adequately mitigated.
 
 ---
 
