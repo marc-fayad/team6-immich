@@ -445,37 +445,45 @@ Distinguish between:
 
 ### 7.1 Task Assignments
 
+The team will continue using the security areas assigned during our previous assurance case assignment.
+
 | Team Member | Assigned Security Area |
 |---|---|
-| Christian | Authentication and Account Access |
+| Christian Theisen | Authentication and Account Access |
 | Adu | Photo/Video Access and Authorization |
 | Marc | Network Communication Security |
 | Dillon | Stored Data Security |
 | Matthew | Availability and Data Preservation |
 
+Each member is responsible for developing or contributing to the DFDs for their assigned area, reviewing relevant TMT-generated threats, identifying mitigation strategies, evaluating existing Immich security controls, and completing an individual reflection.
+
+Members may collaborate on shared DFDs when their security scenarios overlap.
+
 ### 7.2 Collaboration Summary
 
-[Describe how the team coordinated through GitHub issues, branches, pull requests, and project board updates.]
+Team 6 will use its existing GitHub repository and project board to organize and track work for this assignment.
 
-[Identify any shared diagrams or collaborative threat analysis.]
+GitHub issues will be used to document responsibilities and monitor progress. Team members will contribute their work through branches and pull requests, allowing changes to be reviewed before being merged into the main report.
+
+Slack will be used to communicate progress, coordinate shared diagrams, and identify outstanding tasks.
+
+[Update this section before submission to summarize the collaboration that actually occurred.]
 
 ---
 
 ## 8. References
 
-1. Team 6. *Immich Software Assurance Case.*
-   [Previous Team Report](ASSURANCE_CASE_REPORT.md).
+1. Team 6. *Immich Software Assurance Case.* [Previous Team Report](ASSURANCE_CASE_REPORT.md).
 
-2. Immich Contributors. *Immich — Open-Source Photo and Video Management.*
-   https://github.com/immich-app/immich
+2. Immich Contributors. *Immich — Open-Source Photo and Video Management.* [Official GitHub Repository](https://github.com/immich-app/immich).
 
-3. Immich. *Official Documentation.*
-   https://docs.immich.app/
+3. Immich. *Official Documentation.* [Immich Documentation](https://docs.immich.app/).
 
-4. Microsoft. *Threat Modeling Tool Overview.*
-   https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool
+4. Microsoft. *Threat Modeling Tool Overview.* [Microsoft Learn](https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool).
 
-5. Microsoft. *Threat Modeling Tool — Getting Started.*
+5. Microsoft. *Getting Started with the Threat Modeling Tool.* [Microsoft Learn](https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-getting-started).
+
+6. Microsoft. *Threat Modeling Tool Download.* [Download](https://aka.ms/threatmodelingtool)
    https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-getting-started
 
 6. Microsoft. *Threat Modeling Tool Download.*
