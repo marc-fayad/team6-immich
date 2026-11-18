@@ -217,35 +217,77 @@ For each diagram:
 
 ---
 
+
 ### 3.4 Stored Data Security
 
 **Owner:** Dillon
 
 #### 3.4.1 Scenario Overview
 
-[Describe database operations, media storage, stored asset retrieval, and unauthorized data modification.]
+This scenario focuses on how Immich stores and retrieves photos, videos, and their associated metadata. For a small photography studio, protecting stored data is important because employees need to access and manage client photos without exposing private information or allowing unauthorized changes.
+
+Immich uses filesystem storage for photos and videos and PostgreSQL for application data and asset metadata. The main security concerns include unauthorized database access, excessive database permissions, sensitive information disclosure, SQL injection, and unauthorized modification of stored information.
+
+The goal of this threat model is to identify potential risks involving the storage components and determine how those risks could be reduced.
 
 #### 3.4.2 DFD and Data Flows
 
-![Stored Data Security DFD](diagrams/stored-data-dfd.png)
+![Stored Data Security DFD](stored-data.PNG)
 
-[Describe relevant components, flows, and trust boundaries.]
+The data flow diagram was created using Microsoft Threat Modeling Tool and includes the following components:
+
+- **Studio Employee:** The external user who uploads and retrieves photos and videos.
+- **Immich Application Server:** Processes requests and communicates with the storage systems.
+- **Media File Storage:** Stores the original photos and videos.
+- **PostgreSQL Database:** Stores application data and asset metadata.
+- **Self-Hosted Immich Server Boundary:** Represents the trust boundary around the server-side components.
+
+The diagram includes six data flows:
+
+1. Upload Photos and Videos
+2. Retrieve Photos and Videos for Employee
+3. Store Photos and Videos
+4. Retrieve Photos and Videos
+5. Store Asset Metadata
+6. Retrieve Asset Metadata
+
+The main trust boundary separates the studio employee from the self-hosted Immich server and its internal storage components.
 
 #### 3.4.3 TMT-Generated Threats
 
+Microsoft Threat Modeling Tool generated seven potential threats associated with the Store Asset Metadata interaction. These represent possible security risks rather than confirmed vulnerabilities in Immich.
+
 | Threat ID | STRIDE Category | Affected Element / Flow | Threat Description | Relevance |
 |---|---|---|---|---|
-| TBD | TBD | TBD | TBD | TBD |
+| T1 | Elevation of Privilege | Store Asset Metadata | Unauthorized database access through exposed network connections | Could allow attackers to access PostgreSQL |
+| T2 | Elevation of Privilege | Store Asset Metadata | Database accounts have excessive permissions | Could allow unauthorized access to sensitive records |
+| T3 | Information Disclosure | Store Asset Metadata | Sensitive database information could be exposed | Could expose photo metadata and application information |
+| T4 | Information Disclosure | Store Asset Metadata | SQL injection could manipulate database queries | Could allow unauthorized reading or modification of data |
+| T5 | Repudiation | Store Asset Metadata | Insufficient database auditing and logging | Could make unauthorized activity difficult to investigate |
+| T6 | Tampering | Store Asset Metadata | Unauthorized modification of database records | Could compromise the integrity of stored metadata |
+| T7 | Tampering | Store Asset Metadata | Insufficient monitoring of suspicious database activity | Could allow unauthorized activity to remain undetected |
+
+*Threat IDs T1–T7 are labels used for this summary. Full threat descriptions and mitigation details are available in the exported Microsoft Threat Modeling Tool HTML report.*
 
 #### 3.4.4 Proposed Mitigations
 
 | Threat ID | Proposed Mitigation | Rationale |
 |---|---|---|
-| TBD | TBD | TBD |
+| T1 | Restrict PostgreSQL network access to authorized application services and administrators | Reduces the risk of unauthorized database connections |
+| T2 | Apply least-privilege database permissions and restrict administrative accounts | Limits the damage caused by compromised credentials |
+| T3 | Protect database credentials, restrict access, and encrypt sensitive data and backups where appropriate | Reduces the risk of sensitive information disclosure |
+| T4 | Use parameterized queries, validate input, and perform regular security testing | Helps prevent SQL injection attacks |
+| T5 | Enable appropriate database auditing and protect security logs | Helps investigators identify unauthorized activity |
+| T6 | Restrict database write permissions, validate changes, and maintain reliable backups | Helps prevent and recover from unauthorized modifications |
+| T7 | Monitor unusual database activity and configure security alerts | Improves detection of suspicious database operations |
+
+These mitigations are recommendations based on the identified threats. Some security protections are provided by Immich or PostgreSQL, while others require configuration by the organization operating the system.
 
 #### 3.4.5 HTML Threat Modeling Report
 
-[View Stored Data TMT Report](reports/stored-data-report.html)
+[View Stored Data TMT Report](Immich_Stored_Data_Security_Report.htm)
+
+The HTML report was exported from Microsoft Threat Modeling Tool and contains the data flow diagram and the seven generated threats.
 
 ---
 
@@ -345,21 +387,72 @@ Distinguish between:
 
 ---
 
+
 ### 4.4 Stored Data Security
 
 **Owner:** Dillon
 
 #### Existing Security Controls
 
-[Document relevant storage permissions, database access, and data protection controls.]
+Immich provides several security features that help protect stored photos, videos, and database information. Based on a review of Immich's official documentation and GitHub source code, the following controls were identified:
+
+- **Database Access:** Immich uses PostgreSQL to store application data and photo metadata. Its recommended Docker Compose deployment does not publicly expose the database port, helping limit unauthorized network access.
+
+- **Authentication:** Immich supports password-based authentication and OpenID Connect (OIDC), allowing administrators to control access to the application.
+
+- **Database Query Security:** Immich uses the Kysely query builder for database operations, which supports structured query construction and can help reduce SQL injection risks when used correctly.
+
+- **Data Backups:** Immich documents automatic database backups and restoration procedures. These help protect application data from accidental loss or corruption.
+
+- **File Integrity:** Immich provides system integrity checks that can identify missing files, untracked files, and checksum mismatches.
+
+- **Storage Permissions:** Immich relies on filesystem permissions and ownership settings to control access to stored media files.
+
+These controls provide a foundation for protecting stored data, although some protections depend on how Immich is configured and deployed.
 
 #### Identified Security Gaps
 
-[Identify missing, incomplete, or unverified mitigations.]
+Using Microsoft Threat Modeling Tool, I identified seven potential threats related to storing asset metadata in PostgreSQL. These included unauthorized database access, excessive permissions, sensitive information disclosure, SQL injection, insufficient audit logging, unauthorized database modifications, and inadequate monitoring.
+
+After reviewing Immich's documentation and source code, I identified several areas that may require additional security measures:
+
+- **Database Exposure:** Although the recommended deployment does not publicly expose PostgreSQL, incorrect network configurations could still allow unauthorized connections.
+
+- **Excessive Permissions:** PostgreSQL supports role-based permissions, but I could not verify that every Immich deployment follows the principle of least privilege.
+
+- **Sensitive Data Protection:** I could not verify that all database files and backups are automatically encrypted at rest.
+
+- **SQL Injection:** Immich uses a structured query builder, but this does not guarantee that every database interaction is protected against SQL injection.
+
+- **Insufficient Logging:** I could not confirm that comprehensive database auditing is enabled by default to track unauthorized access or modifications.
+
+- **Unauthorized Data Modification:** An attacker who gains database write access could potentially modify or delete important metadata.
+
+- **Security Monitoring:** I could not verify that suspicious database activity automatically generates security alerts.
+
+These are potential security gaps or areas requiring further verification, rather than confirmed vulnerabilities in Immich.
 
 #### Recommended Improvements
 
-[Describe recommended improvements.]
+Based on the threats identified and the existing security controls, I recommend the following improvements to strengthen stored data security:
+
+- **Restrict Database Access:** Ensure PostgreSQL is accessible only to authorized application services and administrators. Use network isolation and firewall rules to prevent unnecessary exposure.
+
+- **Apply Least Privilege:** Review database accounts and permissions to ensure users and services only have access to the information and operations they require.
+
+- **Protect Sensitive Information:** Encrypt sensitive database files and backups where appropriate, and securely manage database credentials.
+
+- **Prevent SQL Injection:** Continue using safe database query practices, including parameterized queries, input validation, and regular security testing.
+
+- **Improve Audit Logging:** Configure PostgreSQL and application logging to record important security events, including unauthorized access attempts and unexpected changes.
+
+- **Monitor Database Activity:** Implement monitoring and alerts for suspicious database connections, unusual queries, and unauthorized modifications.
+
+- **Strengthen Backup Procedures:** Maintain separate backups of both the PostgreSQL database and the original photo and video files. Regularly test restoration procedures.
+
+- **Protect Media Storage:** Review filesystem permissions and use Immich's integrity checks to help identify missing or modified files.
+
+Overall, Immich provides several useful security controls, but protecting stored data also depends on how the organization configures and maintains its self-hosted environment. For a photography studio, the most important priorities are restricting database access, protecting original media files, maintaining reliable backups, and detecting suspicious activity.
 
 ---
 
@@ -421,7 +514,9 @@ Distinguish between:
 
 **Dillon:**
 
-[Individual reflection.]
+For this assignment, I focused on stored data security in Immich. I created a data flow diagram using Microsoft Threat Modeling Tool that showed how photos, videos, and metadata move between a studio employee, the Immich application server, media file storage, and PostgreSQL database. The tool identified seven potential threats related to database security. I reviewed these threats, proposed mitigations, and researched Immich's existing security controls using its official documentation and GitHub source code.
+
+One challenge was learning how to use Microsoft Threat Modeling Tool, especially when creating the trust boundary and organizing the diagram. I also noticed that some generated recommendations were designed for Microsoft SQL Server rather than PostgreSQL, so they needed to be adapted to Immich. The most useful part of the assignment was learning how data flow diagrams help identify security risks. It also showed me that securing a self-hosted application requires both built-in security features and proper configuration by the organization using it.
 
 **Matthew:**
 
