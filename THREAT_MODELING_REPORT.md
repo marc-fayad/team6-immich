@@ -444,16 +444,51 @@ Distinguish between:
 
 #### Existing Security Controls
 
+1. Authentication: Password authentication and integration with OAuth/OIDC allows for user authentication.
+2. Asset ownership: Media stored in Immich is linked to a user. This prevents unauthorized users from accessing private data.
+3. Access control on server: Permission checks are used to determine if a user has view, download, edit or delete access to protected media.
+4. Sharing albums: Users can be given access to albums by other authenticated users with appropriate permissions.
+5. Secured sharing links: Users can share certain media with a password protected and time limited link.
+6. Secured media storage: Media is stored using application managed storage. Access is restricted to prevent unauthorized users from retrieving media. These controls allow for the protection of confidentiality of private media. They address multiple STRIDE threats including Spoofing, Tampering, Information Disclosure, and Elevation of privilege.
+
 [Document relevant media authorization and sharing controls.]
 
 #### Identified Security Gaps
+Threats identified
+1. Authorization: It may not be enforced correctly at all endpoints of the APIs meaning that private data (images, videos, or metadata) could be accessed by unauthorized users.
+2. Impersonation: Privilege escalation may occur between authentication, authorisation and media processes.
+3. Lack of Auditing: It is not verified whether sufficient auditing is in place for uploading, editing, deletion, and sharing media.
+4. Database and Data Protection: There is a potential risk of unauthorized editing of data in PostgreSQL and media, and interception of data.
+5. Denial of Service: Too many uploads, downloads, and/or requests to the database could lead to a denial of service.
+6. Backup and Recovery: It has not been verified whether effective backup and recovery measures are in place within the deployment of the project.
+Note: These threats (or lack of mitigations) are potential threats within the system, however they are not confirmed vulnerabilities in the current deployment of Immich.
 
 [Identify missing, incomplete, or unverified mitigations.]
 
+Threats within the Photo/Video Access and Authorization feature have been identified within the DFD and STRIDE analysis. 
+1. Authorization Incomplete: Although authorization is implemented in the application, to ensure correct authorization to access media resources is applied to all endpoints, it has not been sufficiently verified. This may mean that private photos, videos, thumbnails or metadata can be accessed by unauthorized users.
+2. Privilege Escalation Incomplete: Potential privilege escalation threats have been identified within the authentication, authorization and media access features. Further testing is required to verify that these features cannot bypass access permissions.
+3. Audit Logging Incomplete: Full logging of media upload, deletion, editing and sharing has not been implemented. Without a sufficient audit trail, it may be difficult to determine if unauthorized access has occurred and which user may be responsible.
+4. Secure Data Storage Incomplete: Although PostgreSQL and secure data storage on the server are implemented, it has not been sufficiently verified that least privilege, secure internal communication and secure storage are all implemented.
+5. DDoS Incomplete: It has not been verified that limiting media uploads, limiting request rates, limiting resource usage and limiting database connections will prevent DDoS attacks. Excess requests may cause resource exhaustion, and cause interruption to media services.
+ 6. Shared Link Incomplete: Password protected and time limited links can be created. However, further testing is required to ensure that once a link has expired, been revoked or is unauthorized, that private media cannot be accessed.
+7. Backups Incomplete: Although backups and recovery can be performed on the database, it has not been verified that media data can be backed up and restored in this deployment.
+
 #### Recommended Improvements
 
-[Describe recommended improvements.]
+1.Ensure ownership and permissions are correctly applied in all media endpoints (including thumbnails, download, metadata and shared links).
 
+2.Ensure secure authentication of sessions. Users should be given the least permissions possible. Ensure users cannot impersonate each other between components.
+
+3.Ensure audit logs are implemented. These should be implemented for uploading, deleting, changing permissions and sharing assets.
+
+4.Ensure that data in the database and media is secured. This can be done with access control, secure connections, input validation and ensuring data integrity.
+
+5.Implement protection on resources. Upload limits, throttling, timeout and monitoring should be used to reduce the possibility of a denial of service attack.
+
+6.Ensure secure back up. Both the PostgreSQL and media should be backed up securely, and regular restoration testing should be performed.
+
+7.Ensure more security testing. Testing should be done for cross user permissions, security of shared links and penetration testing to ensure mitigation strategies are effective.
 ---
 
 ### 4.3 Network Communication Security
