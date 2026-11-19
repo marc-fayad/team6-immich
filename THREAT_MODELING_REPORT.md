@@ -187,17 +187,84 @@ Secure media access means that media can only be accessed once authorisation has
 
 [Describe relevant components, flows, and trust boundaries.]
 
+Photo/Video Access and Authorization
+Components
+The following components implement the Photo/Video Access and Authorization process in Immich.
+Component Description
+
+E1: Immich User
+User requesting to upload, view, download, and share photos and videos.
+
+P1: Immich API
+Handles requests from the user.
+
+P2: Authentication
+Verifies user identity.
+
+P3: Authorization
+Verifies if the user is the owner of an asset, has permission to share an asset, or has permission to access a shared link.
+
+P4: Media Access/Upload
+Handles authorized uploading, accessing and downloading of media.
+
+D1: PostgreSQL Database
+Stores user details, asset details, ownership, and access rights.
+
+D2: Media Storage
+Stores raw media (photos and videos) and thumbnails.
+
+Data Flows
+In this DFD, the following Data Flows take place.
+
+User Request: User requests to upload, access, or share media.
+
+Authentication: The authentication component verifies the user by receiving authentication details from the API.
+
+Authorization: Authorization checks are carried out to ensure that the user has ownership and permission to share the asset.
+
+Database: Ownership details, asset details, and access rights are retrieved from the PostgreSQL database.
+
+Media Storage: Permitted media actions are carried out on the protected media storage, including accessing and uploading media.
+
+Response: The permitted content is returned to permitted users. If the request was not permitted, the request is denied.
+
+Trust Boundaries
+Within this DFD there are three significant trust boundaries.
+
+Trust Boundary Description Concerns
+TB1: Untrusted External Clients
+
+Boundary between the Immich users/client devices and the application.
+Spoofing, session hijacking, malicious requests, and unauthorized access.
+
+TB2: Trusted Immich Application
+
+Includes the API, authentication, authorization, and media access processes.
+Privilege escalation, authorization bypass, and impersonation.
+
+TB3: Protected Data Store
+
+Boundary between the application processes and the PostgreSQL database/media storage.
+Data modification, information exposure, spoofed data stores, and denial of service.
+The most critical trust boundaries are between the user requests and the API, and between the application processes and the PostgreSQL database/protected media storage. Strong authentication, authorization on the server, limited access rights, and secure communication should be implemented at these points.
+
 #### 3.2.3 TMT-Generated Threats
 
 | Threat ID | STRIDE Category | Affected Element / Flow | Threat Description | Relevance |
 |---|---|---|---|---|
 | TBD | TBD | TBD | TBD | TBD |
 
+<img width="1022" height="591" alt="image" src="https://github.com/user-attachments/assets/93ed1f29-ec1f-402b-a310-0272fe16683a" />
+
+
 #### 3.2.4 Proposed Mitigations
 
 | Threat ID | Proposed Mitigation | Rationale |
 |---|---|---|
 | TBD | TBD | TBD |
+
+<img width="927" height="675" alt="image" src="https://github.com/user-attachments/assets/733faf57-ee5d-471d-b9df-88d9d8c2f1e4" />
+
 
 #### 3.2.5 HTML Threat Modeling Report
 
