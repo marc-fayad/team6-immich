@@ -216,17 +216,17 @@ Stores raw media (photos and videos) and thumbnails.
 Data Flows
 In this DFD, the following Data Flows take place.
 
-User Request: User requests to upload, access, or share media.
+1.User Request: User requests to upload, access, or share media.
 
-Authentication: The authentication component verifies the user by receiving authentication details from the API.
+2.Authentication: The authentication component verifies the user by receiving authentication details from the API.
 
-Authorization: Authorization checks are carried out to ensure that the user has ownership and permission to share the asset.
+3.Authorization: Authorization checks are carried out to ensure that the user has ownership and permission to share the asset.
 
-Database: Ownership details, asset details, and access rights are retrieved from the PostgreSQL database.
+4.Database: Ownership details, asset details, and access rights are retrieved from the PostgreSQL database.
 
-Media Storage: Permitted media actions are carried out on the protected media storage, including accessing and uploading media.
+5.Media Storage: Permitted media actions are carried out on the protected media storage, including accessing and uploading media.
 
-Response: The permitted content is returned to permitted users. If the request was not permitted, the request is denied.
+6.Response: The permitted content is returned to permitted users. If the request was not permitted, the request is denied.
 
 Trust Boundaries
 Within this DFD there are three significant trust boundaries.
