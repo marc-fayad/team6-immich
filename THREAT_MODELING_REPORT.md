@@ -630,6 +630,11 @@ Overall, Immich provides several useful security controls, but protecting stored
 
 [Individual reflection.]
 
+The assignment help me to identify threats within the Photo/Video Access and Authorisation process for Immich, I learned how to secure access to sensitive user data within Immich is achieved via correct authentication, authorisation, data management and media storage.
+
+Understanding of how to apply the STRIDE approach to help discover security threats was one key thing taken from this task. This allowed me to consider threats such as Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service and Elevation of Privilege. Considering the 19 threats identified by the Microsoft Threat Modeling Tool has allowed me to understand which system components/data flows are vulnerable to which threats.It learned how to apply theory to real-world application in terms of securing software.
+As a result of this task, I am more capable of analysing a software system, discovering security threats and suggesting improvements for security. Going forwards, I aim to include threat modelling at earlier stages of software development and perform security testing to confirm that security controls have been effectively implemented to protect users and their data.
+
 **Marc:**
 
 [Individual reflection.]
