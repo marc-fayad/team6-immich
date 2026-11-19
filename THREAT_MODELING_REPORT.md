@@ -254,7 +254,7 @@ The most critical trust boundaries are between the user requests and the API, an
 |---|---|---|---|---|
 | TBD | TBD | TBD | TBD | TBD |
 
-<img width="1022" height="591" alt="image" src="https://github.com/user-attachments/assets/93ed1f29-ec1f-402b-a310-0272fe16683a" />
+<img width="1015" height="566" alt="image" src="https://github.com/user-attachments/assets/67d04939-1055-45cd-9f8f-a4c87ddaa7f5" />
 
 
 #### 3.2.4 Proposed Mitigations
