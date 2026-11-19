@@ -513,7 +513,9 @@ Threats within the Photo/Video Access and Authorization feature have been identi
 6.Ensure secure back up. Both the PostgreSQL and media should be backed up securely, and regular restoration testing should be performed.
 
 7.Ensure more security testing. Testing should be done for cross user permissions, security of shared links and penetration testing to ensure mitigation strategies are effective.
+
 ---
+
 
 ### 4.3 Network Communication Security
 
@@ -521,15 +523,19 @@ Threats within the Photo/Video Access and Authorization feature have been identi
 
 #### Existing Security Controls
 
-[Document relevant HTTPS, proxy, certificate, and network controls.]
+Immich documents how to deploy a reverse proxy that terminates public HTTPS and forwards requests to the application server. Its example configurations specify headers for the original host, client IP, and request scheme. The upstream Docker Compose configuration supplies credentials to PostgreSQL and maps Immich's application port (2283) to the host. The studio must configure the public certificate, proxy and forwarding rules, host port binding, and network restrictions. [Immich reverse proxy documentation](https://docs.immich.app/administration/reverse-proxy/) · [Upstream Compose configuration](https://github.com/immich-app/immich/blob/main/docker/docker-compose.prod.yml)
 
 #### Identified Security Gaps
 
-[Identify missing, incomplete, or unverified mitigations.]
+- **Public HTTPS and proxy enforcement (TMT ID 1).** The upstream port mapping requires a deployment check. If port 2283 is reachable from outside the studio, clients may be able to bypass the proxy and its HTTPS controls. Certificate validation and trusted handling of forwarding headers have yet to be verified on the studio deployment.
+- **Proxy-to-Immich HTTP (manual finding).** The DFD assumes HTTP between the reverse proxy and Immich. Credentials, session data, share links, and media on this hop can be exposed or modified if an unauthorized system can observe or alter the traffic. The studio has yet to verify isolation of this path.
+- **PostgreSQL transport (manual finding).** Database credentials control access to PostgreSQL. The studio still needs evidence that only authorized services can reach it and that the connection protects queries, updates, and returned metadata where it crosses a shared or untrusted network.
 
 #### Recommended Improvements
 
-[Describe recommended improvements.]
+- Make the reverse proxy the only public entry point. Verify effective port bindings and firewall rules, including IPv6 where enabled. Verify HTTPS for login, uploads, downloads, API calls, and shared media, and confirm that supported web and mobile clients reject invalid certificates.
+- Restrict the application listener to the proxy and configure forwarding headers at the trusted proxy. Use certificate-validated TLS on the upstream connection if it crosses a shared or untrusted network.
+- Restrict PostgreSQL connectivity to authorized services. Verify the database connection settings and require TLS with server identity verification across shared or untrusted networks. Record these checks as evidence for assurance claim NC0.
 
 ---
 
