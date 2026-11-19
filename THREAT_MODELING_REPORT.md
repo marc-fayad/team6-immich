@@ -160,10 +160,30 @@ For each diagram:
 #### 3.2.1 Scenario Overview
 
 [Describe private asset access, media authorization, shared links, and protected photo/video retrieval.]
+a) Accessing Private Media Assets
+
+When uploading media (photos/videos), users have the option to make it private. If an asset is private it should only be visible by its owner or users given access. When trying to access private media from a user, the Immich server must confirm that they have permission to view this asset.
+
+b) Media Authorization
+
+Access control will ensure users can only carry out actions based on permissions given through ownership and sharing. Access control should be enforced at the server side. This needs to be enforced for original media, thumbnail images, metadata, downloadable media and search results. For example, if user A tries to access private media from user B, but user B hasn’t given them the correct permissions, the request should be denied.
+
+c) Shared Links
+
+Users can share some of their media without giving full access to their private media. Within Immich, there are two key methods for sharing media:
+Internal Sharing: Users can share an album with another Immich user. The user can be given either viewing or editing permissions.
+Public Shared Links: Users can generate public links to specific assets/ albums. When doing this, users can set an expiry date, password, and permitted actions.
+
+d) Secure Media Access
+
+Secure media access means that media can only be accessed once authorisation has been confirmed.
 
 #### 3.2.2 DFD and Data Flows
 
 ![Photo and Video Authorization DFD](diagrams/asset-authorization-dfd.png)
+
+<img width="975" height="524" alt="image" src="https://github.com/user-attachments/assets/45e5a075-c4e1-4e65-b195-d7cf092d725e" />
+
 
 [Describe relevant components, flows, and trust boundaries.]
 
