@@ -278,29 +278,53 @@ The most critical trust boundaries are between the user requests and the API, an
 
 #### 3.3.1 Scenario Overview
 
-[Describe network communication between clients, the reverse proxy, application server, and internal services.]
+Studio staff use the Immich web and mobile clients to sign in, upload photographs and videos, and retrieve client media. External clients use share links to retrieve selected media. These requests cross the public network to the studio's reverse proxy, which terminates HTTPS and forwards requests to the Immich application server. The server exchanges data with internal services while processing those requests. Login credentials, session tokens, sharing links, media, and metadata require confidentiality and integrity in transit. This scenario supports assurance claim NC0.
 
 #### 3.3.2 DFD and Data Flows
 
 ![Network Communication DFD](diagrams/network-communication-dfd.png)
 
-[Describe relevant components, flows, and trust boundaries.]
+The following flows define the network communication scope for the proposed studio deployment. The diagram reviewed places the reverse proxy and Immich server in a shared trust zone and PostgreSQL in a separate zone. The proxy terminates public HTTPS. The two internal HTTP flows were visible in the diagram screenshot and produced no rows in the revised CSV. Their endpoint attachments in the final editable model still need verification.
+
+| Source and destination | Data in transit | Trust boundary |
+| --- | --- | --- |
+| Staff browser or mobile client ↔ reverse proxy | Sign-in requests, session data, API requests, and media uploads and downloads | Public network to studio ingress |
+| External client browser ↔ reverse proxy | Share-link requests and selected media responses | Public network to studio ingress |
+| Reverse proxy ↔ Immich server | Forwarded requests and responses, including proxy headers, session data, and media | Within the shared proxy and application zone |
+| Immich server ↔ PostgreSQL | Database authentication, queries and updates, and metadata returned to the server | Application network to internal data service |
 
 #### 3.3.3 TMT-Generated Threats
 
-| Threat ID | STRIDE Category | Affected Element / Flow | Threat Description | Relevance |
-|---|---|---|---|---|
-| TBD | TBD | TBD | TBD | TBD |
+The revised TMT export contains 40 entries across six interactions. The table records the relevance decision for each ID. Repeated template entries share a rationale. The relevance decisions below are based on the exported descriptions and are ready to enter in the editable TMT model.
+
+| Threat IDs | STRIDE category | Affected element or flow | Threat description | Relevance and rationale |
+| --- | --- | --- | --- | --- |
+| 1 | Information Disclosure | Staff client → reverse proxy | Interception of mobile client traffic can disclose credentials, API data, and private uploads. | Relevant. Public transport security and server identity protect sensitive data on this flow. |
+| 0 | Elevation of Privileges | Staff mobile device | Jailbreaking or rooting can elevate privileges on the device. | Outside scope. The threat concerns device privilege and integrity. |
+| 2 | Information Disclosure | Staff mobile device | Sensitive data may be exposed from local storage. | Outside scope. The described exposure concerns data at rest. |
+| 3 | Tampering | Staff mobile application | Reverse engineering and modification of mobile binaries. | Outside scope. The described action concerns the integrity of the installed application. |
+| 19, 25, 31, 37, 43, 49 | Elevation of Privileges | Host machines on staff HTTPS, sharing HTTPS, and PostgreSQL flows | Unauthorized access to host data. | Outside scope as described. The template refers to access on a host. The database network exposure is evaluated separately below. |
+| 20, 26, 32, 38, 44, 50 | Elevation of Privileges | Same six directed flows | Elevated privileges and malicious code execution on a host. | Outside scope. These entries concern host execution privileges. |
+| 21, 27, 33, 39, 45, 51 | Information Disclosure | Same six directed flows | Disclosure of sensitive data stored on a host. | Outside scope. These entries concern stored data. |
+| 22, 28, 34, 40, 46, 52 | Tampering | Same six directed flows | Endpoint malware may steal or modify data. | Outside scope. The stated control is endpoint protection. |
+| 23, 29, 35, 41, 47, 53 | Tampering | Same six directed flows | Reverse engineering of deployed binaries. | Outside scope. The described activity concerns deployed software. |
+| 24, 30, 36, 42, 48, 54 | Tampering | Same six directed flows | Modification of deployed binaries. | Outside scope. These entries concern software integrity. |
 
 #### 3.3.4 Proposed Mitigations
 
-| Threat ID | Proposed Mitigation | Rationale |
-|---|---|---|
-| TBD | TBD | TBD |
+The first row maps to a generated TMT ID. The other rows document deployment risks identified through review of the DFD and use descriptive finding names.
+
+| Threat ID or manual finding | Proposed mitigation | Rationale |
+| --- | --- | --- |
+| TMT 1 — Public traffic disclosure | Require HTTPS for staff sign-in, API calls, and uploads. Use a certificate valid for the studio hostname and verify that supported clients reject invalid certificates. Apply the same public HTTPS configuration to downloads and share-link routes. | TLS protects data in transit and lets clients verify the identity of the studio endpoint. |
+| Internal HTTP — Information disclosure and tampering | Limit upstream access to the reverse proxy. Configure the proxy to set forwarding headers and the application to trust them only from authorized proxies. Use certificate-validated TLS if the upstream path crosses a shared or untrusted network. | Forwarded requests and responses can contain credentials, session data, share links, or media. Network restrictions reduce access to the path, and authenticated TLS protects traffic across the path. |
+| PostgreSQL transport and access — Information disclosure and tampering | Restrict PostgreSQL connectivity to authorized services and use an application database account with the permissions Immich requires. Verify the connection's transport settings and require TLS with server identity verification across shared or untrusted networks. | Queries, updates, and returned metadata require confidentiality and integrity. Network controls and database authentication restrict who can connect. |
 
 #### 3.3.5 HTML Threat Modeling Report
 
-[View Network Communication TMT Report](reports/network-communication-report.html)
+[View Network Communication TMT Report](https://htmlpreview.github.io/?https://github.com/marc-fayad/team6-immich/blob/main/reports/network-communication-report.html) · [HTML source](reports/network-communication-report.html)
+
+*The preview targets the final submission on the main branch. Both links depend on the TMT export being committed and merged.*
 
 ---
 
