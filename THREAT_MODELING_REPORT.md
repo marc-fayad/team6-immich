@@ -668,7 +668,9 @@ As a result of this task, I am more capable of analysing a software system, disc
 
 **Marc:**
 
-[Individual reflection.]
+For my part of this assignment, I built a data flow diagram for network communication security for Immich. It traces how sign-ins, uploads/downloads, and sharing links moves through the studio's deployment. The biggest thing I learned was to follow the data past the first security control. Staff and clients connect over HTTPS, but in our model, HTTPS ends at the reverse proxy. The next connection uses internal HTTP and can still carry session tokens and private media. Seeing those connections side by side helped me understand why each hop needs to be evaluated separately. 
+
+Seeing the results from Microsoft Threat Modeling Tool was fascinating and also taught me how much the output depends on how I build the model. I did have an issue though. My first export had threats specific to Azure PostgreSQL and an identity server, which were outside our scenario, but I had added an Identity Server node and an Azure PostGreSQL database, which affected things. After I revised the model, those entries disappeared, but the tool still generated no threats for either direction of the proxy-to-Immich connection. I documented those risks manually because they were clear from the data flow diagram.
 
 **Dillon:**
 
