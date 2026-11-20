@@ -682,7 +682,17 @@ Immich has several security controls that help maintain availability and data pr
 
 #### Recommended Improvements
 
+These recommendations are based on the identified security gaps and preexisting security controls and would help to strengthen the security of data availability and preservation:
 
+- **Backup Media Files Seperately:** Keep a backup of the original media files alongside the database backups.
+- **Relocate Backup Storage:** Configure database backups to be stored on a separate storage disk instead of the same volume as the library, so that a single failure won't be able to destroy both.
+- **Test Restores Regularly:** Do scheduled restore operations on a clean instance using a full-size copy of the library, recording duration of the restore and post-restore asset counts.
+- **Schedule Integrity Checks:** Perform repair and checksum verification operations on a regular basis.
+- **Protect Backup Content:** Ensure that backup data is encrypted at rest or in transit and that database credentials are supplied via docker secrets rather than in plaintext.
+- **Improved Logging:** Keep detailed records of backups/restores, including the date they occurred, the restore outcome, and the admin account that initiated the restore/backup. Restrict access to those logs to admin only.
+- **Monitor Storage Capacity and Availability:** Track storage, job queue depth, and server uptime with external monitoring tools.
+
+Overall, Immich provides most of the security controls needed to maintain availability and preservation, but some aspects of the studio's operations rely solely on their own configuration and how its deployment is maintained. For our photography studio, the biggest priorities would be maintaining backups of the original media files, keeping backups stored separately from the library volume, and monitoring for problems with storage capacity or availability before they become noticed by clients.
 
 ---
 
@@ -737,7 +747,7 @@ One challenge was learning how to use Microsoft Threat Modeling Tool, especially
 
 **Matthew:**
 
-[Individual reflection.]
+While working on this assignment and focusing on my area of availability/data preservation, I was able to expand on the things I learned from working on our last project deliverable about how Immich makes use of backups and access controls to ensure data is preserved and stays available. Using Microsoft's Threat Modeling Tool and experimenting with how different data flows correlate to different potential threats in the analysis view was also very interesting. 
 
 ### 6.2 Combined Team Reflection
 
