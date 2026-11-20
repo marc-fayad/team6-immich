@@ -964,13 +964,7 @@ Members may collaborate on shared DFDs when their security scenarios overlap.
 
 ### 7.2 Collaboration Summary
 
-Team 6 will use its existing GitHub repository and project board to organize and track work for this assignment.
-
-GitHub issues will be used to document responsibilities and monitor progress. Team members will contribute their work through branches and pull requests, allowing changes to be reviewed before being merged into the main report.
-
-Slack will be used to communicate progress, coordinate shared diagrams, and identify outstanding tasks.
-
-[Update this section before submission to summarize the collaboration that actually occurred.]
+Our team primarily communicated through Slack to coordinate responsibilities, discuss assignment requirements, share progress updates, and address questions throughout the project. We divided the threat modeling work into separate security areas so each member could focus on their assigned analysis. Some team members also used GitHub Issues to organize tasks and track progress, while GitHub branches, commits, and pull requests were used to contribute changes to the shared report. This approach allowed us to work independently on our assigned sections while combining our findings into a single team deliverable.
 
 ---
 
