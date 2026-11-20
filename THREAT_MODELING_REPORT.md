@@ -125,31 +125,84 @@ For each diagram:
 
 #### 3.1.1 Scenario Overview
 
-[Describe the authentication, login, account access, and session-management scenarios.]
+This scenario examines authentication and session management within the hypothetical professional photography studio's Immich deployment. Studio employees use a web browser to sign in, access authenticated application functionality, and sign out when finished. The Immich server processes authentication requests and uses PostgreSQL to retrieve user and session information.
+
+The analysis considers the confidentiality of credentials and session tokens, the integrity of authentication requests, and the availability of authentication services. It also examines whether requests can cross trust boundaries without appropriate protections.
 
 #### 3.1.2 DFD and Data Flows
 
-[Insert the DFD image exported from TMT.]
-
 ![Authentication DFD](diagrams/authentication-dfd.png)
 
-[Explain the external entities, processes, data stores, data flows, and trust boundaries.]
+The Level 1 DFD contains five components:
+
+| Component | Role |
+|---|---|
+| Studio Employee | User who initiates authentication and session actions |
+| Studio Employee Web Browser | Client that sends requests and receives authentication responses |
+| Reverse Proxy (Web Server) | Entry point for HTTPS requests and intermediary for application traffic |
+| Immich Server (Authentication) | Processes authentication requests and validates sessions |
+| PostgreSQL (Users & Sessions) | Stores user and session records |
+
+The diagram models eight directional data flows:
+
+| Source → Destination | Data Flow |
+|---|---|
+| Studio Employee → Web Browser | User Authentication and Session Actions |
+| Web Browser → Studio Employee | Authentication and Session Feedback |
+| Web Browser → Reverse Proxy | HTTPS Authentication & Session Requests |
+| Reverse Proxy → Web Browser | HTTPS Authentication & Session Responses |
+| Reverse Proxy → Immich Server | Forward Authentication & Session Requests (HTTP) |
+| Immich Server → Reverse Proxy | Authentication & Session Responses (HTTP) |
+| Immich Server → PostgreSQL | User Authentication & Session Database Operations |
+| PostgreSQL → Immich Server | User Records & Session Query Results |
+
+The DFD identifies three trust boundaries:
+
+1. **Internet Trust Boundary:** Separates the employee's browser from the reverse proxy. HTTPS protects communication in transit, while application authentication is still required to establish user identity.
+2. **Proxy-to-Application Trust Boundary:** Separates the reverse proxy from the Immich authentication service. The modeled connection uses HTTP, making network isolation and appropriate transport protection important.
+3. **Application-to-Database Trust Boundary:** Separates the authentication service from PostgreSQL. Database access controls and secure query handling are important for protecting user and session records.
+
+The original diagram used 18 individual data flows. These were consolidated into eight directional flows to improve readability and reduce repetitive TMT findings while preserving the main authentication, session-validation, and logout interactions.
+
+The DFD represents an assumed studio deployment. Individual network and transport protections must be verified against the actual configuration.
 
 #### 3.1.3 TMT-Generated Threats
 
+Microsoft Threat Modeling Tool generated **59 potential threats** for the simplified authentication DFD. Seven representative findings were selected for closer analysis, covering all six STRIDE categories.
+
 | Threat ID | STRIDE Category | Affected Element / Flow | Threat Description | Relevance |
 |---|---|---|---|---|
-| TBD | TBD | TBD | TBD | TBD |
+| 6 | Spoofing | Browser → Reverse Proxy | An attacker could impersonate a legitimate employee browser. | Relevant: stolen credentials or sessions could enable unauthorized access. |
+| 9 | Tampering | Immich Server → PostgreSQL | Unsafe database query construction could allow SQL injection. | Relevant for investigation; no SQL injection vulnerability was confirmed. |
+| 22 | Repudiation | Browser → Reverse Proxy | Insufficient records could make it difficult to establish whether the proxy received an authentication request. | Relevant: authentication activity requires appropriate logging and audit evidence. |
+| 219 | Information Disclosure | Reverse Proxy → Immich Server | Authentication traffic could be intercepted on the modeled HTTP connection. | Relevant if an attacker can access the internal network path. |
+| 220 | Information Disclosure | Reverse Proxy → Immich Server | Intercepted credentials or reusable session tokens could be exposed or replayed. | Relevant because sensitive authentication data may traverse the modeled HTTP connection. |
+| 10 | Denial of Service | Immich Server → PostgreSQL | Excessive authentication or database resource consumption could disrupt service. | Relevant: resource exhaustion could prevent legitimate employee access. |
+| 2 | Elevation of Privilege | Browser → Reverse Proxy | The reverse proxy could improperly impersonate a browser's security context. | Relevant for investigation of proxy trust and authorization boundaries. |
+
+All 59 generated findings were initially assigned High priority by TMT. These are automatically generated potential threats, not 59 confirmed high-severity vulnerabilities.
+
+The selected findings were documented in the TMT model with justifications and recommended controls. Their statuses remain Not Started because the proposed mitigations have not been validated for the hypothetical deployment.
 
 #### 3.1.4 Proposed Mitigations
 
 | Threat ID | Proposed Mitigation | Rationale |
 |---|---|---|
-| TBD | TBD | TBD |
+| 6 | Enforce secure authentication, server-side session validation, session expiration and revocation, and secure cookie settings. | Reduces the likelihood of unauthorized access through impersonation or compromised sessions. |
+| 9 | Use parameterized queries, safe database access methods, input validation, and least-privilege database permissions. | Reduces opportunities for SQL injection and limits potential database impact. |
+| 22 | Maintain protected, timestamped reverse proxy access logs and authentication event records without recording sensitive credentials or tokens. | Improves accountability and investigation of disputed authentication activity. |
+| 219 | Isolate the internal application network and use authenticated TLS on upstream connections where supported and appropriate. | Reduces the risk of interception of authentication traffic. |
+| 220 | Protect credentials and session tokens in transit, restrict internal network access, and enforce secure session management. | Reduces credential exposure and potential replay attacks. |
+| 10 | Apply rate limiting, connection and resource limits, timeouts, and monitoring for abnormal authentication activity. | Helps maintain service availability under excessive request loads. |
+| 2 | Enforce authentication and authorization within the application, restrict proxy privileges, and validate trusted identity headers. | Prevents improper assumptions of user identity or privilege across the proxy boundary. |
+
+These mitigations are recommendations based on the modeled threats. Some protections may already be implemented by Immich, while others depend on the studio's deployment configuration. Their implementation and effectiveness are evaluated further in Section 4.1.
 
 #### 3.1.5 HTML Threat Modeling Report
 
 [View Authentication TMT Report](reports/authentication-report.html)
+
+The exported HTML report contains the authentication DFD, all 59 generated threats, and the seven representative findings documented with justifications.
 
 ---
 
@@ -497,17 +550,56 @@ Distinguish between:
 
 **Owner:** Christian Theisen
 
-#### Existing Security Controls
+#### 4.1.1 Existing Security Controls
 
-[Document relevant authentication and session-management controls found in Immich.]
+The Immich authentication implementation was reviewed to identify security controls relevant to the threats generated by Microsoft Threat Modeling Tool. The review focused on authentication, session management, authorization, and logging.
 
-#### Identified Security Gaps
+The following controls were identified in the Immich source code:
 
-[Identify missing, incomplete, or unverified mitigations.]
+| Security Control | Implementation Evidence | Related Threats |
+|---|---|---|
+| Password verification | `AuthService.login()` uses bcrypt comparison to validate submitted passwords. A dummy hash is used for nonexistent users to reduce timing-based user enumeration. | 6 |
+| Password hashing | `AuthService.changePassword()` hashes replacement passwords using bcrypt before updating the user record. | 6 |
+| Session token protection | `BaseService.createLoginResponse()` generates a random session token and stores its SHA-256 hash rather than the plaintext token. | 6, 220 |
+| Server-side session validation | `AuthService.validateSession()` hashes the presented token and retrieves the corresponding session record. Invalid tokens are rejected. | 6, 2 |
+| Session invalidation | `AuthService.logout()` deletes the current session record and emits a session deletion event. | 6, 2 |
+| Authentication event logging | Failed password-login attempts generate warning logs containing the attempted email address and client IP address. | 22 |
+| Authorization checks | `AuthService` validates authentication context and applies permission checks for protected operations. | 2 |
 
-#### Recommended Improvements
+These controls provide evidence that Immich implements several protections against authentication spoofing, session impersonation, and unauthorized access. However, the presence of these controls does not guarantee that every possible attack is prevented.
 
-[Describe additional security measures, testing, or configuration changes.]
+#### 4.1.2 Security Gaps and Deployment Considerations
+
+The source-code review also identified areas where additional verification or deployment-specific protections are necessary.
+
+| Threat ID | Potential Risk | Assessment | Recommended Action |
+|---|---|---|---|
+| 6 | Spoofing of an employee browser or session | Existing password verification and server-side session validation provide protections. Compromised credentials or tokens remain possible attack scenarios. | Use HTTPS, protect session cookies, apply appropriate session policies, and consider additional authentication protections. |
+| 9 | SQL injection against PostgreSQL | The TMT finding identifies a potential injection risk, but this review did not establish an exploitable SQL injection vulnerability. | Review database query construction and ORM usage, verify parameterization, and restrict database permissions. |
+| 22 | Repudiation of authentication requests | Failed-login warning logs exist, but comprehensive reverse-proxy access logging and log retention were not verified. | Configure protected access and audit logs, appropriate timestamps, retention policies, and monitoring. |
+| 219 | Sniffing of authentication traffic | The modeled reverse-proxy-to-Immich connection uses HTTP. Its exposure depends on the actual network environment. | Isolate backend traffic and evaluate upstream TLS where supported and appropriate. |
+| 220 | Exposure of credentials in transit | Session tokens are hashed before storage, but this does not encrypt tokens while they travel across the network. | Protect internal network paths, enforce secure external transport, and limit access to authentication traffic. |
+| 10 | Excessive resource consumption | Application and database resource exhaustion remain potential availability threats. The relevant rate limits and resource controls were not fully verified. | Review request throttling, database connection limits, timeouts, monitoring, and resource allocation. |
+| 2 | Elevation of privilege through impersonation | Server-side authentication and permission checks provide protection, but proxy trust and deployment configuration require review. | Restrict proxy permissions, validate trusted headers, and maintain application-level authorization checks. |
+
+A particularly important distinction concerns the reverse proxy. HTTPS between the browser and reverse proxy protects external communication, but it does not automatically encrypt the connection between the reverse proxy and Immich. In the modeled deployment, that internal connection uses HTTP. This is not automatically a vulnerability when traffic is appropriately isolated, but it creates a potential interception risk if an attacker gains access to the internal network.
+
+Similarly, hashing session tokens in the database reduces exposure if stored records are compromised, but it does not replace transport encryption or secure session handling.
+
+#### 4.1.3 Overall Assessment
+
+The source-code review indicates that Immich implements meaningful authentication and session-management protections, including bcrypt password verification, hashed session-token storage, server-side session validation, logout-based session invalidation, and authorization checks.
+
+The most significant remaining concerns in the hypothetical photography studio deployment involve secure reverse-proxy configuration, internal network protection, comprehensive audit logging, resource-exhaustion defenses, and verification of database query safety.
+
+These findings should be treated as areas for security validation and configuration review rather than confirmed vulnerabilities. The TMT-generated threats provide a structured basis for identifying risks, while the source-code review helps distinguish implemented controls from recommended or unverified protections.
+
+#### 4.1.4 References
+
+1. [Immich Authentication Service — auth.service.ts](https://github.com/immich-app/immich/blob/main/server/src/services/auth.service.ts)
+2. [Immich Base Service — base.service.ts](https://github.com/immich-app/immich/blob/main/server/src/services/base.service.ts)
+3. [Immich Authentication and Session Cookie Definitions — enum.ts](https://github.com/immich-app/immich/blob/main/server/src/enum.ts)
+4. [Immich Authentication TMT Report](reports/authentication-report.html)
 
 ---
 
@@ -699,23 +791,107 @@ Overall, Immich provides most of the security controls needed to maintain availa
 
 ## 5. Optional AI-Assisted Threat Analysis
 
-**Note:** This section is optional and does not replace the required Microsoft Threat Modeling Tool analysis.
-
 ### 5.1 AI Analysis Method
 
-[Document the AI tool, prompt, and DFD used, if applicable.]
+OpenAI ChatGPT was used to conduct an independent STRIDE analysis of the Authentication and Session Management data flow diagram (DFD). The analysis was performed in a separate conversation to reduce the influence of the previously reviewed Microsoft Threat Modeling Tool (TMT) findings.
+
+The AI was provided with the following information:
+
+- Five components: Studio Employee, Studio Employee Web Browser, Reverse Proxy (Web Server), Immich Server (Authentication), and PostgreSQL (Users & Sessions).
+- Eight directional data flows representing authentication requests, responses, and database interactions.
+- Three trust boundaries: Internet, Proxy-to-Application, and Application-to-Database.
+- HTTPS communication between the browser and reverse proxy, with HTTP modeled between the reverse proxy and Immich.
+- Authentication activities including employee login, authenticated requests, session validation, and logout.
+
+**AI Prompt:**
+
+> Analyze the following Level 1 data flow diagram for a hypothetical professional photography studio using Immich for photo management.
+>
+> The diagram contains five components: Studio Employee, Studio Employee Web Browser, Reverse Proxy (Web Server), Immich Server (Authentication), and PostgreSQL (Users & Sessions).
+>
+> There are eight directional data flows connecting these components. Browser-to-proxy communication uses HTTPS. Proxy-to-Immich communication is modeled as HTTP. The application exchanges authentication and session information with PostgreSQL.
+>
+> Three trust boundaries are modeled: Internet Trust Boundary, Proxy-to-Application Trust Boundary, and Application-to-Database Trust Boundary.
+>
+> The scenario includes employee login, authenticated requests, session validation, and logout.
+>
+> Perform a STRIDE threat analysis covering Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, and Elevation of Privilege.
+>
+> For each category, identify a plausible threat, the affected component or data flow, the potential security impact, and a recommended mitigation.
+>
+> Distinguish potential threats from confirmed vulnerabilities. Do not assume that a security control is missing without supporting evidence. Pay particular attention to authentication tokens, trust boundaries, reverse-proxy configuration, database access, and session management.
+
+The AI response was reviewed against the seven representative TMT findings documented in Section 3.1 and the security controls discussed in Section 4.1.
 
 ### 5.2 AI-Identified STRIDE Threats
 
-[Summarize threats identified through AI analysis.]
+The independent AI analysis identified six potential threats, one for each STRIDE category.
+
+| STRIDE Category | AI-Identified Threat | Potential Impact | Recommended Mitigation |
+|---|---|---|---|
+| Spoofing | An attacker obtains a valid authentication token and impersonates a studio employee. | Unauthorized account access and potential exposure of private photographs. | HTTPS, secure token handling, expiration, revocation, and consideration of MFA. |
+| Tampering | An attacker with internal network access modifies authentication traffic over the modeled HTTP connection. | Manipulated requests or compromised session information. | Network isolation, upstream TLS where appropriate, and trusted proxy-header configuration. |
+| Repudiation | An employee or attacker denies performing actions that are insufficiently recorded. | Difficulty investigating unauthorized access or reconstructing incidents. | Protected authentication logs, timestamps, appropriate retention, and centralized logging where applicable. |
+| Information Disclosure | Authentication tokens or user records are exposed through interception, proxy logging, or unauthorized database access. | Account compromise and exposure of sensitive studio information. | Restrict database access, protect internal communication, and avoid logging sensitive tokens. |
+| Denial of Service | Excessive authentication requests exhaust application or database resources. | Legitimate employees cannot authenticate or access studio services. | Rate limiting, request timeouts, monitoring, and traffic protections. |
+| Elevation of Privilege | Improperly trusted proxy headers or authorization weaknesses permit access beyond an employee's assigned privileges. | Unauthorized administrative actions or access to restricted resources. | Server-side authorization, trusted proxy configuration, and permission testing. |
+
+The AI also highlighted three trust-boundary concerns:
+
+1. **Internet Trust Boundary:** HTTPS protects browser-to-proxy traffic when properly configured, but does not prevent the reuse of stolen authentication tokens.
+2. **Proxy-to-Application Trust Boundary:** The modeled HTTP connection could expose authentication traffic if an attacker gains access to the internal network.
+3. **Application-to-Database Trust Boundary:** Database permissions, connectivity restrictions, and sensitive record handling require verification.
+
+The AI explicitly characterized these findings as potential threats rather than confirmed Immich vulnerabilities.
 
 ### 5.3 Comparison with TMT Results
 
-[Compare threats and mitigations identified by AI against those generated by TMT.]
+Microsoft Threat Modeling Tool generated 59 potential threats for the simplified authentication DFD. Seven representative threats were selected for detailed documentation in Section 3.1.
+
+The independent AI analysis identified six broader threat scenarios covering the same six STRIDE categories.
+
+| STRIDE Category | TMT Threat ID | TMT Finding | AI Finding | Comparison |
+|---|---|---|---|---|
+| Spoofing | 6 | Spoofing the Studio Employee Web Browser | Theft and reuse of employee authentication tokens | Both identify impersonation risks. AI provides a specific compromised-token scenario. |
+| Tampering | 9 | Potential SQL injection involving PostgreSQL | Modification of authentication traffic on the internal HTTP connection | Different attack paths within the same STRIDE category. TMT emphasizes database query safety; AI emphasizes network integrity. |
+| Repudiation | 22 | Reverse proxy may deny receiving authentication data | Insufficient logs prevent attribution of employee or attacker activity | Both emphasize the need for reliable logging and audit evidence. |
+| Information Disclosure | 219, 220 | Data flow sniffing and weak credential transit | Exposure through internal HTTP traffic, proxy logs, or unauthorized database access | Strong overlap regarding network interception. AI additionally discusses logging and database access. |
+| Denial of Service | 10 | Excessive resource consumption affecting Immich or PostgreSQL | Authentication request flooding exhausts application or database resources | Both identify availability risks and recommend resource controls. |
+| Elevation of Privilege | 2 | Reverse proxy may impersonate the browser's security context | Improperly trusted headers or authorization weaknesses permit additional privileges | Both identify privilege-boundary concerns. AI provides additional configuration examples. |
+
+**Similarities**
+
+Both approaches identified risks involving authentication impersonation, insufficient logging, information exposure, resource exhaustion, and improper privilege handling.
+
+Both also supported mitigations involving secure authentication, network protection, access controls, logging, and resource management.
+
+**Differences**
+
+TMT generated a larger set of threats associated with individual components and data flows. Its findings included specific threat IDs, STRIDE classifications, and affected interactions.
+
+The AI produced fewer, broader scenarios and provided additional context about attack prerequisites and potential operational impacts.
+
+The clearest difference involved tampering. TMT highlighted potential SQL injection against PostgreSQL, while the AI emphasized modification of authentication traffic across the modeled HTTP connection.
+
+The AI also raised concerns about sensitive information appearing in proxy logs and improperly trusted forwarding headers. These observations provide additional considerations for deployment review but do not establish confirmed vulnerabilities.
 
 ### 5.4 Reflection on AI Usefulness
 
-[Discuss strengths, limitations, and differences between the approaches.]
+The AI-assisted analysis was useful for interpreting the technical findings generated by Microsoft Threat Modeling Tool and connecting them to realistic authentication scenarios.
+
+TMT was effective at systematically identifying potential threats based on the DFD components, data flows, and trust boundaries. However, its 59 generated findings included overlapping scenarios that required manual review and prioritization.
+
+The AI analysis was more concise and explained how threats could affect a professional photography studio. For example, it connected stolen authentication tokens to unauthorized employee access and explained why an internal HTTP connection may create risks depending on network isolation.
+
+The independent analysis also identified a different tampering scenario from the one selected for the TMT report. This demonstrated that AI can help broaden the review by suggesting additional attack paths.
+
+However, AI-generated findings have important limitations. The model did not inspect the actual deployment, execute security tests, or independently verify the implementation of every proposed mitigation. Its recommendations must therefore be checked against source code, documentation, and deployment configuration.
+
+Another limitation is that AI output depends on the information included in the prompt. The Level 1 DFD provides a useful architectural overview but does not capture every application detail or security control.
+
+Overall, the two approaches complemented each other. TMT provided structured, traceable threat identification, while AI helped interpret the findings, identify additional scenarios, and explain security implications.
+
+The final conclusions were based on human review of the generated threats and the available Immich implementation evidence rather than accepting AI-generated recommendations as confirmed security findings.
 
 ---
 
@@ -725,7 +901,9 @@ Overall, Immich provides most of the security controls needed to maintain availa
 
 **Christian Theisen:**
 
-[What did you learn? What was most useful?]
+For this assignment, I was responsible for analyzing authentication and session management within our hypothetical Immich photography studio deployment. I created a data flow diagram using Microsoft Threat Modeling Tool (TMT), reviewed the generated STRIDE threats, and investigated existing security controls in the Immich source code. One of my biggest challenges was determining the appropriate level of detail for the diagram. My initial model contained 18 data flows, which made it difficult to read and produced repetitive threats. After simplifying it to eight directional flows, I learned that effective threat modeling requires clearly representing important system interactions rather than including unnecessary complexity. I also learned to distinguish potential threats from confirmed vulnerabilities, particularly when reviewing the 59 threats generated by TMT and comparing them against Immich's existing security controls.
+
+The assignment also improved my understanding of trust boundaries, authentication tokens, and session management. I learned that HTTPS between the browser and reverse proxy does not automatically protect internal communication, and that security risks depend on the actual deployment configuration. Comparing TMT findings with an independent AI-assisted STRIDE analysis provided another perspective on potential attack scenarios. While TMT offered structured and traceable findings, AI helped explain broader risks and their potential impacts. However, both approaches required critical review and verification against source code and configuration. Overall, this assignment strengthened my understanding of how threat modeling, security controls, and manual analysis work together to identify and evaluate potential security risks.
 
 **Adu:**
 
