@@ -408,13 +408,39 @@ The HTML report was exported from Microsoft Threat Modeling Tool and contains th
 
 #### 3.5.1 Scenario Overview
 
-[Describe media availability, backups, recovery, system failures, and data preservation.]
+This scenario deals with how Immich goes about preserving the studio's media assets and keeps them retrievable even after accidental deletion, hardware failure, or malicious activity. For a photography studio, client work can not be recreated once it's been lost, and any instance that is unavailable during a deadline is a business failure, even if no data was exposed.
+
+Immich stores original media files on the filesystel and records asset file paths in its PostgreSQL Database instead of scanning the library folder, so both of those components must survive and stay consistent for an asset to be retrievable. Immich automatically performs database backups on a schedule configured by the user and supports restoring a backup via the web interface, but does not back up the media files themselves. 
+
+The biggest security concerns are unauthorized user of the admin restore function, loss/corruption of backup data, insufficient logging of backup and restore operations, and exposure of the backup data as it crosses the boundary to an offsite location.
 
 #### 3.5.2 DFD and Data Flows
 
 ![Availability and Data Preservation DFD](diagrams/availability-dfd.png)
 
-[Describe relevant components, flows, and trust boundaries.]
+The data flow diagram was created with the Microsoft Threat Modeling Tool and includes these components:
+
+- **Studio Employee:** The user that uploads and retrieves photos and videos
+- **Studio Administrator:** The user who does the database restores
+- **Immich Application Server:** Processes requests, queues all background work, and performs the restores
+- **Background Job Worker:** Does any scheduled database backups and copies backups to offsite location
+- **Media File Storage:** Stores original photos and videos
+- **PostgreSQL Database:** Stores application data and asset metadata, including file paths used to locate media assets
+- **Job Queue (Redis):** Holds queued background jobs
+- **Local Backup Storage:** Holds database backups under the upload location
+- **Offsite Backup Storage:** Holds copies of backups in a separate location
+
+There are nine data flows included in the diagram:
+
+1. Upload Photos and Videos
+2. Retrieve Photos and Videos
+3. Store Photos and Videos
+4. Store Asset Metadata
+5. Queue Background Job
+6. Read Job
+7. Copy Database Backup
+8. Copy Backups Offsite
+9. Restore Database Backup
 
 #### 3.5.3 TMT-Generated Threats
 
