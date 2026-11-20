@@ -510,7 +510,7 @@ Additional threats uncovered by the threat modeling tool which apply to other se
 | T4 | Retain backup and restore job records, record drill results including dates and outcomes | Establishes when a loss occurs and when recovery was last verified |
 | T5 | Configure the reverse proxy with a valid certificate and verify cert parameters | Prevents interception of admin sessions |
 | T6 | Require OIDC authentication with multi-factor authentication for admin accounts | Reduces impact of stolen credentials |
-| T7 | Use a studio-owned domain with a valid certificate and train staff to access the instance via that address only | Recuses effectiveness of phishing |
+| T7 | Use a studio-owned domain with a valid certificate and train staff to access the instance via that address only | Reduces the effectiveness of phishing |
 | T8 | Restrict restore functionality to admin accounts and require a valid authenticated session | Prevents an ordinary user account from replacing live data |
 | T9 | Rely on Immich's use of type-safe queries and keep instance updated | Prevents injection through application layer |
 | T10 | Supply database credentials through Docker secrets or file-based environment variables rather than plaintext | Prevents credential exposure through config files |
@@ -889,7 +889,7 @@ The assignment also improved my understanding of trust boundaries, authenticatio
 
 The assignment helped me to identify threats within the Photo/Video Access and Authorisation process for Immich, I learned how to secure access to sensitive user data within Immich is achieved via correct authentication, authorisation, data management and media storage.
 
-Understanding of how to apply the STRIDE approach to help discover security threats was one key thing taken from this task. This allowed me to consider threats such as Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service and Elevation of Privilege. Considering the 19 threats identified by the Microsoft Threat Modeling Tool has allowed me to understand which system components/data flows are vulnerable to which threats.threats. I learned how to apply theory to real-world application in terms of securing software.
+Understanding of how to apply the STRIDE approach to help discover security threats was one key thing taken from this task. This allowed me to consider threats such as Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service and Elevation of Privilege. Considering the 19 threats identified by the Microsoft Threat Modeling Tool has allowed me to understand which system components/data flows are vulnerable to which threats. I learned how to apply theory to real-world application in terms of securing software.
 As a result of this task, I am more capable of analysing a software system, discovering security threats and suggesting improvements for security. Going forwards, I aim to include threat modelling at earlier stages of software development and perform security testing to confirm that security controls have been effectively implemented to protect users and their data.
 
 **Marc:**
