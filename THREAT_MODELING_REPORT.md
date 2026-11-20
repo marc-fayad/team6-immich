@@ -212,7 +212,6 @@ The exported HTML report contains the authentication DFD, all 59 generated threa
 
 #### 3.2.1 Scenario Overview
 
-[Describe private asset access, media authorization, shared links, and protected photo/video retrieval.]
 a) Accessing Private Media Assets
 
 When uploading media (photos/videos), users have the option to make it private. If an asset is private it should only be visible by its owner or users given access. When trying to access private media from a user, the Immich server must confirm that they have permission to view this asset.
@@ -303,21 +302,11 @@ The most critical trust boundaries are between the user requests and the API, an
 
 #### 3.2.3 TMT-Generated Threats
 
-| Threat ID | STRIDE Category | Affected Element / Flow | Threat Description | Relevance |
-|---|---|---|---|---|
-| TBD | TBD | TBD | TBD | TBD |
-
 <img width="1015" height="566" alt="image" src="https://github.com/user-attachments/assets/67d04939-1055-45cd-9f8f-a4c87ddaa7f5" />
-
 
 #### 3.2.4 Proposed Mitigations
 
-| Threat ID | Proposed Mitigation | Rationale |
-|---|---|---|
-| TBD | TBD | TBD |
-
 <img width="927" height="675" alt="image" src="https://github.com/user-attachments/assets/733faf57-ee5d-471d-b9df-88d9d8c2f1e4" />
-
 
 #### 3.2.5 HTML Threat Modeling Report
 
@@ -616,8 +605,6 @@ These findings should be treated as areas for security validation and configurat
 5. Secured sharing links: Users can share certain media with a password protected and time limited link.
 6. Secured media storage: Media is stored using application managed storage. Access is restricted to prevent unauthorized users from retrieving media. These controls allow for the protection of confidentiality of private media. They address multiple STRIDE threats including Spoofing, Tampering, Information Disclosure, and Elevation of privilege.
 
-[Document relevant media authorization and sharing controls.]
-
 #### Identified Security Gaps
 Threats identified
 1. Authorization: It may not be enforced correctly at all endpoints of the APIs meaning that private data (images, videos, or metadata) could be accessed by unauthorized users.
@@ -627,8 +614,6 @@ Threats identified
 5. Denial of Service: Too many uploads, downloads, and/or requests to the database could lead to a denial of service.
 6. Backup and Recovery: It has not been verified whether effective backup and recovery measures are in place within the deployment of the project.
 Note: These threats (or lack of mitigations) are potential threats within the system, however they are not confirmed vulnerabilities in the current deployment of Immich.
-
-[Identify missing, incomplete, or unverified mitigations.]
 
 Threats within the Photo/Video Access and Authorization feature have been identified within the DFD and STRIDE analysis. 
 1. Authorization Incomplete: Although authorization is implemented in the application, to ensure correct authorization to access media resources is applied to all endpoints, it has not been sufficiently verified. This may mean that private photos, videos, thumbnails or metadata can be accessed by unauthorized users.
@@ -906,8 +891,6 @@ For this assignment, I was responsible for analyzing authentication and session 
 The assignment also improved my understanding of trust boundaries, authentication tokens, and session management. I learned that HTTPS between the browser and reverse proxy does not automatically protect internal communication, and that security risks depend on the actual deployment configuration. Comparing TMT findings with an independent AI-assisted STRIDE analysis provided another perspective on potential attack scenarios. While TMT offered structured and traceable findings, AI helped explain broader risks and their potential impacts. However, both approaches required critical review and verification against source code and configuration. Overall, this assignment strengthened my understanding of how threat modeling, security controls, and manual analysis work together to identify and evaluate potential security risks.
 
 **Adu:**
-
-[Individual reflection.]
 
 The assignment help me to identify threats within the Photo/Video Access and Authorisation process for Immich, I learned how to secure access to sensitive user data within Immich is achieved via correct authentication, authorisation, data management and media storage.
 
