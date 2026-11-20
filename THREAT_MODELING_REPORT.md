@@ -13,7 +13,7 @@
 
 Immich is an open-source, self-hosted photo and video management application that allows users to upload, organize, store, and share digital media. Since Immich handles potentially sensitive information, understanding its security risks is important for organizations considering its use.
 
-For this assignment, Team 6 will examine Immich through data flow diagrams (DFDs) and threat modeling to identify potential security weaknesses, evaluate possible mitigations, and determine whether existing security controls adequately address the identified threats.
+For this assignment, Team 6 examined Immich through data flow diagrams (DFDs) and threat modeling to identify potential security weaknesses, evaluate possible mitigations, and determine whether existing security controls adequately address the identified threats.
 
 ### 1.2 Operational Environment
 
@@ -57,7 +57,7 @@ Threats identified during this assignment represent potential security risks and
 
 ### 2.1 Microsoft Threat Modeling Tool
 
-Team 6 will use Microsoft's Threat Modeling Tool (TMT) to develop and analyze DFDs representing critical interactions within Immich.
+Team 6 used Microsoft's Threat Modeling Tool (TMT) to develop and analyze DFDs representing critical interactions within Immich.
 
 The diagrams will identify external entities, processes, data stores, data flows, and trust boundaries. Each diagram will focus on the security scenarios established in our previous use/misuse case and assurance case assignments.
 
@@ -235,9 +235,6 @@ Secure media access means that media can only be accessed once authorisation has
 ![Photo and Video Authorization DFD](diagrams/asset-authorization-dfd.png)
 
 <img width="975" height="524" alt="image" src="https://github.com/user-attachments/assets/45e5a075-c4e1-4e65-b195-d7cf092d725e" />
-
-
-[Describe relevant components, flows, and trust boundaries.]
 
 Photo/Video Access and Authorization
 Components
@@ -451,11 +448,11 @@ The HTML report was exported from Microsoft Threat Modeling Tool and contains th
 
 #### 3.5.1 Scenario Overview
 
-This scenario deals with how Immich goes about preserving the studio's media assets and keeps them retrievable even after accidental deletion, hardware failure, or malicious activity. For a photography studio, client work can not be recreated once it's been lost, and any instance that is unavailable during a deadline is a business failure, even if no data was exposed.
+This scenario deals with how Immich goes about preserving the studio's media assets and keeps them retrievable even after accidental deletion, hardware failure, or malicious activity. For a photography studio, client work cannot be recreated once it's been lost, and any instance that is unavailable during a deadline is a business failure, even if no data was exposed.
 
-Immich stores original media files on the filesystel and records asset file paths in its PostgreSQL Database instead of scanning the library folder, so both of those components must survive and stay consistent for an asset to be retrievable. Immich automatically performs database backups on a schedule configured by the user and supports restoring a backup via the web interface, but does not back up the media files themselves. 
+Immich stores original media files on the filesystem and records asset file paths in its PostgreSQL database instead of scanning the library folder, so both of those components must survive and stay consistent for an asset to be retrievable. Immich automatically performs database backups on a schedule configured by the user and supports restoring a backup via the web interface, but does not back up the media files themselves. 
 
-The biggest security concerns are unauthorized user of the admin restore function, loss/corruption of backup data, insufficient logging of backup and restore operations, and exposure of the backup data as it crosses the boundary to an offsite location.
+The biggest security concerns are unauthorized use of the admin restore function, loss/corruption of backup data, insufficient logging of backup and restore operations, and exposure of the backup data as it crosses the boundary to an offsite location.
 
 #### 3.5.2 DFD and Data Flows
 
@@ -513,7 +510,7 @@ Additional threats uncovered by the threat modeling tool which apply to other se
 | T3 | Return generic error messages for failed restore operations, avoid exposing internal info | Prevents disclosure of connection strings and file paths |
 | T4 | Retain backup and restore job records, record drill results including dates and outcomes | Establishes when a loss occurs and when recovery was last verified |
 | T5 | Configure the reverse proxy with a valid certificate and verify cert parameters | Prevents interception of admin sessions |
-| T6 | Require OIDC authentication with mulfi-factor authentication for admin accounts | Reduces impact of stolen credentials |
+| T6 | Require OIDC authentication with multi-factor authentication for admin accounts | Reduces impact of stolen credentials |
 | T7 | Use a studio-owned domain with a valid certificate and train staff to access the instance via that address only | Recuses effectiveness of phishing |
 | T8 | Restrict restore functionality to admin accounts and require a valid authenticated session | Prevents an ordinary user account from replacing live data |
 | T9 | Rely on Immich's use of type-safe queries and keep instance updated | Prevents injection through application layer |
@@ -618,7 +615,7 @@ Note: These threats (or lack of mitigations) are potential threats within the sy
 Threats within the Photo/Video Access and Authorization feature have been identified within the DFD and STRIDE analysis. 
 1. Authorization Incomplete: Although authorization is implemented in the application, to ensure correct authorization to access media resources is applied to all endpoints, it has not been sufficiently verified. This may mean that private photos, videos, thumbnails or metadata can be accessed by unauthorized users.
 2. Privilege Escalation Incomplete: Potential privilege escalation threats have been identified within the authentication, authorization and media access features. Further testing is required to verify that these features cannot bypass access permissions.
-3. Audit Logging Incomplete: Full logging of media upload, deletion, editing and sharing has not been implemented. Without a sufficient audit trail, it may be difficult to determine if unauthorized access has occurred and which user may be responsible.
+3. Audit Logging Incomplete: Comprehensive logging of media uploads, deletions, edits, and sharing activities was not verified during this review. Without a sufficient audit trail, it may be difficult to determine if unauthorized access has occurred and which user may be responsible.
 4. Secure Data Storage Incomplete: Although PostgreSQL and secure data storage on the server are implemented, it has not been sufficiently verified that least privilege, secure internal communication and secure storage are all implemented.
 5. DDoS Incomplete: It has not been verified that limiting media uploads, limiting request rates, limiting resource usage and limiting database connections will prevent DDoS attacks. Excess requests may cause resource exhaustion, and cause interruption to media services.
  6. Shared Link Incomplete: Password protected and time limited links can be created. However, further testing is required to ensure that once a link has expired, been revoked or is unauthorized, that private media cannot be accessed.
@@ -626,22 +623,21 @@ Threats within the Photo/Video Access and Authorization feature have been identi
 
 #### Recommended Improvements
 
-1.Ensure ownership and permissions are correctly applied in all media endpoints (including thumbnails, download, metadata and shared links).
+1. Ensure ownership and permissions are correctly applied in all media endpoints (including thumbnails, download, metadata and shared links).
 
-2.Ensure secure authentication of sessions. Users should be given the least permissions possible. Ensure users cannot impersonate each other between components.
+2. Ensure secure authentication of sessions. Users should be given the least permissions possible. Ensure users cannot impersonate each other between components.
 
-3.Ensure audit logs are implemented. These should be implemented for uploading, deleting, changing permissions and sharing assets.
+3. Ensure audit logs are implemented. These should be implemented for uploading, deleting, changing permissions and sharing assets.
 
-4.Ensure that data in the database and media is secured. This can be done with access control, secure connections, input validation and ensuring data integrity.
+4. Ensure that data in the database and media is secured. This can be done with access control, secure connections, input validation and ensuring data integrity.
 
-5.Implement protection on resources. Upload limits, throttling, timeout and monitoring should be used to reduce the possibility of a denial of service attack.
+5. Implement protection on resources. Upload limits, throttling, timeout and monitoring should be used to reduce the possibility of a denial of service attack.
 
-6.Ensure secure back up. Both the PostgreSQL and media should be backed up securely, and regular restoration testing should be performed.
+6. Ensure secure backups. Both the PostgreSQL and media should be backed up securely, and regular restoration testing should be performed.
 
-7.Ensure more security testing. Testing should be done for cross user permissions, security of shared links and penetration testing to ensure mitigation strategies are effective.
+7. Ensure more security testing. Testing should be done for cross user permissions, security of shared links and penetration testing to ensure mitigation strategies are effective.
 
 ---
-
 
 ### 4.3 Network Communication Security
 
@@ -751,7 +747,7 @@ Immich has several security controls that help maintain availability and data pr
 
 #### Identified Security Gaps
 
-- **Media File Backups:** Immich does not handle fileystem backups, only the database is backed up automatically. Backing up the original photos and videos is the user's responsibility.
+- **Media File Backups:** Immich does not handle filesystem backups, only the database is backed up automatically. Backing up the original photos and videos is the user's responsibility.
 - **Backup Storage Location:** Automatic database backups are saved under the upload location, which by default is on the same volume as the main library. In the event of something like a ransomware attack or hardware failure, both copies would be lost.
 - **Restore Verification:** Immich can do backup restores and will roll back automatically if a restore fails, but it doesn't verify if a restore matches the original. Reconciling assets is something the user has to do themself.
 - **Scheduled Integrity Checking:** The documentation for Immich does not specify if its repair function runs on a schedule or only when the admin initiates it.
@@ -762,7 +758,7 @@ Immich has several security controls that help maintain availability and data pr
 
 These recommendations are based on the identified security gaps and preexisting security controls and would help to strengthen the security of data availability and preservation:
 
-- **Backup Media Files Seperately:** Keep a backup of the original media files alongside the database backups.
+- **Backup Media Files Separately:** Keep a backup of the original media files alongside the database backups.
 - **Relocate Backup Storage:** Configure database backups to be stored on a separate storage disk instead of the same volume as the library, so that a single failure won't be able to destroy both.
 - **Test Restores Regularly:** Do scheduled restore operations on a clean instance using a full-size copy of the library, recording duration of the restore and post-restore asset counts.
 - **Schedule Integrity Checks:** Perform repair and checksum verification operations on a regular basis.
@@ -892,16 +888,16 @@ The assignment also improved my understanding of trust boundaries, authenticatio
 
 **Adu:**
 
-The assignment help me to identify threats within the Photo/Video Access and Authorisation process for Immich, I learned how to secure access to sensitive user data within Immich is achieved via correct authentication, authorisation, data management and media storage.
+The assignment helped me to identify threats within the Photo/Video Access and Authorisation process for Immich, I learned how to secure access to sensitive user data within Immich is achieved via correct authentication, authorisation, data management and media storage.
 
-Understanding of how to apply the STRIDE approach to help discover security threats was one key thing taken from this task. This allowed me to consider threats such as Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service and Elevation of Privilege. Considering the 19 threats identified by the Microsoft Threat Modeling Tool has allowed me to understand which system components/data flows are vulnerable to which threats.It learned how to apply theory to real-world application in terms of securing software.
+Understanding of how to apply the STRIDE approach to help discover security threats was one key thing taken from this task. This allowed me to consider threats such as Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service and Elevation of Privilege. Considering the 19 threats identified by the Microsoft Threat Modeling Tool has allowed me to understand which system components/data flows are vulnerable to which threats.threats. I learned how to apply theory to real-world application in terms of securing software.
 As a result of this task, I am more capable of analysing a software system, discovering security threats and suggesting improvements for security. Going forwards, I aim to include threat modelling at earlier stages of software development and perform security testing to confirm that security controls have been effectively implemented to protect users and their data.
 
 **Marc:**
 
-For my part of this assignment, I built a data flow diagram for network communication security for Immich. It traces how sign-ins, uploads/downloads, and sharing links moves through the studio's deployment. The biggest thing I learned was to follow the data past the first security control. Staff and clients connect over HTTPS, but in our model, HTTPS ends at the reverse proxy. The next connection uses internal HTTP and can still carry session tokens and private media. Seeing those connections side by side helped me understand why each hop needs to be evaluated separately. 
+For my part of this assignment, I built a data flow diagram for network communication security for Immich. It traces how sign-ins, uploads/downloads, and sharing links move through the studio's deployment. The biggest thing I learned was to follow the data past the first security control. Staff and clients connect over HTTPS, but in our model, HTTPS ends at the reverse proxy. The next connection uses internal HTTP and can still carry session tokens and private media. Seeing those connections side by side helped me understand why each hop needs to be evaluated separately. 
 
-Seeing the results from Microsoft Threat Modeling Tool was fascinating and also taught me how much the output depends on how I build the model. I did have an issue though. My first export had threats specific to Azure PostgreSQL and an identity server, which were outside our scenario, but I had added an Identity Server node and an Azure PostGreSQL database, which affected things. After I revised the model, those entries disappeared, but the tool still generated no threats for either direction of the proxy-to-Immich connection. I documented those risks manually because they were clear from the data flow diagram.
+Seeing the results from Microsoft Threat Modeling Tool was fascinating and also taught me how much the output depends on how I build the model. I did have an issue though. My first export had threats specific to Azure PostgreSQL and an identity server, which were outside our scenario, but I had added an Identity Server node and an Azure PostgreSQL database, which affected things. After I revised the model, those entries disappeared, but the tool still generated no threats for either direction of the proxy-to-Immich connection. I documented those risks manually because they were clear from the data flow diagram.
 
 **Dillon:**
 
@@ -963,8 +959,4 @@ Our team primarily communicated through Slack to coordinate responsibilities, di
 
 5. Microsoft. *Getting Started with the Threat Modeling Tool.* [Microsoft Learn](https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-getting-started).
 
-6. Microsoft. *Threat Modeling Tool Download.* [Download](https://aka.ms/threatmodelingtool)
-   https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-getting-started
-
-6. Microsoft. *Threat Modeling Tool Download.*
-   https://aka.ms/threatmodelingtool
+6. Microsoft. *Threat Modeling Tool Download.* [Download](https://aka.ms/threatmodelingtool).
