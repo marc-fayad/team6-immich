@@ -309,7 +309,6 @@ The most critical trust boundaries are between the user requests and the API, an
 
 [View Asset Authorization TMT Report](https://apeprah1.github.io/PhotoVideo_Access_Threat_Model_Report.htm/)
 
-https://apeprah1.github.io/PhotoVideo_Access_Threat_Model_Report.htm/
 ---
 
 ### 3.3 Network Communication Security
