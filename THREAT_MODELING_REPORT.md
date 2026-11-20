@@ -125,31 +125,84 @@ For each diagram:
 
 #### 3.1.1 Scenario Overview
 
-[Describe the authentication, login, account access, and session-management scenarios.]
+This scenario examines authentication and session management within the hypothetical professional photography studio's Immich deployment. Studio employees use a web browser to sign in, access authenticated application functionality, and sign out when finished. The Immich server processes authentication requests and uses PostgreSQL to retrieve user and session information.
+
+The analysis considers the confidentiality of credentials and session tokens, the integrity of authentication requests, and the availability of authentication services. It also examines whether requests can cross trust boundaries without appropriate protections.
 
 #### 3.1.2 DFD and Data Flows
 
-[Insert the DFD image exported from TMT.]
-
 ![Authentication DFD](diagrams/authentication-dfd.png)
 
-[Explain the external entities, processes, data stores, data flows, and trust boundaries.]
+The Level 1 DFD contains five components:
+
+| Component | Role |
+|---|---|
+| Studio Employee | User who initiates authentication and session actions |
+| Studio Employee Web Browser | Client that sends requests and receives authentication responses |
+| Reverse Proxy (Web Server) | Entry point for HTTPS requests and intermediary for application traffic |
+| Immich Server (Authentication) | Processes authentication requests and validates sessions |
+| PostgreSQL (Users & Sessions) | Stores user and session records |
+
+The diagram models eight directional data flows:
+
+| Source → Destination | Data Flow |
+|---|---|
+| Studio Employee → Web Browser | User Authentication and Session Actions |
+| Web Browser → Studio Employee | Authentication and Session Feedback |
+| Web Browser → Reverse Proxy | HTTPS Authentication & Session Requests |
+| Reverse Proxy → Web Browser | HTTPS Authentication & Session Responses |
+| Reverse Proxy → Immich Server | Forward Authentication & Session Requests (HTTP) |
+| Immich Server → Reverse Proxy | Authentication & Session Responses (HTTP) |
+| Immich Server → PostgreSQL | User Authentication & Session Database Operations |
+| PostgreSQL → Immich Server | User Records & Session Query Results |
+
+The DFD identifies three trust boundaries:
+
+1. **Internet Trust Boundary:** Separates the employee's browser from the reverse proxy. HTTPS protects communication in transit, while application authentication is still required to establish user identity.
+2. **Proxy-to-Application Trust Boundary:** Separates the reverse proxy from the Immich authentication service. The modeled connection uses HTTP, making network isolation and appropriate transport protection important.
+3. **Application-to-Database Trust Boundary:** Separates the authentication service from PostgreSQL. Database access controls and secure query handling are important for protecting user and session records.
+
+The original diagram used 18 individual data flows. These were consolidated into eight directional flows to improve readability and reduce repetitive TMT findings while preserving the main authentication, session-validation, and logout interactions.
+
+The DFD represents an assumed studio deployment. Individual network and transport protections must be verified against the actual configuration.
 
 #### 3.1.3 TMT-Generated Threats
 
+Microsoft Threat Modeling Tool generated **59 potential threats** for the simplified authentication DFD. Seven representative findings were selected for closer analysis, covering all six STRIDE categories.
+
 | Threat ID | STRIDE Category | Affected Element / Flow | Threat Description | Relevance |
 |---|---|---|---|---|
-| TBD | TBD | TBD | TBD | TBD |
+| 6 | Spoofing | Browser → Reverse Proxy | An attacker could impersonate a legitimate employee browser. | Relevant: stolen credentials or sessions could enable unauthorized access. |
+| 9 | Tampering | Immich Server → PostgreSQL | Unsafe database query construction could allow SQL injection. | Relevant for investigation; no SQL injection vulnerability was confirmed. |
+| 22 | Repudiation | Browser → Reverse Proxy | Insufficient records could make it difficult to establish whether the proxy received an authentication request. | Relevant: authentication activity requires appropriate logging and audit evidence. |
+| 219 | Information Disclosure | Reverse Proxy → Immich Server | Authentication traffic could be intercepted on the modeled HTTP connection. | Relevant if an attacker can access the internal network path. |
+| 220 | Information Disclosure | Reverse Proxy → Immich Server | Intercepted credentials or reusable session tokens could be exposed or replayed. | Relevant because sensitive authentication data may traverse the modeled HTTP connection. |
+| 10 | Denial of Service | Immich Server → PostgreSQL | Excessive authentication or database resource consumption could disrupt service. | Relevant: resource exhaustion could prevent legitimate employee access. |
+| 2 | Elevation of Privilege | Browser → Reverse Proxy | The reverse proxy could improperly impersonate a browser's security context. | Relevant for investigation of proxy trust and authorization boundaries. |
+
+All 59 generated findings were initially assigned High priority by TMT. These are automatically generated potential threats, not 59 confirmed high-severity vulnerabilities.
+
+The selected findings were documented in the TMT model with justifications and recommended controls. Their statuses remain Not Started because the proposed mitigations have not been validated for the hypothetical deployment.
 
 #### 3.1.4 Proposed Mitigations
 
 | Threat ID | Proposed Mitigation | Rationale |
 |---|---|---|
-| TBD | TBD | TBD |
+| 6 | Enforce secure authentication, server-side session validation, session expiration and revocation, and secure cookie settings. | Reduces the likelihood of unauthorized access through impersonation or compromised sessions. |
+| 9 | Use parameterized queries, safe database access methods, input validation, and least-privilege database permissions. | Reduces opportunities for SQL injection and limits potential database impact. |
+| 22 | Maintain protected, timestamped reverse proxy access logs and authentication event records without recording sensitive credentials or tokens. | Improves accountability and investigation of disputed authentication activity. |
+| 219 | Isolate the internal application network and use authenticated TLS on upstream connections where supported and appropriate. | Reduces the risk of interception of authentication traffic. |
+| 220 | Protect credentials and session tokens in transit, restrict internal network access, and enforce secure session management. | Reduces credential exposure and potential replay attacks. |
+| 10 | Apply rate limiting, connection and resource limits, timeouts, and monitoring for abnormal authentication activity. | Helps maintain service availability under excessive request loads. |
+| 2 | Enforce authentication and authorization within the application, restrict proxy privileges, and validate trusted identity headers. | Prevents improper assumptions of user identity or privilege across the proxy boundary. |
+
+These mitigations are recommendations based on the modeled threats. Some protections may already be implemented by Immich, while others depend on the studio's deployment configuration. Their implementation and effectiveness are evaluated further in Section 4.1.
 
 #### 3.1.5 HTML Threat Modeling Report
 
 [View Authentication TMT Report](reports/authentication-report.html)
+
+The exported HTML report contains the authentication DFD, all 59 generated threats, and the seven representative findings documented with justifications.
 
 ---
 
