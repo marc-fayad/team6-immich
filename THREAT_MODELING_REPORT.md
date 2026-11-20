@@ -307,7 +307,7 @@ The most critical trust boundaries are between the user requests and the API, an
 
 #### 3.2.5 HTML Threat Modeling Report
 
-[View Asset Authorization TMT Report](https://apeprah1.github.io/PhotoVideo_Access_Threat_Model_Report.htm/)
+[View Asset Authorization TMT Report](https://htmlpreview.github.io/?https://github.com/marc-fayad/team6-immich/blob/main/PhotoVideo_Access_Threat_Model_Report.htm.htm)
 
 ---
 
