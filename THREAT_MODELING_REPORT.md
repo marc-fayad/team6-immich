@@ -932,11 +932,11 @@ While working on this assignment and focusing on my area of availability/data pr
 
 ### 6.2 Combined Team Reflection
 
-[Summarize what the team learned from developing DFDs, analyzing STRIDE threats, identifying mitigations, and evaluating existing security controls.]
+As a team, this assignment helped us better understand how data flow diagrams and the STRIDE framework can be used to identify potential security threats within Immich. By examining authentication, photo and video authorization, network communication, stored data security, and availability, we gained a broader understanding of how these areas interact. Microsoft Threat Modeling Tool helped us identify potential threats, while reviewing Immich's documentation and existing security controls allowed us to distinguish between possible risks and confirmed vulnerabilities. We also learned that security depends not only on the application's implementation but also on how the organization configures and maintains its deployment.
 
-[Discuss the importance of trust boundaries and how threat modeling contributed to understanding Immich's security.]
+One of our biggest takeaways was the importance of identifying trust boundaries and understanding how information moves between components. For example, HTTPS protects communication between users and the reverse proxy, but internal communication must still be evaluated separately. We also recognized the importance of protecting database access, enforcing media authorization, and maintaining reliable backups of both application data and original media files. These findings demonstrated how weaknesses in one security area could affect other parts of the system.
 
-[Describe any challenges encountered and lessons learned through collaboration.]
+A common challenge was learning how to use Microsoft Threat Modeling Tool effectively and determining the appropriate level of detail for our diagrams. Some generated threats were repetitive, unrelated to our specific deployment, or required further investigation before they could be considered applicable. By dividing responsibilities across the five security areas and documenting our work through GitHub, we were able to combine our findings into a more complete assessment. Overall, the assignment reinforced the importance of collaboration, critical evaluation of automated threat modeling results, and verifying security controls rather than assuming that every identified threat represents an existing vulnerability.
 
 ---
 
