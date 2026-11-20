@@ -409,25 +409,73 @@ The HTML report was exported from Microsoft Threat Modeling Tool and contains th
 
 #### 3.5.1 Scenario Overview
 
-[Describe media availability, backups, recovery, system failures, and data preservation.]
+This scenario deals with how Immich goes about preserving the studio's media assets and keeps them retrievable even after accidental deletion, hardware failure, or malicious activity. For a photography studio, client work can not be recreated once it's been lost, and any instance that is unavailable during a deadline is a business failure, even if no data was exposed.
+
+Immich stores original media files on the filesystel and records asset file paths in its PostgreSQL Database instead of scanning the library folder, so both of those components must survive and stay consistent for an asset to be retrievable. Immich automatically performs database backups on a schedule configured by the user and supports restoring a backup via the web interface, but does not back up the media files themselves. 
+
+The biggest security concerns are unauthorized user of the admin restore function, loss/corruption of backup data, insufficient logging of backup and restore operations, and exposure of the backup data as it crosses the boundary to an offsite location.
 
 #### 3.5.2 DFD and Data Flows
 
 ![Availability and Data Preservation DFD](diagrams/availability-dfd.png)
 
-[Describe relevant components, flows, and trust boundaries.]
+The data flow diagram was created with the Microsoft Threat Modeling Tool and includes these components:
+
+- **Studio Employee:** The user that uploads and retrieves photos and videos
+- **Studio Administrator:** The user who does the database restores
+- **Immich Application Server:** Processes requests, queues all background work, and performs the restores
+- **Background Job Worker:** Does any scheduled database backups and copies backups to offsite location
+- **Media File Storage:** Stores original photos and videos
+- **PostgreSQL Database:** Stores application data and asset metadata, including file paths used to locate media assets
+- **Job Queue (Redis):** Holds queued background jobs
+- **Local Backup Storage:** Holds database backups under the upload location
+- **Offsite Backup Storage:** Holds copies of backups in a separate location
+
+There are nine data flows included in the diagram:
+
+1. Upload Photos and Videos
+2. Retrieve Photos and Videos
+3. Store Photos and Videos
+4. Store Asset Metadata
+5. Queue Background Job
+6. Read Job
+7. Copy Database Backup
+8. Copy Backups Offsite
+9. Restore Database Backup
 
 #### 3.5.3 TMT-Generated Threats
 
+The Microsoft Threat Modeling Tool listed 10 threats that are associated with the Restore Database Backup interaction, which belongs to the security area of Availability/Data Preservation. 
+
 | Threat ID | STRIDE Category | Affected Element / Flow | Threat Description | Relevance |
 |---|---|---|---|---|
-| TBD | TBD | TBD | TBD | TBD |
+| T1 | Information Disclosure | Restore Database Backup | Weakly encrypted/hashed content could be reversed | Could expose backup data |
+| T2 | Information Disclosure | Restore Database Backup | Sensitive data could be exposed via log files | Could reveal backup data or account details |
+| T3 | Information Disclosure | Restore Database Backup | Verbose error messages could reveal internal details | Could expose connection info or file locations |
+| T4 | Repudiation | Restore Database Backup | Insufficient auditing and logging of actions | Could make it impossible to determine when data loss happened |
+| T5 | Spoofing | Restore Database Backup | Insecure TLS cert configuration could allow the application to be spoofed | Could expose admin credentials |
+| T6 | Spoofing | Restore Database Backup | User credentials could be stolen | Could allow an attacker to pose as an administrator |
+| T7 | Spoofing | Restore Database Backup | A fake website could be used for phishing attacks | Could capture admin credentials |
+| T8 | Spoofing | Restore Database Backup | An attacker could spoof the studio administrator and access the application | Could allow an unauthorized restore that overwrites live data |
+| T9 | Tampering | Restore Database Backup | SQL Injection could be performed through the application | Could allow unauthorized modification of stored data |
+| T10 | Tampering | Restore Database Backup | Sensitive data stored in config files could be accessed | Could expose database credentials used by the backup job |
+
+Additional threats uncovered by the threat modeling tool which apply to other security areas can be viewed in the full report below.
 
 #### 3.5.4 Proposed Mitigations
 
 | Threat ID | Proposed Mitigation | Rationale |
 |---|---|---|
-| TBD | TBD | TBD |
+| T1 | Encrypt backups at rest on both local/offsite storage | Protects backup data if the storage location is reached |
+| T2 | Restrict access to log files and avoid logging sensitive info regarding backup/restore operations | Limits exposure of data through logs |
+| T3 | Return generic error messages for failed restore operations, avoid exposing internal info | Prevents disclosure of connection strings and file paths |
+| T4 | Retain backup and restore job records, record drill results including dates and outcomes | Establishes when a loss occurs and when recovery was last verified |
+| T5 | Configure the reverse proxy with a valid certificate and verify cert parameters | Prevents interception of admin sessions |
+| T6 | Require OIDC authentication with mulfi-factor authentication for admin accounts | Reduces impact of stolen credentials |
+| T7 | Use a studio-owned domain with a valid certificate and train staff to access the instance via that address only | Recuses effectiveness of phishing |
+| T8 | Restrict restore functionality to admin accounts and require a valid authenticated session | Prevents an ordinary user account from replacing live data |
+| T9 | Rely on Immich's use of type-safe queries and keep instance updated | Prevents injection through application layer |
+| T10 | Supply database credentials through Docker secrets or file-based environment variables rather than plaintext | Prevents credential exposure through config files |
 
 #### 3.5.5 HTML Threat Modeling Report
 
@@ -615,15 +663,37 @@ Overall, Immich provides several useful security controls, but protecting stored
 
 #### Existing Security Controls
 
-[Document relevant backup, recovery, integrity, and availability mechanisms.]
+Immich has several security controls that help maintain availability and data preservation. Those security controls were identified via the Immich documentation as:
+- **Automatic Database Backups:** Immich automatically creates backup based on a schedule that is configured by the user. Admins can also trigger backups on command whenever they want via the job status page.
+- **Guarded Restore:** When a database is restored, Immich creates a restore point just before that operation so that if anything fails the system will automatically roll back, making restore operations low-risk to do.
+- **Deletion Recovery:** Deleted assets are placed in trash for a set retention period rather than be deleted permanently immediately.
+- **File Integrity Checks:** Immich has a repair function that will identify any untracked or offline files and checksum mismatches between the stored files and the database.
+- **Administrative Access Control:** Restore/backup functions are restricted only to admin accounts, and the application requires a valid authenticated session before checking admin privileges.
+- **Deployment Isolation:** The Docker Compose deployment for Immich keeps PostgreSQL, Redis, and the machine learning service on an internal network, limiting the paths stored data/backups can be reached.
+- **Storage Quotas:** Admins can set per-user storage quotas, setting a limit on how much storage a single user account can take up.
 
 #### Identified Security Gaps
 
-[Identify missing, incomplete, or unverified mitigations.]
+- **Media File Backups:** Immich does not handle fileystem backups, only the database is backed up automatically. Backing up the original photos and videos is the user's responsibility.
+- **Backup Storage Location:** Automatic database backups are saved under the upload location, which by default is on the same volume as the main library. In the event of something like a ransomware attack or hardware failure, both copies would be lost.
+- **Restore Verification:** Immich can do backup restores and will roll back automatically if a restore fails, but it doesn't verify if a restore matches the original. Reconciling assets is something the user has to do themself.
+- **Scheduled Integrity Checking:** The documentation for Immich does not specify if its repair function runs on a schedule or only when the admin initiates it.
+- **Backup Encryption:** Immich doesn't say if database backups are encrypted when copied to their offsite location.
+- **Availability Engineering:** Immich doesn't provide any clustering, failover, or replication. Continuity of services depends on the studio's hardware and regular monitoring.
 
 #### Recommended Improvements
 
-[Describe recommended improvements.]
+These recommendations are based on the identified security gaps and preexisting security controls and would help to strengthen the security of data availability and preservation:
+
+- **Backup Media Files Seperately:** Keep a backup of the original media files alongside the database backups.
+- **Relocate Backup Storage:** Configure database backups to be stored on a separate storage disk instead of the same volume as the library, so that a single failure won't be able to destroy both.
+- **Test Restores Regularly:** Do scheduled restore operations on a clean instance using a full-size copy of the library, recording duration of the restore and post-restore asset counts.
+- **Schedule Integrity Checks:** Perform repair and checksum verification operations on a regular basis.
+- **Protect Backup Content:** Ensure that backup data is encrypted at rest or in transit and that database credentials are supplied via docker secrets rather than in plaintext.
+- **Improved Logging:** Keep detailed records of backups/restores, including the date they occurred, the restore outcome, and the admin account that initiated the restore/backup. Restrict access to those logs to admin only.
+- **Monitor Storage Capacity and Availability:** Track storage, job queue depth, and server uptime with external monitoring tools.
+
+Overall, Immich provides most of the security controls needed to maintain availability and preservation, but some aspects of the studio's operations rely solely on their own configuration and how its deployment is maintained. For our photography studio, the biggest priorities would be maintaining backups of the original media files, keeping backups stored separately from the library volume, and monitoring for problems with storage capacity or availability before they become noticed by clients.
 
 ---
 
@@ -680,7 +750,7 @@ One challenge was learning how to use Microsoft Threat Modeling Tool, especially
 
 **Matthew:**
 
-[Individual reflection.]
+While working on this assignment and focusing on my area of availability/data preservation, I was able to expand on the things I learned from working on our last project deliverable about how Immich makes use of backups and access controls to ensure data is preserved and stays available. Using Microsoft's Threat Modeling Tool and experimenting with how different data flows correlate to different potential threats in the analysis view was also very interesting. 
 
 ### 6.2 Combined Team Reflection
 
