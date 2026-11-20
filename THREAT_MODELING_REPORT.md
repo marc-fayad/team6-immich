@@ -444,15 +444,37 @@ There are nine data flows included in the diagram:
 
 #### 3.5.3 TMT-Generated Threats
 
+The Microsoft Threat Modeling Tool listed 10 threats that are associated with the Restore Database Backup interaction, which belongs to the security area of Availability/Data Preservation. 
+
 | Threat ID | STRIDE Category | Affected Element / Flow | Threat Description | Relevance |
 |---|---|---|---|---|
-| TBD | TBD | TBD | TBD | TBD |
+| T1 | Information Disclosure | Restore Database Backup | Weakly encrypted/hashed content could be reversed | Could expose backup data |
+| T2 | Information Disclosure | Restore Database Backup | Sensitive data could be exposed via log files | Could reveal backup data or account details |
+| T3 | Information Disclosure | Restore Database Backup | Verbose error messages could reveal internal details | Could expose connection info or file locations |
+| T4 | Repudiation | Restore Database Backup | Insufficient auditing and logging of actions | Could make it impossible to determine when data loss happened |
+| T5 | Spoofing | Restore Database Backup | Insecure TLS cert configuration could allow the application to be spoofed | Could expose admin credentials |
+| T6 | Spoofing | Restore Database Backup | User credentials could be stolen | Could allow an attacker to pose as an administrator |
+| T7 | Spoofing | Restore Database Backup | A fake website could be used for phishing attacks | Could capture admin credentials |
+| T8 | Spoofing | Restore Database Backup | An attacker could spoof the studio administrator and access the application | Could allow an unauthorized restore that overwrites live data |
+| T9 | Tampering | Restore Database Backup | SQL Injection could be performed through the application | Could allow unauthorized modification of stored data |
+| T10 | Tampering | Restore Database Backup | Sensitive data stored in config files could be accessed | Could expose database credentials used by the backup job |
+
+Additional threats uncovered by the threat modeling tool which apply to other security areas can be viewed in the full report below.
 
 #### 3.5.4 Proposed Mitigations
 
 | Threat ID | Proposed Mitigation | Rationale |
 |---|---|---|
-| TBD | TBD | TBD |
+| T1 | Encrypt backups at rest on both local/offsite storage | Protects backup data if the storage location is reached |
+| T2 | Restrict access to log files and avoid logging sensitive info regarding backup/restore operations | Limits exposure of data through logs |
+| T3 | Return generic error messages for failed restore operations, avoid exposing internal info | Prevents disclosure of connection strings and file paths |
+| T4 | Retain backup and restore job records, record drill results including dates and outcomes | Establishes when a loss occurs and when recovery was last verified |
+| T5 | Configure the reverse proxy with a valid certificate and verify cert parameters | Prevents interception of admin sessions |
+| T6 | Require OIDC authentication with mulfi-factor authentication for admin accounts | Reduces impact of stolen credentials |
+| T7 | Use a studio-owned domain with a valid certificate and train staff to access the instance via that address only | Recuses effectiveness of phishing |
+| T8 | Restrict restore functionality to admin accounts and require a valid authenticated session | Prevents an ordinary user account from replacing live data |
+| T9 | Rely on Immich's use of type-safe queries and keep instance updated | Prevents injection through application layer |
+| T10 | Supply database credentials through Docker secrets or file-based environment variables rather than plaintext | Prevents credential exposure through config files |
 
 #### 3.5.5 HTML Threat Modeling Report
 
