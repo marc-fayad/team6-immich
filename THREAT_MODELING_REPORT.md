@@ -721,23 +721,107 @@ Overall, Immich provides several useful security controls, but protecting stored
 
 ## 5. Optional AI-Assisted Threat Analysis
 
-**Note:** This section is optional and does not replace the required Microsoft Threat Modeling Tool analysis.
-
 ### 5.1 AI Analysis Method
 
-[Document the AI tool, prompt, and DFD used, if applicable.]
+OpenAI ChatGPT was used to conduct an independent STRIDE analysis of the Authentication and Session Management data flow diagram (DFD). The analysis was performed in a separate conversation to reduce the influence of the previously reviewed Microsoft Threat Modeling Tool (TMT) findings.
+
+The AI was provided with the following information:
+
+- Five components: Studio Employee, Studio Employee Web Browser, Reverse Proxy (Web Server), Immich Server (Authentication), and PostgreSQL (Users & Sessions).
+- Eight directional data flows representing authentication requests, responses, and database interactions.
+- Three trust boundaries: Internet, Proxy-to-Application, and Application-to-Database.
+- HTTPS communication between the browser and reverse proxy, with HTTP modeled between the reverse proxy and Immich.
+- Authentication activities including employee login, authenticated requests, session validation, and logout.
+
+**AI Prompt:**
+
+> Analyze the following Level 1 data flow diagram for a hypothetical professional photography studio using Immich for photo management.
+>
+> The diagram contains five components: Studio Employee, Studio Employee Web Browser, Reverse Proxy (Web Server), Immich Server (Authentication), and PostgreSQL (Users & Sessions).
+>
+> There are eight directional data flows connecting these components. Browser-to-proxy communication uses HTTPS. Proxy-to-Immich communication is modeled as HTTP. The application exchanges authentication and session information with PostgreSQL.
+>
+> Three trust boundaries are modeled: Internet Trust Boundary, Proxy-to-Application Trust Boundary, and Application-to-Database Trust Boundary.
+>
+> The scenario includes employee login, authenticated requests, session validation, and logout.
+>
+> Perform a STRIDE threat analysis covering Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, and Elevation of Privilege.
+>
+> For each category, identify a plausible threat, the affected component or data flow, the potential security impact, and a recommended mitigation.
+>
+> Distinguish potential threats from confirmed vulnerabilities. Do not assume that a security control is missing without supporting evidence. Pay particular attention to authentication tokens, trust boundaries, reverse-proxy configuration, database access, and session management.
+
+The AI response was reviewed against the seven representative TMT findings documented in Section 3.1 and the security controls discussed in Section 4.1.
 
 ### 5.2 AI-Identified STRIDE Threats
 
-[Summarize threats identified through AI analysis.]
+The independent AI analysis identified six potential threats, one for each STRIDE category.
+
+| STRIDE Category | AI-Identified Threat | Potential Impact | Recommended Mitigation |
+|---|---|---|---|
+| Spoofing | An attacker obtains a valid authentication token and impersonates a studio employee. | Unauthorized account access and potential exposure of private photographs. | HTTPS, secure token handling, expiration, revocation, and consideration of MFA. |
+| Tampering | An attacker with internal network access modifies authentication traffic over the modeled HTTP connection. | Manipulated requests or compromised session information. | Network isolation, upstream TLS where appropriate, and trusted proxy-header configuration. |
+| Repudiation | An employee or attacker denies performing actions that are insufficiently recorded. | Difficulty investigating unauthorized access or reconstructing incidents. | Protected authentication logs, timestamps, appropriate retention, and centralized logging where applicable. |
+| Information Disclosure | Authentication tokens or user records are exposed through interception, proxy logging, or unauthorized database access. | Account compromise and exposure of sensitive studio information. | Restrict database access, protect internal communication, and avoid logging sensitive tokens. |
+| Denial of Service | Excessive authentication requests exhaust application or database resources. | Legitimate employees cannot authenticate or access studio services. | Rate limiting, request timeouts, monitoring, and traffic protections. |
+| Elevation of Privilege | Improperly trusted proxy headers or authorization weaknesses permit access beyond an employee's assigned privileges. | Unauthorized administrative actions or access to restricted resources. | Server-side authorization, trusted proxy configuration, and permission testing. |
+
+The AI also highlighted three trust-boundary concerns:
+
+1. **Internet Trust Boundary:** HTTPS protects browser-to-proxy traffic when properly configured, but does not prevent the reuse of stolen authentication tokens.
+2. **Proxy-to-Application Trust Boundary:** The modeled HTTP connection could expose authentication traffic if an attacker gains access to the internal network.
+3. **Application-to-Database Trust Boundary:** Database permissions, connectivity restrictions, and sensitive record handling require verification.
+
+The AI explicitly characterized these findings as potential threats rather than confirmed Immich vulnerabilities.
 
 ### 5.3 Comparison with TMT Results
 
-[Compare threats and mitigations identified by AI against those generated by TMT.]
+Microsoft Threat Modeling Tool generated 59 potential threats for the simplified authentication DFD. Seven representative threats were selected for detailed documentation in Section 3.1.
+
+The independent AI analysis identified six broader threat scenarios covering the same six STRIDE categories.
+
+| STRIDE Category | TMT Threat ID | TMT Finding | AI Finding | Comparison |
+|---|---|---|---|---|
+| Spoofing | 6 | Spoofing the Studio Employee Web Browser | Theft and reuse of employee authentication tokens | Both identify impersonation risks. AI provides a specific compromised-token scenario. |
+| Tampering | 9 | Potential SQL injection involving PostgreSQL | Modification of authentication traffic on the internal HTTP connection | Different attack paths within the same STRIDE category. TMT emphasizes database query safety; AI emphasizes network integrity. |
+| Repudiation | 22 | Reverse proxy may deny receiving authentication data | Insufficient logs prevent attribution of employee or attacker activity | Both emphasize the need for reliable logging and audit evidence. |
+| Information Disclosure | 219, 220 | Data flow sniffing and weak credential transit | Exposure through internal HTTP traffic, proxy logs, or unauthorized database access | Strong overlap regarding network interception. AI additionally discusses logging and database access. |
+| Denial of Service | 10 | Excessive resource consumption affecting Immich or PostgreSQL | Authentication request flooding exhausts application or database resources | Both identify availability risks and recommend resource controls. |
+| Elevation of Privilege | 2 | Reverse proxy may impersonate the browser's security context | Improperly trusted headers or authorization weaknesses permit additional privileges | Both identify privilege-boundary concerns. AI provides additional configuration examples. |
+
+**Similarities**
+
+Both approaches identified risks involving authentication impersonation, insufficient logging, information exposure, resource exhaustion, and improper privilege handling.
+
+Both also supported mitigations involving secure authentication, network protection, access controls, logging, and resource management.
+
+**Differences**
+
+TMT generated a larger set of threats associated with individual components and data flows. Its findings included specific threat IDs, STRIDE classifications, and affected interactions.
+
+The AI produced fewer, broader scenarios and provided additional context about attack prerequisites and potential operational impacts.
+
+The clearest difference involved tampering. TMT highlighted potential SQL injection against PostgreSQL, while the AI emphasized modification of authentication traffic across the modeled HTTP connection.
+
+The AI also raised concerns about sensitive information appearing in proxy logs and improperly trusted forwarding headers. These observations provide additional considerations for deployment review but do not establish confirmed vulnerabilities.
 
 ### 5.4 Reflection on AI Usefulness
 
-[Discuss strengths, limitations, and differences between the approaches.]
+The AI-assisted analysis was useful for interpreting the technical findings generated by Microsoft Threat Modeling Tool and connecting them to realistic authentication scenarios.
+
+TMT was effective at systematically identifying potential threats based on the DFD components, data flows, and trust boundaries. However, its 59 generated findings included overlapping scenarios that required manual review and prioritization.
+
+The AI analysis was more concise and explained how threats could affect a professional photography studio. For example, it connected stolen authentication tokens to unauthorized employee access and explained why an internal HTTP connection may create risks depending on network isolation.
+
+The independent analysis also identified a different tampering scenario from the one selected for the TMT report. This demonstrated that AI can help broaden the review by suggesting additional attack paths.
+
+However, AI-generated findings have important limitations. The model did not inspect the actual deployment, execute security tests, or independently verify the implementation of every proposed mitigation. Its recommendations must therefore be checked against source code, documentation, and deployment configuration.
+
+Another limitation is that AI output depends on the information included in the prompt. The Level 1 DFD provides a useful architectural overview but does not capture every application detail or security control.
+
+Overall, the two approaches complemented each other. TMT provided structured, traceable threat identification, while AI helped interpret the findings, identify additional scenarios, and explain security implications.
+
+The final conclusions were based on human review of the generated threats and the available Immich implementation evidence rather than accepting AI-generated recommendations as confirmed security findings.
 
 ---
 
