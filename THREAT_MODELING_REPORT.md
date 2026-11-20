@@ -662,15 +662,27 @@ Overall, Immich provides several useful security controls, but protecting stored
 
 #### Existing Security Controls
 
-[Document relevant backup, recovery, integrity, and availability mechanisms.]
+Immich has several security controls that help maintain availability and data preservation. Those security controls were identified via the Immich documentation as:
+- **Automatic Database Backups:** Immich automatically creates backup based on a schedule that is configured by the user. Admins can also trigger backups on command whenever they want via the job status page.
+- **Guarded Restore:** When a database is restored, Immich creates a restore point just before that operation so that if anything fails the system will automatically roll back, making restore operations low-risk to do.
+- **Deletion Recovery:** Deleted assets are placed in trash for a set retention period rather than be deleted permanently immediately.
+- **File Integrity Checks:** Immich has a repair function that will identify any untracked or offline files and checksum mismatches between the stored files and the database.
+- **Administrative Access Control:** Restore/backup functions are restricted only to admin accounts, and the application requires a valid authenticated session before checking admin privileges.
+- **Deployment Isolation:** The Docker Compose deployment for Immich keeps PostgreSQL, Redis, and the machine learning service on an internal network, limiting the paths stored data/backups can be reached.
+- **Storage Quotas:** Admins can set per-user storage quotas, setting a limit on how much storage a single user account can take up.
 
 #### Identified Security Gaps
 
-[Identify missing, incomplete, or unverified mitigations.]
+- **Media File Backups:** Immich does not handle fileystem backups, only the database is backed up automatically. Backing up the original photos and videos is the user's responsibility.
+- **Backup Storage Location:** Automatic database backups are saved under the upload location, which by default is on the same volume as the main library. In the event of something like a ransomware attack or hardware failure, both copies would be lost.
+- **Restore Verification:** Immich can do backup restores and will roll back automatically if a restore fails, but it doesn't verify if a restore matches the original. Reconciling assets is something the user has to do themself.
+- **Scheduled Integrity Checking:** The documentation for Immich does not specify if its repair function runs on a schedule or only when the admin initiates it.
+- **Backup Encryption:** Immich doesn't say if database backups are encrypted when copied to their offsite location.
+- **Availability Engineering:** Immich doesn't provide any clustering, failover, or replication. Continuity of services depends on the studio's hardware and regular monitoring.
 
 #### Recommended Improvements
 
-[Describe recommended improvements.]
+
 
 ---
 
