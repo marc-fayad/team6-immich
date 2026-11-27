@@ -93,6 +93,18 @@ For each reviewer, document **finding ID; reviewer; related misuse case, assuran
 #### 3.5 OAuth/OIDC and External Authentication — Adu
 
 **Reviewed code paths:** TBD  
+Code path	                    | Security-sensitive functionality
+----------------------------  | ---------------------------------------
+https://github.com/immich-app/immich/blob/main/server/src/services/auth.service.ts? | OAuth callback processing, account linking, identity mapping and session management.
+https://github.com/immich-app/immich/blob/main/server/src/repositories/oauth.repository.ts?| OAuth provider discovery, authorization code exchange, PKCE, token validation and profile retrieval.
+https://github.com/immich-app/immich/blob/main/server/src/controllers/oauth.controller.ts?| OAuth API endpoints, callback requests and cookie management.
+https://github.com/immich-app/immich/blob/main/server/src/dtos/auth.dto.ts? | Authentication request validation and OAuth input parameters.
+https://github.com/immich-app/immich/blob/main/server/src/middleware/auth.guard.ts? | Authentication enforcement and protection of restricted endpoints.
+https://github.com/immich-app/immich/blob/main/server/src/repositories/user.repository.ts? | External identity mapping and user account persistence
+https://github.com/immich-app/immich/blob/main/server/src/dtos/config.dto.ts? | OAuth provider configuration and administrative security settings.
+https://github.com/immich-app/immich/blob/main/mobile/lib/services/oauth.service.dart? | Mobile OAuth authentication and callback handling
+
+
 **Findings/evidence:** Pending review.
 
 ### 4. Automated Code Scanning Findings
