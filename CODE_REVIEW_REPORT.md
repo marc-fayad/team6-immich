@@ -107,14 +107,13 @@ https://github.com/immich-app/immich/blob/main/mobile/lib/services/oauth.service
 
 **Findings/evidence:** Pending review.
 
-1.Findings : OAuth state validationAccount takeoverCWE: CWE-352  Cross Site Request Forgery
+1.Findings : OAuth state validationAccount takeover: CWE-352  Cross Site Request Forgery
 
 Evidence: auth.service.ts, oauth.repository.ts, oauth.controller.ts.
 
 Immich contains measures to validate OAuth state. However, the correct functioning of this protection is reliant on the secure binding of a state value to a genuine login process. A security advisory was issued upstream on November 10 2026 and identifies an OAuth account binding issue which can lead to account takeover.- Advisory: GHSA-7j23-rprg-3g5q- Vulnerable versions: v3.3.6 and earlier- Fixed in: v3.4.0- Upstream risk rating: High- Verified: Yes, as identified in the upstream advisory.
 
 Recommendation: Upgrade affected deployments and introduce regression tests covering transaction binding, unauthorized account linking, state expiration and replay prevention.
-
 
 2.Findings: Conditional PKCE usage
 
