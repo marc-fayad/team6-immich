@@ -156,9 +156,14 @@ Suggestion: Limit which external role(s) are used to determine elevated local pe
 
 ### 4. Automated Code Scanning Findings
 
-| Tool/version | Scan scope and configuration | Output link | Findings and triage status |
+| Tool/version | Scan scope and configuration | Output link| Findings and triage status |
 |---|---|---|---|
-| TBD | TBD | TBD | Pending |
+| Semgrep version pending execution | OAuth-related TypeScript files; security and OWASP rules | evidence/semgrep-oauth.json | Pending execution |
+| GitHub CodeQL version pending execution| JavaScript/TypeScript security and data-flow analysis |evidence/codeql-results.sarif | Pending execution|
+| npm Audit version pending execution| Server-side npm dependencies and lockfile | evidence/npm-audit.json | Pending execution|
+| Gitleaks version pending execution |Source repository and Git history for exposed credentials | evidence/gitleaks-report.json| Pending execution |
+| Manual security review - November 26, 2026| Authentication service, OAuth repository and relevant upstream advisory | https://github.com/immich-app/immich/security/advisories/GHSA-7j23-rprg-3g5q)| Preliminary findings documented |
+
 
 **Limitations and false positives:** TBD.
 
