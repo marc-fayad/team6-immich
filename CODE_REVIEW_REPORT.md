@@ -107,6 +107,55 @@ https://github.com/immich-app/immich/blob/main/mobile/lib/services/oauth.service
 
 **Findings/evidence:** Pending review.
 
+1.Findings : OAuth state validationAccount takeoverCWE: CWE-352  Cross Site Request Forgery
+
+Evidence: auth.service.ts, oauth.repository.ts, oauth.controller.ts.
+
+Immich contains measures to validate OAuth state. However, the correct functioning of this protection is reliant on the secure binding of a state value to a genuine login process. A security advisory was issued upstream on November 10 2026 and identifies an OAuth account binding issue which can lead to account takeover.- Advisory: GHSA-7j23-rprg-3g5q- Vulnerable versions: v3.3.6 and earlier- Fixed in: v3.4.0- Upstream risk rating: High- Verified: Yes, as identified in the upstream advisory.
+
+Recommendation: Upgrade affected deployments and introduce regression tests covering transaction binding, unauthorized account linking, state expiration and replay prevention.
+
+
+2.Findings: Conditional PKCE usage
+
+CWE: CWE-287 – Incorrect authentication
+
+Evidence: oauth.repository.ts – authorize() and getProfileAndOAuthSid().
+
+PKCE is conditionally used based on what the identity provider claims that it can do. Therefore, defence against interception of an authorisation code also relies, in part, on how the identity provider is set up. 
+
+Recommendation: Enforce the use of identity providers that can utilise PKCE (SHA-256) and detail the security consequences of using those that cannot.
+
+Verification: Behaviour has been seen. Exploitability unknown.
+
+3.Finding :Email-driven auto-linking of accounts CWE: CWE-345 — Insufficient Verification of Data Authenticity
+
+ Evidence: auth.service.ts - method: callback() In the Auth Service, external account providers can be linked to current users via their email address. The security of this operation relies upon the external party having correctly authenticated the email. 
+
+Suggestion: Confirm that the user has control over the relevant email address prior to auto-linking. May wish to force explicit action by the account holder to link accounts. 
+
+Assessment: Further checks needed. 
+
+4.Finding : SSRF via images returned from 3rd-party profiles CWE: CWE-918 — Server-Side Request Forgery 
+
+Evidence: auth.service.ts - syncProfilePicture(); oauth.repository.ts - getProfilePicture() As the code makes outgoing requests based on data received from external sources (i.e. social media profiles), there is a possibility of SSRF if the allowed targets are not tightly controlled. 
+
+.Suggestion: Confirm controls in place around: private IPs, localhost, redirect chains, DNS and supported protocols. Assessment: Not confirmed as exploitable.
+
+ 5.Finding : Debug logging may record PII CWE: CWE-532 — Insertion of Sensitive Information into Log File 
+
+Evidence: auth.service.ts - method: callback() OAuth profile details are logged during the auth flow at debug level. Given the variability between different OAuth providers and configurable logging settings, some form of PII could be logged. 
+
+Suggestion: Only log key fields relating to the authentication process, and remove any further sensitive data from the OAuth profile. Assessment: Requires assessment of logged output. 
+
+Finding 6: External roles affect admin rights CWE: CWE-269 — Improper Privilege Management 
+
+Evidence: auth.service.ts - methods: callback(), getRoleClaim() Roles defined in the external OAuth system will map to the local system's admin-level permissions. Misconfiguration of the OAuth connection and lack of hardening of the corresponding claims would allow unauthorised elevation of access. 
+
+Suggestion: Limit which external role(s) are used to determine elevated local permissions, and validate ability to elevate and de-elevate access. Assessment: Dependent on configuration of OAuth.
+
+
+
 ### 4. Automated Code Scanning Findings
 
 | Tool/version | Scan scope and configuration | Output link | Findings and triage status |
