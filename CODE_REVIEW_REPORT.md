@@ -128,7 +128,7 @@ Recommendation: Enforce the use of identity providers that can utilise PKCE (SHA
 
 Verification: Behaviour has been seen. Exploitability unknown.
 
-3.Finding :Email-driven auto-linking of accounts CWE: CWE-345 — Insufficient Verification of Data Authenticity
+3.Finding :Email-driven auto-linking of accounts CWE: CWE-345 - Insufficient Verification of Data Authenticity
 
  Evidence: auth.service.ts - method: callback() In the Auth Service, external account providers can be linked to current users via their email address. The security of this operation relies upon the external party having correctly authenticated the email. 
 
@@ -136,24 +136,23 @@ Suggestion: Confirm that the user has control over the relevant email address pr
 
 Assessment: Further checks needed. 
 
-4.Finding : SSRF via images returned from 3rd-party profiles CWE: CWE-918 — Server-Side Request Forgery 
+4.Finding : SSRF via images returned from 3rd-party profiles CWE: CWE-918 - Server-Side Request Forgery 
 
 Evidence: auth.service.ts - syncProfilePicture(); oauth.repository.ts - getProfilePicture() As the code makes outgoing requests based on data received from external sources (i.e. social media profiles), there is a possibility of SSRF if the allowed targets are not tightly controlled. 
 
 .Suggestion: Confirm controls in place around: private IPs, localhost, redirect chains, DNS and supported protocols. Assessment: Not confirmed as exploitable.
 
- 5.Finding : Debug logging may record PII CWE: CWE-532 — Insertion of Sensitive Information into Log File 
+ 5.Finding : Debug logging may record PII CWE: CWE-532 - Insertion of Sensitive Information into Log File 
 
 Evidence: auth.service.ts - method: callback() OAuth profile details are logged during the auth flow at debug level. Given the variability between different OAuth providers and configurable logging settings, some form of PII could be logged. 
 
 Suggestion: Only log key fields relating to the authentication process, and remove any further sensitive data from the OAuth profile. Assessment: Requires assessment of logged output. 
 
-Finding 6: External roles affect admin rights CWE: CWE-269 — Improper Privilege Management 
+Finding 6: External roles affect admin rights CWE: CWE-269 - Improper Privilege Management 
 
-Evidence: auth.service.ts - methods: callback(), getRoleClaim() Roles defined in the external OAuth system will map to the local system's admin-level permissions. Misconfiguration of the OAuth connection and lack of hardening of the corresponding claims would allow unauthorised elevation of access. 
+Evidence: auth.service.ts - methods: callback(), getRoleClaim() Roles defined in the external OAuth system will map to the local system's admin-level permissions. Misconfiguration of the OAuth connection and lack of hardening of the corresponding claims would allow unauthorized elevation of access. 
 
 Suggestion: Limit which external role(s) are used to determine elevated local permissions, and validate ability to elevate and de-elevate access. Assessment: Dependent on configuration of OAuth.
-
 
 
 ### 4. Automated Code Scanning Findings
