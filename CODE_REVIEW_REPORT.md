@@ -189,7 +189,14 @@ Map significant findings from manual and/or automated review to CWEs. Evaluate r
 
 | Finding ID | Security area | CWE | Supporting evidence | Likelihood | Impact | Overall risk | Verification status |
 |---|---|---|---|---|---|---|---|
-| TBD | TBD | TBD | TBD | TBD | TBD | TBD | Pending |
+|OAuth-F01|OAuth state and account takeover| CWE-352|GHSA-7j23-rprg-3g5q|High |High | High |Upstream confirmed; deployment applicability pending |
+|OAuth-F02|Conditional PKCE| CWE-287|oauth.repository.ts | Medium |High| High |Implementation behavior observed |
+|OAuth-F03|Automatic account linking |CWE-345|	auth.service.ts|Medium |High| High|Potential weakness|
+|OAuth-F04 |External profile resource SSRF |CWE-918|syncProfilePicture()| Medium | High |High |Pending verification|
+|OAuth-F05|Sensitive information logging|CWE-532|OAuth profile debug logging|Medium|Medium|Medium|Logging behavior observed|
+|OAuth-F06 |External role and privilege mapping|CWE-269|getRoleClaim()|Low | High |Medium |Configuration-dependent|
+|OAuth-F07|Redirect URI validation|CWE-601|resolveRedirectUri()|Medium|Medium |Medium|Pending verification|
+|OAuth-F08|Session expiration and replay prevention |CWE-613 |Authentication session lifecycle |Medium|High|High|Pending verification  |
 
 **Risk assessment rationale:** TBD.  
 **Distinction between potential threats and confirmed vulnerabilities:** TBD.
