@@ -185,7 +185,9 @@ Further, application specific settings such as identity provider, TLS and revers
 
 ### 5. Summary of Key Findings and Risk
 
-Map significant findings from manual and/or automated review to CWEs. Evaluate risk in the hypothetical professional photography studio operating Immich.
+### Map significant findings from manual and/or automated review to CWEs. Evaluate risk in the hypothetical professional photography studio operating Immich.
+
+The findings are assessed in the context of the hypothetical professional photography studio employing five staff members and using Immich to manage confidential client media.
 
 | Finding ID | Security area | CWE | Supporting evidence | Likelihood | Impact | Overall risk | Verification status |
 |---|---|---|---|---|---|---|---|
@@ -198,8 +200,20 @@ Map significant findings from manual and/or automated review to CWEs. Evaluate r
 |OAuth-F07|Redirect URI validation|CWE-601|resolveRedirectUri()|Medium|Medium |Medium|Pending verification|
 |OAuth-F08|Session expiration and replay prevention |CWE-613 |Authentication session lifecycle |Medium|High|High|Pending verification  |
 
-**Risk assessment rationale:** TBD.  
+**Risk assessment rationale:** TBD. 
+
+OAuth/OIDC is integral to security. Successful authenticating to an external system provides the basis to then authorize media. Within the photography studio, issues can include unauthorized access to confidential information, impersonation and unauthorized editing or erasure of data. This may also affect business functioning and lead to harm to reputation. High risk issues can allow someone to take over an account, circumvent authentication, and/or gain unauthorized access to information. Medium risk issues often rely on further factors such as poor system set up and/or access to application log files. The probability levels are based on Immich being externally available and with OAuth functionality activated. In reality, probability will be influenced by the Immich version, identity provider set up and current security measures in place.
+
 **Distinction between potential threats and confirmed vulnerabilities:** TBD.
+
+| Classification | Description	 | Example|
+|---|---|---|
+|Confirmed issue	|An issue for which there is solid evidence that it can be exploited and/or there is a relevant security advisory.|OAuth account compromise (for certain versions).|
+| Observed behaviour	| Code exhibits a security relevant behaviour, however, it has not been proven that this can be exploited. | Conditional PKCE, and logging of profiles.|
+|Possible issue	|A potential issue which may need further code analysis and/or security testing.| SSRF using external profile resources. |
+|Configurational issue		|A security issue which is affected by configuration settings (both for administrators and identity providers| External administration role mapping. |
+
+
 
 ### 6. Planned or Ongoing Upstream Contributions
 
