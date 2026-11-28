@@ -214,12 +214,24 @@ OAuth/OIDC is integral to security. Successful authenticating to an external sys
 |Configurational issue		|A security issue which is affected by configuration settings (both for administrators and identity providers| External administration role mapping. |
 
 
-
 ### 6. Planned or Ongoing Upstream Contributions
 
 Describe possible documentation, design, code, or communication contributions to the upstream Immich project, including proposals informed by earlier class assignments. Do not claim a contribution was submitted unless it was.
 
 **Proposed contribution(s):** TBD.  
+Drawing from the scenario analysis, CWE list and previous threat modelling work, the following contributions are proposed for the upstream Immich project.
+
+| Contribution ID | Type of contribution| Description of contribution	| Anticipated benefit | Status | 
+|---|---|---|---|---|
+|UC-01|Documentation|Create secure OAuth/ OIDC implementation guidance.|Lowers risk of misconfigured identity providers|Proposed|
+|UC-02	|Security testing|Create regression tests to test state, replay and cross account binding functionality|Lowers risk of account hijacking|Proposed|
+|UC-03	|Code enhancement	|Investigate both PKCE enforcement and/or notifications for non-supported identity providers.|Enhances security of authorization codes.|Proposed|
+|UC-04|Security testing|Create tests to confirm resistance to attacks using rogue remote profile pages|Enhances confidence in defence against SSRF|Proposed|
+|UC-05|Code enhancement	|Investigate enhanced validation processes for automatic email cross-account binding|Lowers risk of identity impersonation|Proposed|
+|UC-06|Code enhancement|Reduce logging of highly confidential OAuth profile information.|Lowers risk of information leakage|Proposed|
+|UC-07|Documentation|Create documentation to securely map external roles and allocate administrative permissions.|Lowers risk of privilege escalation|Proposed|
+|UC-08|Design documentation|Create a security orientated data flow for the OAuth/ OIDC implementation, including trust zones|Enhances both maintainability and security.|Proposed|
+
 **Upstream issue/PR/discussion links (if any):** TBD.
 
 ### 7. Team Collaboration and GitHub Task Tracking
