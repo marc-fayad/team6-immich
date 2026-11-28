@@ -234,6 +234,17 @@ Drawing from the scenario analysis, CWE list and previous threat modelling work,
 
 **Upstream issue/PR/discussion links (if any):** TBD.
 
+| Resource | URL | Status |
+|---|---|---|
+|Immich upstream repository|https://github.com/immich-app/immich?|Reference|
+|Upstream issues|https://github.com/immich-app/immich/issues?|Proposed contribution destination|
+|Upstream pull requests|https://github.com/immich-app/immich/pulls?|Proposed contribution destination|
+|Upstream discussions|https://github.com/immich-app/immich/discussions?|Proposed contribution destination|
+|Security advisories|https://github.com/immich-app/immich/security?|Responsible disclosure destination|
+|Existing OAuth security advisory|https://github.com/immich-app/immich/security/advisories/GHSA-7j23-rprg-3g5q?|Existing upstream finding|
+|Team 6 threat modeling report|https://github.com/marc-fayad/team6-immich/blob/main/THREAT_MODELING_REPORT.md?|Previous assignment evidence|
+
+
 ### 7. Team Collaboration and GitHub Task Tracking
 
 **Team repository:** [Insert Team 6 GitHub repository URL]  
@@ -257,7 +268,7 @@ Pending.
 Pending.
 
 #### Adu
-Pending.
+I learnt how to utilize software security engineering techniques. I undertook a code analysis of both Immich and external code relating to its OAuth/OIDC and authentication features in order to detect possible security issues. I learnt how to use scenario analysis and CWE lists to analyze code and recognize and assess potential security issues. I further learnt how to relate these to previously produced threat models and misuse cases. My knowledge of authentication was also expanded. This included areas such as OAuth state checks, PKCE, authentication, user account association and session handling. Furthermore, I learnt how to distinguish between a potential and an actual security issue. I recognized that whilst recognizing questionable code is an essential step, this should then be substantiated and verified. What was most beneficial?I found the code analysis to be particularly beneficial as it enabled me to practically utilize my knowledge of software security. Relating threat models and misuse cases to sections of code enabled me to recognize how a malicious actor may take advantage of a software’s authentication features. In addition, I found it beneficial to learn about automated security analysis tools (such as Semgrep, CodeQL and Gitleaks). These can be used alongside manual code analysis and are effective at assisting in the detection of security issues.Overall, I found it most beneficial to learn how to methodically address software security. This includes threat modelling, code analysis, risk assessment and suggesting enhancements. Consequently, my knowledge of secure software development was enhanced and I further recognized the significance of embedding security within software engineering processes.
 
 ### 9. Combined Team Reflection
 
