@@ -167,6 +167,20 @@ Suggestion: Limit which external role(s) are used to determine elevated local pe
 
 **Limitations and false positives:** TBD.
 
+ Limitations and false positives Automated tools used for security testing can have issues when analysing an application’s authentication implementation using OAuth/OIDC. 
+
+For example:
+
+Static analysis tools can wrongly identify HTTP calls to external services even though the application does have suitable SSRF defence in place.
+
+Automated tools are unable to recognize that authentication libraries can themselves include validation.
+
+Whilst dependency tools can highlight compromised packages, they cannot determine if the associated functionality is actually accessible.
+
+An application’s authentication process and user association functionality can also have business logic flaws which cannot be identified by standard automated tools.
+
+Further, application specific settings such as identity provider, TLS and reverse proxy controls cannot be fully analyzed from source code.
+
 ## Part 2: Key Findings and Contributions
 
 ### 5. Summary of Key Findings and Risk
